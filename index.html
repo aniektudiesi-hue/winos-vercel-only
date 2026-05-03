@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WinOS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#2563eb;
+  --bg:#0b1220;
+  --surface:rgba(243,246,255,.78);
+  --surface-solid:#f3f6ff;
+  --surface-dark:rgba(20,24,33,.86);
+  --text:#101827;
+  --text-inv:#f8fafc;
+  --muted:#5d6678;
+  --line:rgba(20,30,48,.16);
+  --line-dark:rgba(255,255,255,.16);
+  --shadow:0 24px 70px rgba(0,0,0,.28);
+  --taskbar-h:48px;
+  --radius:8px;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:#07111f;color:var(--text);font-family:"Segoe UI Variable","Segoe UI",system-ui,sans-serif}
+button,input,textarea,select{font:inherit}
+button{border:0;background:transparent;color:inherit;cursor:pointer}
+input,textarea,select{outline:0;color:inherit}
+svg{display:block}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(80,90,110,.34);border:3px solid transparent;border-radius:999px;background-clip:padding-box}
+.hidden{display:none!important}
+
+.wallpaper{position:fixed;inset:0;overflow:hidden;background:
+  radial-gradient(ellipse 70% 58% at 14% 30%,rgba(45,132,255,.9) 0%,rgba(33,111,225,.65) 30%,transparent 58%),
+  radial-gradient(ellipse 72% 58% at 82% 76%,rgba(91,196,255,.82) 0%,rgba(45,135,220,.32) 31%,transparent 62%),
+  radial-gradient(ellipse 64% 48% at 62% 8%,rgba(116,69,255,.35),transparent 62%),
+  linear-gradient(135deg,#07111f 0%,#173a72 48%,#06101d 100%);background-size:cover;background-position:center;transition:filter .2s,background .35s}
+.wallpaper:before{content:"";position:absolute;inset:-18%;opacity:0;pointer-events:none;transition:opacity .35s}
+.wallpaper:after{content:"";position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.17)),
+  radial-gradient(circle at 50% 120%,rgba(255,255,255,.14),transparent 42%)}
+.wallpaper.glass-aurora{background:linear-gradient(125deg,#0a1228 0%,#103b6d 34%,#5a6dd8 62%,#0d1835 100%)}
+.wallpaper.glass-aurora:before{opacity:1;background:
+  radial-gradient(ellipse 42% 36% at 18% 28%,rgba(116,211,255,.7),transparent 64%),
+  radial-gradient(ellipse 48% 42% at 76% 22%,rgba(220,190,255,.62),transparent 66%),
+  radial-gradient(ellipse 54% 50% at 54% 82%,rgba(45,255,190,.34),transparent 64%);
+  filter:blur(20px) saturate(145%);animation:auroraDrift 18s ease-in-out infinite alternate}
+.wallpaper.cosmic-flow{background:radial-gradient(circle at 28% 18%,#6d5dfc,transparent 26%),radial-gradient(circle at 72% 68%,#0cc7c7,transparent 24%),linear-gradient(135deg,#050713,#131730 58%,#03050d)}
+.wallpaper.cosmic-flow:before{opacity:1;background-image:radial-gradient(circle,rgba(255,255,255,.9) 0 1px,transparent 1.4px),radial-gradient(circle,rgba(125,211,252,.6) 0 1px,transparent 1.5px);background-size:86px 86px,142px 142px;animation:starFloat 26s linear infinite}
+.wallpaper.minimal-liquid{background:linear-gradient(135deg,#e9f4ff,#d6f4ef 42%,#f4e8ff)}
+.wallpaper.minimal-liquid:before{opacity:1;background:radial-gradient(circle at 24% 40%,rgba(37,99,235,.34),transparent 30%),radial-gradient(circle at 78% 56%,rgba(16,185,129,.3),transparent 28%),radial-gradient(circle at 54% 18%,rgba(236,72,153,.24),transparent 24%);filter:blur(24px);animation:liquidShift 16s ease-in-out infinite alternate}
+.wallpaper.midnight-calm{background:linear-gradient(135deg,#050816,#12172e 48%,#07111f)}
+.wallpaper.midnight-calm:before{opacity:1;background:radial-gradient(ellipse at 50% 8%,rgba(59,130,246,.42),transparent 38%),radial-gradient(ellipse at 18% 76%,rgba(20,184,166,.18),transparent 36%);filter:blur(14px);animation:calmPulse 12s ease-in-out infinite alternate}
+@keyframes auroraDrift{from{transform:translate3d(-4%,-2%,0) rotate(-5deg) scale(1.04)}to{transform:translate3d(5%,3%,0) rotate(7deg) scale(1.12)}}
+@keyframes starFloat{from{transform:translate3d(0,0,0)}to{transform:translate3d(-72px,48px,0)}}
+@keyframes liquidShift{from{transform:translate3d(-5%,1%,0) scale(1)}to{transform:translate3d(5%,-2%,0) scale(1.08)}}
+@keyframes calmPulse{from{opacity:.78;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}
+
+.lock,.login{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;color:#fff}
+.lock{cursor:pointer}
+.lock:before,.login:before{content:"";position:absolute;inset:0;background:rgba(3,8,16,.18);backdrop-filter:blur(1px)}
+.lock-panel{position:relative;text-align:center;text-shadow:0 8px 28px rgba(0,0,0,.34)}
+.lock-time{font-size:92px;line-height:1;font-weight:300;letter-spacing:-2px}
+.lock-date{font-size:20px;margin-top:12px;font-weight:400}
+.lock-hint{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);font-size:13px;color:rgba(255,255,255,.76)}
+.login-box{position:relative;width:360px;max-width:calc(100vw - 40px);padding:30px 32px 26px;background:rgba(244,247,255,.18);border:1px solid rgba(255,255,255,.34);border-radius:10px;box-shadow:var(--shadow);backdrop-filter:blur(34px) saturate(150%)}
+.login-avatar{width:76px;height:76px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.9);color:#1f2937;font-size:32px;font-weight:600}
+.login-title{text-align:center;font-size:20px;font-weight:500;margin-bottom:16px}
+.login-tabs{display:grid;grid-template-columns:1fr 1fr;margin-bottom:12px;background:rgba(255,255,255,.2);border-radius:7px;padding:3px}
+.login-tab{height:32px;border-radius:5px;color:rgba(255,255,255,.78);font-size:13px}
+.login-tab.active{background:rgba(255,255,255,.86);color:#111827}
+.login-input{width:100%;height:40px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.85);border-radius:4px;padding:0 11px;margin-bottom:9px;color:#111827}
+.login-input:focus{border-color:#60a5fa;box-shadow:0 0 0 1px #60a5fa}
+.login-actions{display:flex;gap:8px;margin-top:5px}
+.login-btn{height:38px;flex:1;border-radius:4px;background:#2563eb;color:#fff;font-weight:500}
+.login-btn.secondary{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.38)}
+.login-error{height:18px;margin-top:10px;font-size:12px;color:#fee2e2}
+
+.welcome{position:fixed;inset:0;z-index:9200;display:grid;place-items:center;color:#fff;pointer-events:none;opacity:1;transform:scale(1);transition:opacity .9s ease,transform .9s ease}
+.welcome:before{content:"";position:absolute;inset:0;background:rgba(248,250,252,.08);backdrop-filter:blur(28px) saturate(170%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.welcome:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.02) 44%,rgba(0,0,0,.14));mix-blend-mode:screen}
+.welcome.welcome-out{opacity:0;transform:scale(1.035)}
+.welcome-copy{position:relative;z-index:1;max-width:calc(100vw - 32px);padding:0 16px;text-align:center;text-shadow:0 22px 58px rgba(0,0,0,.34),0 2px 10px rgba(0,0,0,.26)}
+.welcome-line{font-family:"Segoe Script","Snell Roundhand","Brush Script MT",cursive;font-size:clamp(50px,9vw,132px);font-weight:400;line-height:1.05;overflow-wrap:anywhere}
+.welcome-cursor{display:inline-block;width:.08em;min-width:4px;height:.8em;margin-left:.09em;border-radius:999px;background:rgba(255,255,255,.92);vertical-align:-.08em;animation:welcomeBlink .85s steps(1,end) infinite;box-shadow:0 0 20px rgba(255,255,255,.56)}
+@keyframes welcomeBlink{50%{opacity:0}}
+
+.desktop{position:fixed;inset:0 0 var(--taskbar-h) 0;z-index:5;overflow:hidden;padding:12px}
+.desktop-icons{display:flex;flex-direction:column;flex-wrap:wrap;gap:4px;height:100%;width:84px;align-content:flex-start}
+.desk-icon{width:76px;height:78px;border:1px solid transparent;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.75)}
+.desk-icon:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.24)}
+.desk-icon .app-ico{width:34px;height:34px}
+.desk-label{font-size:11px;line-height:1.2;text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+.taskbar{position:fixed;left:0;right:0;bottom:0;height:var(--taskbar-h);z-index:5000;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:rgba(240,244,252,.76);border-top:1px solid rgba(255,255,255,.62);backdrop-filter:blur(34px) saturate(190%);box-shadow:0 -1px 24px rgba(8,15,30,.16)}
+.tb-left,.tb-right,.tb-center{display:flex;align-items:center;gap:4px}
+.tb-center{position:absolute;left:50%;transform:translateX(-50%);max-width:calc(100vw - 320px);overflow:hidden}
+.tb-btn,.start-btn,.clock-zone{height:40px;border-radius:5px;display:grid;place-items:center;position:relative}
+.tb-btn,.start-btn{width:44px}
+.tb-btn,.start-btn{transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
+.tb-btn:hover,.start-btn:hover,.clock-zone:hover,.search-box:hover{background:rgba(255,255,255,.48);box-shadow:0 10px 26px rgba(15,23,42,.12)}
+.tb-btn:hover,.start-btn:hover{transform:translateY(-4px) scale(1.06)}
+.start-btn.open,.tb-btn.active{background:rgba(0,0,0,.09)}
+.tb-btn.running:after,.tb-btn.active:after{content:"";position:absolute;bottom:2px;left:50%;transform:translateX(-50%);height:3px;border-radius:4px;background:#64748b}
+.tb-btn.running:after{width:6px}
+.tb-btn.active:after{width:18px;background:var(--accent)}
+.tb-tip{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#20242d;color:#fff;border:1px solid rgba(255,255,255,.08);padding:5px 9px;border-radius:4px;font-size:11px;opacity:0;pointer-events:none;transition:.12s;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.tb-btn:hover .tb-tip{opacity:1}
+.search-box{height:34px;width:220px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.06);display:flex;align-items:center;gap:8px;padding:0 12px;color:#4b5563;font-size:13px}
+.tray{height:40px;border-radius:5px;display:flex;align-items:center;gap:8px;padding:0 8px;font-size:12px;color:#182033}
+.battery-text{font-size:12px;min-width:34px;text-align:right;color:#172033}
+.tray:hover{background:rgba(0,0,0,.07)}
+.clock-zone{min-width:86px;align-items:end;justify-items:end;padding:0 7px;color:#172033}
+.clock-time{font-size:12px;line-height:1.25}
+.clock-date{font-size:11px;line-height:1.25}
+.sync{width:8px;height:8px;border-radius:50%;background:#9ca3af;margin-right:4px}
+.sync.synced{background:#22c55e}.sync.saving{background:#eab308}.sync.error{background:#ef4444}
+
+.start-menu,.search-panel,.calendar-pop{position:fixed;z-index:6100;background:rgba(246,248,252,.92);border:1px solid rgba(255,255,255,.72);border-radius:8px;box-shadow:0 20px 55px rgba(0,0,0,.22);backdrop-filter:blur(30px) saturate(170%);color:#101827;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .14s,transform .14s}
+.start-menu.open,.search-panel.open,.calendar-pop.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.start-menu{left:50%;bottom:58px;width:min(640px,calc(100vw - 24px));margin-left:-320px;padding:20px}
+.start-search{height:36px;width:100%;border:1px solid #cbd5e1;border-radius:4px;background:#fff;padding:0 12px;margin-bottom:18px}
+.start-sec{font-size:13px;font-weight:600;margin-bottom:10px}
+.start-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.start-app{height:76px;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
+.start-app:hover{background:rgba(15,23,42,.07)}
+.start-app .app-ico{width:30px;height:30px}
+.start-app-name{font-size:11px;max-width:84px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.start-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(15,23,42,.1);margin-top:18px;padding-top:12px}
+.user-chip{display:flex;align-items:center;gap:10px;font-size:13px}
+.avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#dbeafe;color:#1e3a8a;font-weight:600}
+.power-btn{width:34px;height:34px;border-radius:5px}
+.power-btn:hover{background:rgba(239,68,68,.13);color:#dc2626}
+.calendar-pop{right:10px;bottom:58px;width:330px;padding:14px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-title{font-weight:600}
+.cal-nav button{width:28px;height:28px;border-radius:4px}
+.cal-nav button:hover{background:rgba(15,23,42,.08)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-dow{height:28px;display:grid;place-items:center;font-size:11px;color:#64748b}
+.cal-day{height:34px;border-radius:50%;display:grid;place-items:center;font-size:12px}
+.cal-day:hover{background:rgba(15,23,42,.08)}
+.cal-day.today{background:var(--accent);color:#fff;font-weight:600}
+.cal-day.has{box-shadow:0 0 0 1px var(--accent) inset}
+
+.window{position:fixed;z-index:20;min-width:286px;min-height:170px;background:rgba(249,250,252,.86);border:1px solid rgba(255,255,255,.66);border-radius:10px;box-shadow:0 26px 80px rgba(6,10,24,.28);overflow:hidden;display:flex;flex-direction:column;color:#101827;backdrop-filter:blur(24px) saturate(160%);animation:winIn .2s cubic-bezier(.2,.8,.2,1)}
+.window.focused{box-shadow:0 34px 100px rgba(0,0,0,.34);border-color:rgba(255,255,255,.82);transform:translateY(-1px)}
+.window.maximized{border-radius:0;border-left:0;border-right:0;border-top:0;animation:none}
+.titlebar{height:34px;display:flex;align-items:center;gap:8px;padding:0 0 0 10px;background:rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.62);user-select:none;backdrop-filter:blur(18px)}
+@keyframes winIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.titlebar.drag{cursor:move}
+.win-ico{width:16px;height:16px;flex:0 0 auto}
+.win-title{font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.win-controls{display:flex;height:32px}
+.win-control{width:46px;height:32px;border-radius:0;display:grid;place-items:center;color:#111827}
+.win-control:hover{background:rgba(0,0,0,.08)}
+.win-control.close:hover{background:#c42b1c;color:#fff}
+.win-body{flex:1;min-height:0;overflow:hidden;background:#fff}
+.resize-handle{position:absolute;z-index:3;background:transparent}
+.resize-handle.e{top:12px;right:0;width:8px;bottom:12px;cursor:ew-resize}
+.resize-handle.w{top:12px;left:0;width:8px;bottom:12px;cursor:ew-resize}
+.resize-handle.n{top:0;left:12px;right:12px;height:8px;cursor:ns-resize}
+.resize-handle.s{bottom:0;left:12px;right:12px;height:8px;cursor:ns-resize}
+.resize-handle.ne,.resize-handle.nw,.resize-handle.se,.resize-handle.sw{width:16px;height:16px}
+.resize-handle.ne{top:0;right:0;cursor:nesw-resize}.resize-handle.nw{top:0;left:0;cursor:nwse-resize}.resize-handle.se{right:0;bottom:0;cursor:nwse-resize}.resize-handle.sw{left:0;bottom:0;cursor:nesw-resize}
+.resize-handle.se:after{content:"";position:absolute;right:4px;bottom:4px;width:8px;height:8px;border-right:2px solid rgba(15,23,42,.28);border-bottom:2px solid rgba(15,23,42,.28);border-radius:1px}
+
+.app-shell{height:100%;display:flex;flex-direction:column;background:#fff}
+.toolbar{min-height:42px;display:flex;align-items:center;gap:7px;padding:6px 8px;border-bottom:1px solid #e5e7eb;background:#f8fafc}
+.tool-input{height:30px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;padding:0 9px;font-size:13px}
+.tool-btn{height:30px;border-radius:4px;background:#e9edf5;border:1px solid #d8dee9;padding:0 10px;font-size:12px;font-weight:500}
+.tool-btn:hover{background:#dde5f0}
+.tool-btn.primary{background:#2563eb;border-color:#2563eb;color:#fff}
+.tool-btn.danger{background:#fee2e2;border-color:#fecaca;color:#991b1b}
+.split{display:flex;min-height:0;flex:1}
+.sidebar{width:184px;flex:0 0 auto;background:#f3f6fb;border-right:1px solid #e5e7eb;padding:8px;overflow:auto}
+.side-item{height:32px;width:100%;border-radius:4px;display:flex;align-items:center;gap:8px;padding:0 9px;text-align:left;font-size:13px;color:#253044}
+.side-item:hover,.side-item.active{background:#e3eaf5}
+.main-pane{flex:1;min-width:0;overflow:auto;padding:12px}
+.pathbar{height:32px;display:flex;align-items:center;border:1px solid #d8dee9;background:#fff;border-radius:4px;padding:0 10px;font-size:13px;color:#475569;margin-bottom:10px}
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.file-card{height:92px;border:1px solid transparent;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative}
+.file-card:hover{background:#eef4ff;border-color:#d8e7ff}
+.file-card .app-ico{width:34px;height:34px}
+.file-name{font-size:11px;max-width:86px;text-align:center;line-height:1.2;word-break:break-word}
+.empty{padding:28px;text-align:center;color:#64748b;font-size:13px}
+
+.notepad{height:100%;display:flex;flex-direction:column;background:#fff}
+.note-bar{height:38px;display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid #e5e7eb;background:#f8fafc}
+.note-title{flex:1;height:28px;border:0;background:transparent;font-size:13px}
+.note-stat{font-size:11px;color:#64748b;white-space:nowrap}
+.note-area{flex:1;resize:none;border:0;padding:14px 16px;font:14px/1.65 Consolas,"Cascadia Mono",monospace;background:#fff;color:#111827}
+
+.chrome{height:100%;display:flex;flex-direction:column;background:#f1f3f4}
+.chrome-tabs{height:36px;display:flex;align-items:end;gap:2px;padding:6px 8px 0;background:#dee1e6}
+.chrome-tab{height:30px;min-width:168px;max-width:220px;border-radius:8px 8px 0 0;background:#cfd4dc;display:flex;align-items:center;gap:7px;padding:0 10px;font-size:12px}
+.chrome-tab.active{background:#fff}
+.chrome-tab-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+.chrome-plus{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;margin-bottom:2px}
+.chrome-plus:hover,.chrome-icon-btn:hover{background:rgba(0,0,0,.08)}
+.chrome-toolbar{height:42px;display:flex;align-items:center;gap:6px;padding:6px 8px;background:#fff;border-bottom:1px solid #d7dce5}
+.chrome-icon-btn{width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+.omnibox{flex:1;height:30px;border:0;border-radius:999px;background:#eef2f7;padding:0 13px;font-size:13px;color:#111827}
+.browser-view{flex:1;position:relative;background:#fff}
+.browser-view iframe{width:100%;height:100%;border:0;background:#fff}
+.browser-note{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.94);border:1px solid #d8dee9;border-radius:6px;padding:8px 10px;font-size:11px;color:#475569;box-shadow:0 10px 30px rgba(0,0,0,.14);max-width:270px}
+.browser-start{height:100%;display:grid;place-items:center;padding:28px;color:#475569;text-align:center}
+.browser-start h3{font-size:30px;font-weight:400;color:#111827;margin-bottom:8px}
+.browser-open{position:absolute;left:10px;bottom:10px;background:rgba(255,255,255,.94);border:1px solid #d8dee9;border-radius:6px;padding:8px 10px;font-size:11px;color:#475569;box-shadow:0 10px 30px rgba(0,0,0,.14)}
+
+.results{display:flex;flex-direction:column;gap:8px}
+.result{display:flex;gap:10px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;padding:10px;text-align:left}
+.result:hover{background:#f8fafc}
+.result-title{font-size:14px;font-weight:600;color:#0f172a}
+.result-url{font-size:11px;color:#2563eb;margin-top:2px;word-break:break-all}
+.result-text{font-size:12px;color:#64748b;line-height:1.4;margin-top:5px}
+.thumb{width:128px;height:72px;object-fit:cover;border-radius:4px;background:#e5e7eb;flex:0 0 auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.card{border:1px solid #e5e7eb;border-radius:6px;background:#fff;padding:12px}
+.card-label{font-size:12px;color:#64748b;margin-bottom:6px}
+.big{font-size:28px;font-weight:300}
+.todo-row,.event-row{display:flex;align-items:center;gap:8px;border:1px solid #e5e7eb;background:#fff;border-radius:5px;padding:8px;margin-bottom:7px}
+.todo-row.done .todo-text{text-decoration:line-through;color:#64748b}
+.check{width:17px;height:17px;border:1px solid #94a3b8;border-radius:3px;display:grid;place-items:center;font-size:12px}
+.todo-row.done .check{background:#2563eb;color:#fff;border-color:#2563eb}
+.calc{height:100%;display:flex;flex-direction:column;gap:10px;padding:14px;background:linear-gradient(180deg,#f8fbff,#edf3fb)}
+.calc-screen{min-height:116px;border:1px solid rgba(148,163,184,.32);border-radius:10px;background:rgba(255,255,255,.9);display:flex;flex-direction:column;justify-content:end;align-items:end;padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.calc-history{min-height:22px;color:#64748b;font-size:13px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calc-display{max-width:100%;font-size:38px;font-weight:300;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1}
+.calc-key{border-radius:8px;background:rgba(255,255,255,.9);border:1px solid rgba(203,213,225,.9);font-size:17px;box-shadow:0 8px 20px rgba(15,23,42,.06);transition:transform .12s,background .12s}
+.calc-key:hover{background:#fff;transform:translateY(-1px)}
+.calc-key.op{background:#e0ecff;color:#1d4ed8}
+.calc-key.eq{background:#2563eb;color:#fff}
+.calc-key.utility{background:#eef2f7;color:#334155}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #e5e7eb}
+.muted{color:#64748b;font-size:12px;margin-top:2px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;justify-content:end}
+.swatch{width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #cbd5e1}
+.swatch.active{box-shadow:0 0 0 2px #111827}
+.wall-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;min-width:280px}
+.wall-thumb{height:66px;border-radius:6px;border:2px solid transparent;background-size:cover;background-position:center;box-shadow:0 0 0 1px #cbd5e1 inset;overflow:hidden;position:relative}
+.wall-thumb.active{border-color:#111827}
+.wall-thumb span{position:absolute;left:7px;bottom:6px;color:#fff;font-size:11px;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.game-board{display:grid;gap:10px;margin:12px auto;max-width:360px}
+.ttt-board{grid-template-columns:repeat(3,1fr);aspect-ratio:1}
+.ttt-cell{border-radius:10px;background:rgba(255,255,255,.86);border:1px solid #dbe3ef;font-size:48px;font-weight:700;color:#1d4ed8;box-shadow:0 10px 28px rgba(15,23,42,.08);transition:transform .12s,background .12s}
+.ttt-cell:hover{transform:translateY(-2px);background:#fff}
+.ttt-cell.matched{background:#dcfce7;color:#15803d;box-shadow:0 0 0 2px rgba(34,197,94,.32) inset}
+.game-stats{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 10px;color:#475569;font-size:13px}
+.segmented{display:flex;background:#e9eef7;border-radius:8px;padding:3px;gap:3px}
+.segmented button{height:30px;border-radius:6px;padding:0 10px;font-size:12px}
+.segmented button.active{background:#fff;box-shadow:0 6px 16px rgba(15,23,42,.1)}
+.memory-board{grid-template-columns:repeat(4,1fr);max-width:430px}
+.memory-card{height:76px;border-radius:10px;border:1px solid #dbe3ef;background:linear-gradient(135deg,#dbeafe,#f5f3ff);color:#1e293b;font-size:28px;font-weight:700;box-shadow:0 10px 26px rgba(15,23,42,.08);transform-style:preserve-3d;transition:transform .18s,background .18s}
+.memory-card.flipped,.memory-card.matched{background:#fff;transform:rotateY(180deg)}
+.memory-card.matched{color:#16a34a;box-shadow:0 0 0 2px rgba(34,197,94,.26) inset}
+.camera-shell{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 280px;background:#0b1020;color:#f8fafc}
+.camera-stage{position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 20%,rgba(37,99,235,.22),transparent 35%),#030712;overflow:hidden}
+.camera-video{max-width:100%;max-height:100%;background:#000;border-radius:8px;box-shadow:0 20px 70px rgba(0,0,0,.45)}
+.camera-video.mirror{transform:scaleX(-1)}
+.camera-side{border-left:1px solid rgba(255,255,255,.12);background:rgba(15,23,42,.88);padding:14px;overflow:auto}
+.camera-status{font-size:12px;color:#cbd5e1;line-height:1.45;margin:8px 0 12px}
+.camera-shot{width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.16);margin-top:10px;background:#111827}
+.qr-box{display:grid;place-items:center;background:#fff;border-radius:8px;padding:10px;margin:10px 0}
+.qr-box img{width:160px;height:160px}
+.phone-portal{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#050816,#173a72);color:#fff;font-family:"Segoe UI",system-ui,sans-serif}
+.phone-card{width:min(430px,100%);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:22px;backdrop-filter:blur(24px);box-shadow:0 24px 70px rgba(0,0,0,.34)}
+.phone-card video{width:100%;border-radius:8px;background:#000;margin:12px 0}
+@media (prefers-reduced-motion:reduce){.wallpaper:before,.window,.tb-btn,.start-btn,.memory-card{animation:none!important;transition:none!important}}
+
+@media(max-width:760px){
+  .search-box{display:none}
+  .tb-left{display:none}
+  .tb-center{left:8px;right:108px;transform:none;max-width:none}
+  .start-menu{left:8px;right:8px;margin-left:0;width:auto}
+  .start-grid{grid-template-columns:repeat(4,1fr)}
+  .sidebar{width:132px}
+}
+</style>
+</head>
+<body>
+<div class="wallpaper" id="wallpaper"></div>
+<section class="lock" id="lockScreen">
+  <div class="lock-panel"><div class="lock-time" id="lockTime">--:--</div><div class="lock-date" id="lockDate">Loading</div></div>
+  <div class="lock-hint">Click to sign in</div>
+</section>
+<section class="login hidden" id="loginScreen">
+  <form class="login-box" id="loginForm">
+    <div class="login-avatar" id="loginAvatar">U</div>
+    <div class="login-title">WinOS</div>
+    <div class="login-tabs">
+      <button class="login-tab active" type="button" data-auth-tab="login">Sign in</button>
+      <button class="login-tab" type="button" data-auth-tab="register">Register</button>
+    </div>
+    <input class="login-input" id="loginUser" autocomplete="username" placeholder="Username">
+    <input class="login-input" id="loginPass" type="password" autocomplete="current-password" placeholder="Password">
+    <div class="login-actions"><button class="login-btn" id="loginSubmit">Sign in</button><button class="login-btn secondary" type="button" id="localLogin">Local</button></div>
+    <div class="login-error" id="loginError"></div>
+  </form>
+</section>
+<section class="welcome hidden" id="welcomeScreen" aria-live="polite">
+  <div class="welcome-copy">
+    <span class="welcome-line" id="welcomeLine"></span><span class="welcome-cursor" aria-hidden="true"></span>
+  </div>
+</section>
+<main class="desktop hidden" id="desktop"><div class="desktop-icons" id="desktopIcons"></div></main>
+<div id="windows"></div>
+<div class="start-menu" id="startMenu"></div>
+<div class="calendar-pop" id="calendarPop"></div>
+<nav class="taskbar hidden" id="taskbar"></nav>
+
+<script>
+const API="";
+const LS_TOKEN="takumi_token";
+const LS_USER="takumi_user";
+const LS_STATE="takumi_os_state_v3";
+const LS_ACCOUNTS="winos_accounts_v1";
+const LS_SERVER_STATES="winos_server_states_v1";
+const folders=["Desktop","Documents","Downloads","Pictures","Music"];
+const accents=["#2563eb","#0078d4","#16a34a","#dc2626","#7c3aed","#0891b2","#ea580c","#be123c"];
+const wallpaperChoices=[
+  {id:"glass",name:"Glass Aurora",cls:"glass-aurora",bg:"linear-gradient(125deg,#0a1228,#5a6dd8 62%,#0d1835)"},
+  {id:"cosmic",name:"Cosmic Flow",cls:"cosmic-flow",bg:"radial-gradient(circle at 28% 18%,#6d5dfc,transparent 28%),radial-gradient(circle at 72% 68%,#0cc7c7,transparent 24%),linear-gradient(135deg,#050713,#131730)"},
+  {id:"liquid",name:"Minimal Liquid",cls:"minimal-liquid",bg:"linear-gradient(135deg,#e9f4ff,#d6f4ef 42%,#f4e8ff)"},
+  {id:"midnight",name:"Midnight Calm",cls:"midnight-calm",bg:"linear-gradient(135deg,#050816,#12172e 48%,#07111f)"},
+  {id:"bloom",name:"Bloom",bg:"radial-gradient(ellipse 70% 58% at 14% 30%,rgba(45,132,255,.9) 0%,rgba(33,111,225,.65) 30%,transparent 58%),radial-gradient(ellipse 72% 58% at 82% 76%,rgba(91,196,255,.82) 0%,rgba(45,135,220,.32) 31%,transparent 62%),radial-gradient(ellipse 64% 48% at 62% 8%,rgba(116,69,255,.35),transparent 62%),linear-gradient(135deg,#07111f 0%,#173a72 48%,#06101d 100%)"},
+  {id:"forest",name:"Forest",bg:"linear-gradient(140deg,rgba(4,12,24,.08),rgba(0,0,0,.2)),url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2400&q=85') center/cover no-repeat"},
+  {id:"lake",name:"Lake",bg:"linear-gradient(140deg,rgba(4,12,24,.05),rgba(0,0,0,.18)),url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=85') center/cover no-repeat"},
+  {id:"city",name:"City",bg:"linear-gradient(140deg,rgba(4,12,24,.08),rgba(0,0,0,.28)),url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=2400&q=85') center/cover no-repeat"},
+  {id:"aurora",name:"Aurora",bg:"linear-gradient(140deg,rgba(4,12,24,.08),rgba(0,0,0,.2)),url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=2400&q=85') center/cover no-repeat"},
+  {id:"mesh",name:"Mesh",bg:"radial-gradient(circle at 15% 20%,#60a5fa,transparent 28%),radial-gradient(circle at 82% 22%,#a78bfa,transparent 24%),radial-gradient(circle at 70% 82%,#22c55e,transparent 22%),linear-gradient(135deg,#0f172a,#1e293b)"},
+  {id:"fabric",name:"Fabric",bg:"linear-gradient(45deg,rgba(255,255,255,.055) 25%,transparent 25%),linear-gradient(-45deg,rgba(255,255,255,.055) 25%,transparent 25%),linear-gradient(135deg,#111827,#334155)"},
+  {id:"dark",name:"Dark",bg:"radial-gradient(circle at 50% -10%,rgba(37,99,235,.42),transparent 35%),linear-gradient(135deg,#050816,#101827 55%,#050816)"}
+];
+const fileTemplates={
+  ".txt":"",
+  ".md":"# New Document\n\n",
+  ".json":"{\n  \"name\": \"new-file\"\n}\n",
+  ".js":"console.log(\"Hello from WinOS\");\n",
+  ".html":"<!doctype html>\n<html>\n<head>\n  <title>New Page</title>\n</head>\n<body>\n  <h1>Hello WinOS</h1>\n</body>\n</html>\n",
+  ".css":"body {\n  font-family: system-ui, sans-serif;\n}\n",
+  ".py":"print(\"Hello from WinOS\")\n"
+};
+const appDefs={
+  explorer:{title:"File Explorer",icon:"folder",w:820,h:540,single:true},
+  notepad:{title:"Notepad",icon:"notepad",w:700,h:520,single:false},
+  chromium:{title:"Chromium",icon:"chromium",w:940,h:620,single:false},
+  google:{title:"Search",icon:"search",w:780,h:560,single:true},
+  youtube:{title:"YouTube",icon:"play",w:880,h:620,single:true},
+  calendar:{title:"Calendar",icon:"calendar",w:670,h:540,single:true},
+  apis:{title:"APIs",icon:"bolt",w:700,h:530,single:true},
+  todo:{title:"To Do",icon:"check",w:460,h:530,single:true},
+  calculator:{title:"Calculator",icon:"calc",w:360,h:560,single:true},
+  camera:{title:"Camera",icon:"camera",w:820,h:560,single:true},
+  tictactoe:{title:"Tic Tac Toe",icon:"game",w:470,h:560,single:true},
+  memory:{title:"Memory Match",icon:"cards",w:560,h:620,single:true},
+  settings:{title:"Settings",icon:"settings",w:680,h:520,single:true}
+};
+const pinned=["explorer","chromium","notepad","google","youtube","calculator","camera","tictactoe","memory","settings"];
+let token=localStorage.getItem(LS_TOKEN)||"";
+let currentUser=localStorage.getItem(LS_USER)||"";
+let authMode="login";
+let screen="lock";
+let zTop=100;
+let syncState="local";
+let syncTimer=null;
+let calendarView=new Date();
+let batteryState={supported:false,level:null,charging:false};
+let state=loadLocalState();
+let cameraStream=null, phoneStream=null, cameraPeer=null, cameraPeerId="";
+
+function jsonStore(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
+function saveJsonStore(key,value){localStorage.setItem(key,JSON.stringify(value))}
+async function localHash(text){
+  const data=new TextEncoder().encode(text);
+  const hash=await crypto.subtle.digest("SHA-256",data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function localToken(){return"winos_"+Math.random().toString(36).slice(2)+Date.now().toString(36)}
+function localJson(data,status=200){return new Response(JSON.stringify(data),{status,headers:{"Content-Type":"application/json"}})}
+function localAuthHeader(opts={}){
+  const h=opts.headers||{};
+  if(h instanceof Headers)return h.get("Authorization")||"";
+  return h.Authorization||h.authorization||"";
+}
+function localUserFromAuth(opts={}){
+  const raw=localAuthHeader(opts).replace(/^Bearer\s+/i,"").trim();
+  if(!raw)return null;
+  const accounts=jsonStore(LS_ACCOUNTS,{});
+  return Object.entries(accounts).find(([,a])=>a.token===raw)?.[0]||null;
+}
+async function localApi(path,opts={}){
+  const url=new URL(path,location.origin),method=(opts.method||"GET").toUpperCase();
+  const body=opts.body?JSON.parse(opts.body):{};
+  if(url.pathname==="/auth/register"&&method==="POST"){
+    const username=String(body.username||"").trim(),password=String(body.password||"").trim();
+    if(username.length<3)return localJson({detail:"Username must be at least 3 characters"},400);
+    if(password.length<4)return localJson({detail:"Password must be at least 4 characters"},400);
+    const accounts=jsonStore(LS_ACCOUNTS,{});
+    if(accounts[username])return localJson({detail:"Username already taken"},409);
+    accounts[username]={passwordHash:await localHash(password),token:localToken()};
+    saveJsonStore(LS_ACCOUNTS,accounts);
+    return localJson({token:accounts[username].token,username});
+  }
+  if(url.pathname==="/auth/login"&&method==="POST"){
+    const username=String(body.username||"").trim(),password=String(body.password||"").trim(),accounts=jsonStore(LS_ACCOUNTS,{});
+    if(!accounts[username]||accounts[username].passwordHash!==await localHash(password))return localJson({detail:"Wrong username or password"},401);
+    return localJson({token:accounts[username].token,username});
+  }
+  if(url.pathname==="/auth/me"){
+    const username=localUserFromAuth(opts);
+    return username?localJson({id:username,username}):localJson({detail:"Invalid or expired token"},401);
+  }
+  if(url.pathname==="/desktop/state"){
+    const username=localUserFromAuth(opts);
+    if(!username)return localJson({detail:"Not authenticated"},401);
+    const states=jsonStore(LS_SERVER_STATES,{});
+    if(method==="GET")return localJson({state:states[username]||{},is_default:!states[username],updated_at:null});
+    states[username]=body.state||body||{};
+    saveJsonStore(LS_SERVER_STATES,states);
+    return localJson({ok:true,bytes:JSON.stringify(states[username]).length});
+  }
+  return null;
+}
+const nativeFetch=window.fetch.bind(window);
+window.fetch=async(input,opts={})=>{
+  const url=typeof input==="string"?input:input.url,parsed=new URL(url,location.href);
+  if(parsed.origin===location.origin){
+    const handled=await localApi(parsed.pathname+parsed.search,opts);
+    if(handled)return handled;
+  }
+  return nativeFetch(input,opts);
+};
+
+function icon(name,size=22){
+  const s=`width="${size}" height="${size}"`;
+  const common=`${s} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"`;
+  const fill=(body)=>`<svg ${s} viewBox="0 0 24 24">${body}</svg>`;
+  const stroke=(body)=>`<svg ${common}>${body}</svg>`;
+  const map={
+    start:fill('<rect x="3" y="3" width="8" height="8" fill="#00a4ef"/><rect x="13" y="3" width="8" height="8" fill="#7fba00"/><rect x="3" y="13" width="8" height="8" fill="#f25022"/><rect x="13" y="13" width="8" height="8" fill="#ffb900"/>'),
+    folder:fill('<path d="M2.7 7.4c0-1 .8-1.8 1.8-1.8h5l1.8 2.1h8.2c1 0 1.8.8 1.8 1.8v8.3c0 1-.8 1.8-1.8 1.8h-15c-1 0-1.8-.8-1.8-1.8V7.4z" fill="#f7c948"/><path d="M2.7 9.2h18.6v8.6c0 1-.8 1.8-1.8 1.8h-15c-1 0-1.8-.8-1.8-1.8V9.2z" fill="#f9d66b"/>'),
+    file:fill('<path d="M6 2.8h8l4 4v14.4H6z" fill="#fff" stroke="#8aa0bd"/><path d="M14 2.8v4h4" fill="#dbeafe"/><path d="M8.4 11h7.2M8.4 14h7.2M8.4 17h5" stroke="#64748b" stroke-width="1.2"/>'),
+    notepad:fill('<path d="M6 3h11.5c.8 0 1.5.7 1.5 1.5v15c0 .8-.7 1.5-1.5 1.5H6z" fill="#fff" stroke="#8796ad"/><path d="M6 3h2.4v18H6z" fill="#dbeafe"/><path d="M10.2 8h6M10.2 11.5h6M10.2 15h4.2" stroke="#64748b" stroke-width="1.3"/><path d="M4.8 6h3M4.8 10h3M4.8 14h3M4.8 18h3" stroke="#64748b" stroke-width="1.1"/>'),
+    chromium:fill('<circle cx="12" cy="12" r="10" fill="#4285f4"/><path d="M12 2a10 10 0 0 1 8.7 5H12a5 5 0 0 0-4.3 2.5L3.4 5.7A10 10 0 0 1 12 2z" fill="#ea4335"/><path d="M20.7 7A10 10 0 0 1 12 22l4.3-7.5A5 5 0 0 0 17 12c0-1.9-1-3.9-2.7-5z" fill="#fbbc05"/><path d="M12 22A10 10 0 0 1 3.4 5.7L7.7 13A5 5 0 0 0 12 17z" fill="#34a853"/><circle cx="12" cy="12" r="4.2" fill="#eaf3ff"/><circle cx="12" cy="12" r="2.8" fill="#4285f4"/>'),
+    search:stroke('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M16 16l4 4"/>'),
+    play:fill('<rect x="3" y="5" width="18" height="14" rx="3" fill="#ef4444"/><path d="M10 9v6l5-3z" fill="#fff"/>'),
+    calendar:fill('<rect x="4" y="5" width="16" height="15" rx="2" fill="#fff" stroke="#8aa0bd"/><path d="M4 9h16" stroke="#8aa0bd"/><path d="M8 3v4M16 3v4" stroke="#64748b" stroke-width="1.6"/><rect x="7" y="12" width="3" height="3" rx=".6" fill="#2563eb"/><rect x="12" y="12" width="3" height="3" rx=".6" fill="#bfdbfe"/>'),
+    bolt:fill('<path d="M13.2 2.5L4.5 13h6.2l-1 8.5L19.5 9h-6.6z" fill="#f59e0b"/>'),
+    check:stroke('<path d="M4 12.5l5 5L20 6"/><rect x="3" y="3" width="18" height="18" rx="3"/>'),
+    calc:fill('<rect x="5" y="3" width="14" height="18" rx="2" fill="#fff" stroke="#8796ad"/><rect x="7.5" y="5.5" width="9" height="4" rx="1" fill="#dbeafe"/><path d="M8 13h2M12 13h2M16 13h.2M8 16h2M12 16h2M16 16h.2" stroke="#64748b" stroke-width="1.8"/>'),
+    settings:stroke('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2 3.4-.2-.1a1.7 1.7 0 0 0-2 .2 7.5 7.5 0 0 1-1.7.7 1.7 1.7 0 0 0-1.4 1.4V23h-4v-.4a1.7 1.7 0 0 0-1.3-1.4 7.5 7.5 0 0 1-1.8-.7 1.7 1.7 0 0 0-2-.2l-.2.1-2-3.4.2-.1A1.7 1.7 0 0 0 1.6 15a7.9 7.9 0 0 1 0-2 1.7 1.7 0 0 0-.3-1.9l-.1-.1 2-3.4.2.1a1.7 1.7 0 0 0 2-.2 7.5 7.5 0 0 1 1.8-.7A1.7 1.7 0 0 0 8.5 5.4V5h4v.4a1.7 1.7 0 0 0 1.4 1.4 7.5 7.5 0 0 1 1.7.7 1.7 1.7 0 0 0 2 .2l.2-.1 2 3.4-.1.1a1.7 1.7 0 0 0-.3 1.9 7.9 7.9 0 0 1 0 2z"/>'),
+    wifi:stroke('<path d="M4.5 10a11 11 0 0 1 15 0M7.5 13a6.5 6.5 0 0 1 9 0M10.3 16a2.5 2.5 0 0 1 3.4 0"/><circle cx="12" cy="19" r="1"/>'),
+    volume:stroke('<path d="M4 10v4h3l4 3.5v-11L7 10z"/><path d="M15 9a4 4 0 0 1 0 6M17.5 6.5a7.5 7.5 0 0 1 0 11"/>'),
+    battery:stroke('<rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 11v2"/><path d="M6 10v4h8v-4z" fill="currentColor" stroke="none"/>'),
+    power:stroke('<path d="M12 3v8"/><path d="M7 6.5a7 7 0 1 0 10 0"/>'),
+    up:stroke('<path d="M6 14l6-6 6 6"/>'),
+    back:stroke('<path d="M15 6l-6 6 6 6"/>'),
+    forward:stroke('<path d="M9 6l6 6-6 6"/>'),
+    refresh:stroke('<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v6h-6"/>'),
+    close:stroke('<path d="M6 6l12 12M18 6L6 18"/>'),
+    minus:stroke('<path d="M6 12h12"/>'),
+    square:stroke('<rect x="7" y="7" width="10" height="10"/>'),
+    camera:stroke('<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/>'),
+    game:stroke('<rect x="3" y="7" width="18" height="10" rx="4"/><path d="M8 11v2M7 12h2M15.5 11.5h.01M18 13.5h.01"/>'),
+    cards:stroke('<rect x="5" y="4" width="10" height="14" rx="2"/><path d="M9 7h2M8 10h4M17 7l2 10-8 2"/>')
+  };
+  return map[name]||map.file;
+}
+function uid(p="id"){return p+"_"+Math.random().toString(36).slice(2,8)+"_"+Date.now().toString(36)}
+function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function iso(){return new Date().toISOString()}
+function defaultState(){
+  return {
+    version:4,accent:"#2563eb",wallpaper:"glass",
+    vfs:{
+      Desktop:[fileObj("Welcome.txt","Welcome to WinOS.\n\nOpen File Explorer, create text files, edit in Notepad, move windows, refresh, and everything restores.")],
+      Documents:[fileObj("notes.txt","Multiple files are stored in the virtual file system and synced with the server when signed in.")],
+      Downloads:[],Pictures:[],Music:[]
+    },
+    events:{},todos:[{id:uid("todo"),text:"Make the web OS feel like Windows",done:false,createdAt:Date.now()}],
+    calc:{display:"0",stored:null,operator:null,waiting:false,history:""},
+    games:{ttt:{board:Array(9).fill(""),turn:"X",mode:"ai",status:"Your move",scores:{x:0,o:0,draw:0}},memory:null},
+    camera:{mirror:true,status:"Camera ready."},
+    windows:[]
+  };
+}
+function fileObj(name,content=""){return {id:uid("file"),name,kind:"text",content,createdAt:iso(),updatedAt:iso()}}
+function mergeState(raw){
+  const base=defaultState(), out={...base,...(raw||{})};
+  out.vfs={...base.vfs,...((raw&&raw.vfs)||{})};
+  folders.forEach(f=>{if(!Array.isArray(out.vfs[f]))out.vfs[f]=[]});
+  out.events=out.events||{}; out.todos=Array.isArray(out.todos)?out.todos:[]; out.windows=sanitizeWindows(Array.isArray(out.windows)?out.windows:[]);
+  out.calc={...base.calc,...(out.calc||{})};
+  out.games={...base.games,...(out.games||{})};
+  out.camera={...base.camera,...(out.camera||{})};
+  return out;
+}
+function loadLocalState(){try{return mergeState(JSON.parse(localStorage.getItem(LS_STATE)||"null"))}catch{return defaultState()}}
+function setSync(s){syncState=s;renderTaskbar()}
+async function apiFetch(path,opts={}){
+  const headers={...(opts.headers||{})};
+  if(token)headers.Authorization="Bearer "+token;
+  const r=await fetch(API+path,{...opts,headers});
+  if(!r.ok){const e=await r.json().catch(()=>({detail:r.statusText}));throw new Error(e.detail||r.statusText)}
+  return r.json();
+}
+function saveState(now=false){
+  state.windows=sanitizeWindows(state.windows);
+  localStorage.setItem(LS_STATE,JSON.stringify(state));
+  if(!token){setSync("local");return}
+  setSync("saving");
+  clearTimeout(syncTimer);
+  const run=async()=>{try{await apiFetch("/desktop/state",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({state})});setSync("synced")}catch{setSync("error")}};
+  now?run():syncTimer=setTimeout(run,650);
+}
+async function loadServerState(){
+  if(!token)return;
+  try{const res=await apiFetch("/desktop/state");if(res&&!res.is_default&&res.state){state=mergeState(res.state);localStorage.setItem(LS_STATE,JSON.stringify(state))}setSync("synced")}catch{setSync("error")}
+}
+function sanitizeWindows(wins){
+  let focused=false;
+  return (wins||[]).filter(w=>appDefs[w.app]).map((w,i)=>{
+    const d=appDefs[w.app], ww=Math.max(320,innerWidth-18), wh=Math.max(210,innerHeight-60);
+    const out={id:w.id||uid("win"),app:w.app,title:w.title||d.title,icon:w.icon||d.icon,x:clamp(Number(w.x)||80,0,Math.max(0,innerWidth-100)),y:clamp(Number(w.y)||60,0,Math.max(0,innerHeight-80)),w:clamp(Number(w.w)||d.w,286,ww),h:clamp(Number(w.h)||d.h,170,wh),z:Number(w.z)||100+i,minimized:!!w.minimized,maximized:!!w.maximized,focused:!!w.focused&&!focused,data:w.data||{}};
+    if(out.focused)focused=true; zTop=Math.max(zTop,out.z); return out;
+  });
+}
+function applyTheme(){
+  document.documentElement.style.setProperty("--accent",state.accent||"#2563eb");
+  const wall=document.getElementById("wallpaper");
+  const picked=wallpaperChoices.find(w=>w.id===state.wallpaper);
+  wall.className="wallpaper "+((picked&&picked.cls)||"");
+  if(String(state.wallpaper||"").startsWith("url:")){
+    const url=state.wallpaper.slice(4);
+    wall.style.background=`linear-gradient(140deg,rgba(4,12,24,.08),rgba(0,0,0,.22)),url('${url}') center/cover no-repeat`;
+  }else if(!picked||!picked.cls){
+    wall.style.background=(picked||wallpaperChoices[0]).bg;
+  }else{
+    wall.style.background="";
+  }
+  wall.style.filter=state.wallpaper==="dark"||state.wallpaper==="midnight"?"brightness(.78)":"";
+}
+function switchScreen(next){screen=next;["lockScreen","loginScreen","welcomeScreen","desktop","taskbar"].forEach(id=>document.getElementById(id).classList.add("hidden"));if(next==="lock")document.getElementById("lockScreen").classList.remove("hidden");if(next==="login")document.getElementById("loginScreen").classList.remove("hidden");if(next==="welcome")document.getElementById("welcomeScreen").classList.remove("hidden");if(next==="desktop"){document.getElementById("desktop").classList.remove("hidden");document.getElementById("taskbar").classList.remove("hidden");renderAll()}}
+function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+async function showWelcomeAnimation(user){
+  const welcome=document.getElementById("welcomeScreen"),line=document.getElementById("welcomeLine");
+  if(!welcome||!line)return;
+  const name=String(user||"User").trim()||"User",message=`Welcome, ${name}`;
+  welcome.classList.remove("welcome-out");
+  line.textContent="";
+  switchScreen("welcome");
+  await wait(320);
+  const delay=clamp(Math.round(2500/message.length),55,120);
+  for(const ch of message){line.textContent+=ch;await wait(ch===" "?delay*1.7:delay)}
+  await wait(900);
+  welcome.classList.add("welcome-out");
+  await wait(900);
+}
+function tick(){const n=new Date();document.getElementById("lockTime").textContent=n.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});document.getElementById("lockDate").textContent=n.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"});renderClock();const mt=document.getElementById("memoryTimer"),g=state.games&&state.games.memory;if(mt&&g&&g.startedAt&&!g.done)mt.textContent=String(Math.floor((Date.now()-g.startedAt)/1000))}
+setInterval(tick,1000);
+document.getElementById("lockScreen").addEventListener("click",()=>switchScreen("login"));
+document.querySelectorAll("[data-auth-tab]").forEach(b=>b.addEventListener("click",()=>{authMode=b.dataset.authTab;document.querySelectorAll("[data-auth-tab]").forEach(x=>x.classList.toggle("active",x.dataset.authTab===authMode));document.getElementById("loginSubmit").textContent=authMode==="login"?"Sign in":"Create"}));
+document.getElementById("loginUser").addEventListener("input",e=>document.getElementById("loginAvatar").textContent=(e.target.value||"U")[0].toUpperCase());
+document.getElementById("localLogin").addEventListener("click",()=>{currentUser=document.getElementById("loginUser").value.trim()||"Local User";token="";localStorage.removeItem(LS_TOKEN);localStorage.setItem(LS_USER,currentUser);switchScreen("desktop")});
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();const u=document.getElementById("loginUser").value.trim(),p=document.getElementById("loginPass").value.trim(),err=document.getElementById("loginError");err.textContent="";
+  if(u.length<3||p.length<4){err.textContent="Username/password too short.";return}
+  try{
+    const wasSignup=authMode==="register";
+    if(wasSignup){const rr=await fetch("/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:p})});if(!rr.ok){const m=await rr.json().catch(()=>({detail:"Register failed"}));throw new Error(m.detail)}}
+    const r=await fetch("/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:p})});if(!r.ok){const m=await r.json().catch(()=>({detail:"Login failed"}));throw new Error(m.detail)}
+    const data=await r.json();token=data.token||data.access_token;currentUser=data.username||u;localStorage.setItem(LS_TOKEN,token);localStorage.setItem(LS_USER,currentUser);await loadServerState();if(wasSignup)await showWelcomeAnimation(currentUser);switchScreen("desktop");
+  }catch(ex){err.textContent=ex.message}
+});
+
+function extOf(name){const m=String(name||"").match(/(\.[a-z0-9]+)$/i);return m?m[1].toLowerCase():""}
+function fileIcon(name){const ext=extOf(name);return [".txt",".md",".json",".js",".html",".css",".py"].includes(ext)?icon("file",34):icon("file",34)}
+function findFile(id){for(const folder of folders){const f=(state.vfs[folder]||[]).find(x=>x.id===id);if(f)return{folder,file:f}}return null}
+function createFile(folder,name,content=""){let clean=(name||"New Text Document.txt").trim();if(!/\.[a-z0-9]+$/i.test(clean))clean+=".txt";const ext=extOf(clean);const f=fileObj(clean,content || fileTemplates[ext] || "");state.vfs[folder]=[...(state.vfs[folder]||[]),f];saveState();return f}
+function updateFile(id,patch){const found=findFile(id);if(!found)return;state.vfs[found.folder]=state.vfs[found.folder].map(f=>f.id===id?{...f,...patch,updatedAt:iso()}:f);saveState()}
+function deleteFile(id){const found=findFile(id);if(!found)return;state.vfs[found.folder]=state.vfs[found.folder].filter(f=>f.id!==id);saveState();renderAll()}
+function openApp(app,data={}){
+  const d=appDefs[app];if(!d)return;
+  if(d.single){const existing=state.windows.find(w=>w.app===app);if(existing){existing.minimized=false;focusWindow(existing.id);renderAll();return}}
+  zTop++;const offset=Math.min(80,state.windows.length*22);
+  state.windows.forEach(w=>w.focused=false);
+  state.windows.push({id:uid("win"),app,title:d.title,icon:d.icon,x:clamp(Math.round((innerWidth-d.w)/2)+offset,4,innerWidth-120),y:clamp(Math.round((innerHeight-48-d.h)/2)+offset,4,innerHeight-90),w:Math.min(d.w,innerWidth-12),h:Math.min(d.h,innerHeight-56),z:zTop,minimized:false,maximized:false,focused:true,data});
+  saveState();renderAll();
+}
+function focusWindow(id){zTop++;state.windows.forEach(w=>{w.focused=w.id===id;if(w.id===id){w.z=zTop;w.minimized=false}});saveState()}
+function closeWindow(id){state.windows=state.windows.filter(w=>w.id!==id);saveState();renderAll()}
+function minWindow(id){const w=state.windows.find(x=>x.id===id);if(w){w.minimized=true;w.focused=false;saveState();renderAll()}}
+function maxWindow(id){const w=state.windows.find(x=>x.id===id);if(w){w.maximized=!w.maximized;focusWindow(id);renderAll()}}
+function renderAll(){applyTheme();renderDesktop();renderWindows();renderTaskbar();renderStart();renderCalendarPop()}
+function renderDesktop(){
+  const el=document.getElementById("desktopIcons");
+  const desktopApps=["explorer","chromium","notepad","google","youtube","calculator","camera","tictactoe","memory","settings"];
+  const appIcons=desktopApps.map(a=>`<button class="desk-icon" data-open="${a}"><span class="app-ico">${icon(appDefs[a].icon,34)}</span><span class="desk-label">${appDefs[a].title}</span></button>`).join("");
+  const files=(state.vfs.Desktop||[]).map(f=>`<button class="desk-icon" data-file="${f.id}"><span class="app-ico">${fileIcon(f.name)}</span><span class="desk-label">${escapeHtml(f.name)}</span></button>`).join("");
+  el.innerHTML=appIcons+files;el.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("dblclick",()=>openApp(b.dataset.open)));el.querySelectorAll("[data-file]").forEach(b=>b.addEventListener("dblclick",()=>openApp("notepad",{fileId:b.dataset.file})));
+}
+function renderWindows(){
+  const root=document.getElementById("windows");
+  root.innerHTML=state.windows.map(w=>w.minimized?"":`<section class="window ${w.focused?"focused":""} ${w.maximized?"maximized":""}" data-win="${w.id}" style="${w.maximized?`left:0;top:0;width:100vw;height:calc(100vh - var(--taskbar-h));z-index:${w.z}`:`left:${w.x}px;top:${w.y}px;width:${w.w}px;height:${w.h}px;z-index:${w.z}`}">
+    <div class="titlebar drag" data-drag="${w.id}"><span class="win-ico">${icon(w.icon,16)}</span><span class="win-title">${escapeHtml(w.title)}</span><div class="win-controls"><button class="win-control" data-min="${w.id}">${icon("minus",12)}</button><button class="win-control" data-max="${w.id}">${icon("square",12)}</button><button class="win-control close" data-close="${w.id}">${icon("close",13)}</button></div></div>
+    <div class="win-body">${renderApp(w)}</div>${w.maximized?"":["n","s","e","w","ne","nw","se","sw"].map(h=>`<div class="resize-handle ${h}" data-resize="${w.id}:${h}"></div>`).join("")}</section>`).join("");
+  root.querySelectorAll("[data-win]").forEach(e=>e.addEventListener("mousedown",()=>focusWindow(e.dataset.win),{capture:true}));
+  root.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();closeWindow(b.dataset.close)}));
+  root.querySelectorAll("[data-min]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();minWindow(b.dataset.min)}));
+  root.querySelectorAll("[data-max]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();maxWindow(b.dataset.max)}));
+  root.querySelectorAll("[data-drag]").forEach(b=>b.addEventListener("mousedown",startDrag));
+  root.querySelectorAll("[data-resize]").forEach(b=>b.addEventListener("mousedown",startResize));
+  attachHandlers(root);
+  attachCameraStreams();
+}
+function startDrag(e){if(e.target.closest(".win-controls"))return;const id=e.currentTarget.dataset.drag,w=state.windows.find(x=>x.id===id);if(!w||w.maximized)return;focusWindow(id);const el=document.querySelector(`[data-win="${id}"]`),sx=e.clientX,sy=e.clientY,ox=w.x,oy=w.y;function mv(ev){w.x=clamp(ox+ev.clientX-sx,0,innerWidth-90);w.y=clamp(oy+ev.clientY-sy,0,innerHeight-60);el.style.left=w.x+"px";el.style.top=w.y+"px";saveState()}function up(){document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);saveState(true)}document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up)}
+function startResize(e){e.stopPropagation();const parts=e.currentTarget.dataset.resize.split(":"),id=parts[0],dir=parts[1]||"se",w=state.windows.find(x=>x.id===id),el=document.querySelector(`[data-win="${id}"]`),sx=e.clientX,sy=e.clientY,ox=w.x,oy=w.y,ow=w.w,oh=w.h,minW=appDefs[w.app]?.minW||286,minH=appDefs[w.app]?.minH||170;function mv(ev){let dx=ev.clientX-sx,dy=ev.clientY-sy,nx=ox,ny=oy,nw=ow,nh=oh;if(dir.includes("e"))nw=ow+dx;if(dir.includes("s"))nh=oh+dy;if(dir.includes("w")){nw=ow-dx;nx=ox+dx;if(nw<minW){nx=ox+ow-minW;nw=minW}}if(dir.includes("n")){nh=oh-dy;ny=oy+dy;if(nh<minH){ny=oy+oh-minH;nh=minH}}nx=clamp(nx,0,innerWidth-minW);ny=clamp(ny,0,innerHeight-varTaskbar()-minH);nw=clamp(nw,minW,innerWidth-nx);nh=clamp(nh,minH,innerHeight-varTaskbar()-ny);Object.assign(w,{x:nx,y:ny,w:nw,h:nh});el.style.left=nx+"px";el.style.top=ny+"px";el.style.width=nw+"px";el.style.height=nh+"px"}function up(){document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);saveState(true)}document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up)}
+function varTaskbar(){return parseInt(getComputedStyle(document.documentElement).getPropertyValue("--taskbar-h"))||48}
+function renderClock(){const t=document.querySelector(".clock-time"),d=document.querySelector(".clock-date");if(!t||!d)return;const n=new Date();t.textContent=n.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});d.textContent=n.toLocaleDateString([],{month:"numeric",day:"numeric"})}
+function batteryLabel(){return batteryState.level==null?"--%":`${batteryState.level}%${batteryState.charging?" ⚡":""}`}
+function renderTaskbar(){if(screen!=="desktop")return;const cls=syncState==="synced"?"synced":syncState==="saving"?"saving":syncState==="error"?"error":"";document.getElementById("taskbar").innerHTML=`<div class="tb-left"><span class="sync ${cls}"></span><span style="font-size:12px;color:#334155">${escapeHtml(currentUser||"Local")}</span></div><div class="tb-center"><button class="start-btn" id="startBtn">${icon("start",22)}</button><button class="search-box" id="searchBtn">${icon("search",15)}<span>Search</span></button>${pinned.map(a=>`<button class="tb-btn" data-pin="${a}"><span>${icon(appDefs[a].icon,22)}</span><span class="tb-tip">${appDefs[a].title}</span></button>`).join("")}${state.windows.map(w=>`<button class="tb-btn ${w.focused&&!w.minimized?"active":"running"}" data-task="${w.id}"><span>${icon(w.icon,22)}</span><span class="tb-tip">${escapeHtml(w.title)}</span></button>`).join("")}</div><div class="tb-right"><div class="tray">${icon("wifi",16)}${icon("volume",16)}${icon("battery",18)}<span class="battery-text">${batteryLabel()}</span></div><button class="clock-zone" id="clockBtn"><span class="clock-time"></span><span class="clock-date"></span></button></div>`;
+  document.getElementById("startBtn").addEventListener("click",()=>toggleStart());
+  document.getElementById("searchBtn").addEventListener("click",()=>toggleStart(true));
+  document.getElementById("clockBtn").addEventListener("click",()=>toggleCalendar());
+  document.querySelectorAll("[data-pin]").forEach(b=>b.addEventListener("click",()=>openApp(b.dataset.pin)));
+  document.querySelectorAll("[data-task]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.task);if(!w)return;if(w.focused&&!w.minimized)w.minimized=true;else focusWindow(w.id);saveState();renderAll()}));
+  renderClock();
+}
+function renderStart(){const el=document.getElementById("startMenu");el.innerHTML=`<input class="start-search" id="startSearch" placeholder="Type here to search"><div class="start-sec">Pinned</div><div class="start-grid">${Object.entries(appDefs).map(([id,a])=>`<button class="start-app" data-start="${id}"><span class="app-ico">${icon(a.icon,30)}</span><span class="start-app-name">${a.title}</span></button>`).join("")}</div><div class="start-footer"><div class="user-chip"><span class="avatar">${escapeHtml((currentUser||"U")[0].toUpperCase())}</span><span>${escapeHtml(currentUser||"Local User")}</span></div><button class="power-btn" id="logoutBtn">${icon("power",17)}</button></div>`;el.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>{openApp(b.dataset.start);toggleStart(false)}));document.getElementById("logoutBtn").addEventListener("click",logout);document.getElementById("startSearch").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.value.trim()){openApp("google",{query:e.target.value.trim()});toggleStart(false)}})}
+function toggleStart(force){const el=document.getElementById("startMenu");const open=typeof force==="boolean"?force:!el.classList.contains("open");el.classList.toggle("open",open);document.getElementById("startBtn")?.classList.toggle("open",open);if(open)setTimeout(()=>document.getElementById("startSearch")?.focus(),20)}
+function toggleCalendar(force){const el=document.getElementById("calendarPop");el.classList.toggle("open",typeof force==="boolean"?force:!el.classList.contains("open"));renderCalendarPop()}
+function renderCalendarPop(){const el=document.getElementById("calendarPop"),y=calendarView.getFullYear(),m=calendarView.getMonth();el.innerHTML=`<div class="cal-head"><div class="cal-title">${calendarView.toLocaleDateString([],{month:"long",year:"numeric"})}</div><div class="cal-nav"><button id="calPrev">&lt;</button><button id="calNext">&gt;</button></div></div>${calendarGrid(y,m)}<button class="tool-btn primary" style="width:100%;margin-top:12px" id="openCal">Open Calendar</button>`;el.querySelector("#calPrev").addEventListener("click",()=>{calendarView.setMonth(calendarView.getMonth()-1);renderCalendarPop()});el.querySelector("#calNext").addEventListener("click",()=>{calendarView.setMonth(calendarView.getMonth()+1);renderCalendarPop()});el.querySelector("#openCal").addEventListener("click",()=>{openApp("calendar");toggleCalendar(false)})}
+function calendarGrid(y,m){const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),today=new Date();let html=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div class="cal-dow">${d}</div>`).join("");for(let i=0;i<first;i++)html+="<div></div>";for(let d=1;d<=days;d++){const key=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,cls=`${today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d?"today":""} ${(state.events[key]||[]).length?"has":""}`;html+=`<button class="cal-day ${cls}" data-date="${key}">${d}</button>`}return`<div class="cal-grid">${html}</div>`}
+function renderApp(w){return ({explorer:explorerApp,notepad:notepadApp,chromium:chromiumApp,google:googleApp,youtube:youtubeApp,calendar:calendarApp,apis:apisApp,todo:todoApp,calculator:calculatorApp,camera:cameraApp,tictactoe:ticTacToeApp,memory:memoryApp,settings:settingsApp}[w.app]||(()=>"<div></div>"))(w)}
+function explorerApp(w){const folder=w.data.folder||"Documents",files=state.vfs[folder]||[];return`<div class="app-shell"><div class="toolbar"><input class="tool-input" id="new_${w.id}" placeholder="New file name"><button class="tool-btn primary" data-new-file="${w.id}">New</button><button class="tool-btn" data-open-note="${w.id}">Notepad</button></div><div class="split"><aside class="sidebar">${folders.map(f=>`<button class="side-item ${f===folder?"active":""}" data-folder="${w.id}:${f}">${icon("folder",18)} ${f}</button>`).join("")}</aside><main class="main-pane"><div class="pathbar">This PC / ${folder}</div><div class="file-grid">${files.length?files.map(f=>`<button class="file-card" data-file-open="${f.id}"><span class="app-ico">${fileIcon(f.name)}</span><span class="file-name">${escapeHtml(f.name)}</span><button class="tool-btn danger" style="position:absolute;right:4px;top:4px;height:22px;padding:0 7px" data-file-del="${f.id}">x</button></button>`).join(""):`<div class="empty">This folder is empty.</div>`}</div></main></div></div>`}
+function notepadApp(w){const found=w.data.fileId?findFile(w.data.fileId):null,file=found&&found.file,name=file?file.name:(w.data.name||"Untitled.txt"),text=file?file.content:(w.data.content||""),words=text.trim()?text.trim().split(/\s+/).length:0;return`<div class="notepad"><div class="note-bar"><input class="note-title" data-note-name="${w.id}" value="${escapeHtml(name)}"><span class="note-stat" id="stat_${w.id}">${words} words, ${text.length} chars</span><button class="tool-btn primary" data-note-save="${w.id}">Save</button></div><textarea class="note-area" data-note-text="${w.id}" spellcheck="false">${escapeHtml(text)}</textarea></div>`}
+function tabDefaults(w){if(!w.data.tabs)w.data.tabs=[{id:uid("tab"),title:"New tab",url:"about:blank"}];if(!w.data.activeTab)w.data.activeTab=w.data.tabs[0].id;return w.data.tabs.find(t=>t.id===w.data.activeTab)||w.data.tabs[0]}
+function normUrl(v){v=(v||"").trim();if(!v)return"about:blank";if(/\s/.test(v))return"https://www.google.com/search?q="+encodeURIComponent(v);if(/^https?:\/\//i.test(v))return v;return"https://"+v}
+function chromiumContent(tab){
+  if(tab.loading)return'<div class="browser-start"><div><h3>Loading</h3><p>Fetching the page...</p></div></div>';
+  if(tab.error)return`<div class="browser-start"><div><h3>Could not load</h3><p>${escapeHtml(tab.error)}</p></div></div>`;
+  if(tab.results)return`<main class="main-pane"><div class="results">${renderWebResults(tab.results)}</div></main>`;
+  if(!tab.url||tab.url==="about:blank")return'<div class="browser-start"><div><h3>Chromium</h3><p>Type a search or URL in the address bar.</p></div></div>';
+  const url=normUrl(tab.url);
+  return`<iframe src="/api/browser/page?url=${encodeURIComponent(url)}"></iframe><button class="browser-open" data-open-external="${escapeHtml(url)}">Open original page</button><div class="browser-note">Chromium web view</div>`;
+}
+function chromiumApp(w){const tab=tabDefaults(w);return`<div class="chrome"><div class="chrome-tabs">${w.data.tabs.map(t=>`<button class="chrome-tab ${t.id===w.data.activeTab?"active":""}" data-tab="${w.id}:${t.id}"><span>${icon("chromium",15)}</span><span class="chrome-tab-title">${escapeHtml(t.title||t.url)}</span><span data-tab-close="${w.id}:${t.id}">x</span></button>`).join("")}<button class="chrome-plus" data-tab-new="${w.id}">+</button></div><div class="chrome-toolbar"><button class="chrome-icon-btn">${icon("back",16)}</button><button class="chrome-icon-btn">${icon("forward",16)}</button><button class="chrome-icon-btn" data-refresh-tab="${w.id}">${icon("refresh",16)}</button><input class="omnibox" data-url="${w.id}" value="${escapeHtml(tab.url==="about:blank"?"":tab.url)}" placeholder="Search or enter address"><button class="tool-btn primary" data-go="${w.id}">Go</button><button class="tool-btn" data-ext="${w.id}">Open</button></div><div class="browser-view">${chromiumContent(tab)}</div></div>`}
+function googleApp(w){const q=w.data.query||"";return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="flex:1" data-google-q="${w.id}" value="${escapeHtml(q)}" placeholder="Search the web"><button class="tool-btn primary" data-google-go="${w.id}">Search</button></div><main class="main-pane"><div class="results" id="google_${w.id}">${w.data.results?renderWebResults(w.data.results):"Search from the box above."}</div></main></div>`}
+function renderWebResults(results){return(results||[]).map(r=>`<div class="result"><div><div class="result-title">${escapeHtml(r.title)}</div><div class="result-url">${escapeHtml(r.url)}</div><div class="result-text">${escapeHtml(r.snippet||"")}</div><button class="tool-btn primary" style="margin-top:8px" data-open-url="${escapeHtml(r.url)}">Open in Chromium</button></div></div>`).join("")||'<div class="empty">No results.</div>'}
+function youtubeApp(w){const q=w.data.query||"lofi";return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="flex:1" data-yt-q="${w.id}" value="${escapeHtml(q)}" placeholder="Search YouTube"><button class="tool-btn primary" data-yt-go="${w.id}">Search</button></div><div class="split">${w.data.embed?`<main style="flex:1;background:#000"><iframe style="width:100%;height:100%;border:0" allowfullscreen src="${escapeHtml(w.data.embed)}"></iframe></main>`:""}<aside class="main-pane" style="${w.data.embed?"width:340px;flex:0 0 340px":""}"><div class="results" id="yt_${w.id}">${w.data.results?renderYtResults(w.data.results):"Search videos."}</div></aside></div></div>`}
+function renderYtResults(results){return(results||[]).map(r=>`<button class="result" data-yt-open="${escapeHtml(r.embed_url)}"><img class="thumb" src="${escapeHtml(r.thumb)}" alt=""><div><div class="result-title">${escapeHtml(r.title)}</div><div class="result-url">youtube.com/watch?v=${escapeHtml(r.id)}</div></div></button>`).join("")||'<div class="empty">No videos.</div>'}
+function calendarApp(w){const y=w.data.year||new Date().getFullYear(),m=w.data.month??new Date().getMonth(),sel=w.data.selected||new Date().toISOString().slice(0,10),evs=state.events[sel]||[];return`<div class="app-shell"><div class="toolbar"><button class="tool-btn" data-cal-prev="${w.id}">&lt;</button><strong style="min-width:190px;text-align:center">${new Date(y,m,1).toLocaleDateString([],{month:"long",year:"numeric"})}</strong><button class="tool-btn" data-cal-next="${w.id}">&gt;</button></div><div class="split"><main class="main-pane">${calendarGrid(y,m)}</main><aside class="sidebar" style="width:240px"><div class="pathbar">${sel}</div><input class="tool-input" style="width:100%;margin-bottom:8px" data-event-title="${w.id}" placeholder="New event"><button class="tool-btn primary" style="width:100%;margin-bottom:10px" data-event-add="${w.id}">Add</button>${evs.length?evs.map(e=>`<div class="event-row"><span style="flex:1">${escapeHtml(e.title)}</span><button class="tool-btn danger" data-event-del="${w.id}:${e.id}">x</button></div>`).join(""):`<div class="empty">No events.</div>`}</aside></div></div>`}
+function apisApp(w){return`<div class="app-shell"><div class="toolbar"><input class="tool-input" id="city_${w.id}" value="Delhi"><button class="tool-btn primary" data-weather="${w.id}">Weather</button><button class="tool-btn" data-system="${w.id}">System</button></div><main class="main-pane"><div class="cards" id="api_${w.id}"><div class="card"><div class="card-label">API console</div><div>Ready.</div></div></div></main></div>`}
+function todoApp(){return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="flex:1" data-todo-input placeholder="Add task"><button class="tool-btn primary" data-todo-add>Add</button></div><main class="main-pane">${state.todos.length?state.todos.map(t=>`<button class="todo-row ${t.done?"done":""}" data-todo-toggle="${t.id}"><span class="check">${t.done?"v":""}</span><span class="todo-text" style="flex:1;text-align:left">${escapeHtml(t.text)}</span><button class="tool-btn danger" data-todo-del="${t.id}">x</button></button>`).join(""):`<div class="empty">No tasks.</div>`}</main></div>`}
+function calculatorApp(){const c=getCalc(),keys=["AC","Back","%","/","7","8","9","*","4","5","6","-","1","2","3","+","+/-","0",".","="];return`<div class="calc"><div class="calc-screen"><div class="calc-history">${escapeHtml(c.history||"")}</div><div class="calc-display" id="calcDisplay">${escapeHtml(c.display||"0")}</div></div><div class="calc-grid">${keys.map(k=>`<button class="calc-key ${"/*-+=".includes(k)?"op":""} ${k==="="?"eq":""} ${["AC","Back","%","+/-"].includes(k)?"utility":""}" data-calc="${k}" style="${k==="0"?"grid-column:span 1":""}">${k}</button>`).join("")}</div></div>`}
+function ticTacToeApp(){const g=getTtt(),wins=winningLine(g.board)||[];return`<div class="app-shell"><div class="toolbar"><div class="segmented"><button class="${g.mode==="ai"?"active":""}" data-ttt-mode="ai">Vs AI</button><button class="${g.mode==="pvp"?"active":""}" data-ttt-mode="pvp">2 Player</button></div><button class="tool-btn primary" data-ttt-reset>New Game</button></div><main class="main-pane"><div class="game-stats"><strong>${escapeHtml(g.status)}</strong><span>X ${g.scores.x} / O ${g.scores.o} / Draw ${g.scores.draw}</span></div><div class="game-board ttt-board">${g.board.map((v,i)=>`<button class="ttt-cell ${wins.includes(i)?"matched":""}" data-ttt-cell="${i}">${escapeHtml(v)}</button>`).join("")}</div></main></div>`}
+function memoryApp(){const g=getMemory();const elapsed=g.startedAt&&!g.done?Math.floor((Date.now()-g.startedAt)/1000):g.elapsed||0;return`<div class="app-shell"><div class="toolbar"><button class="tool-btn primary" data-memory-reset>New Board</button><span class="muted">Moves ${g.moves} / Matches ${g.matched.length/2} / Time <span id="memoryTimer">${elapsed}</span>s</span></div><main class="main-pane"><div class="game-stats"><strong>${g.done?"Board cleared":"Find every pair"}</strong><span>${g.flipped.length?`${g.flipped.length} selected`:"Choose a card"}</span></div><div class="game-board memory-board">${g.cards.map((card,i)=>{const on=g.flipped.includes(i)||g.matched.includes(i);return`<button class="memory-card ${on?"flipped":""} ${g.matched.includes(i)?"matched":""}" data-memory-card="${i}">${on?escapeHtml(card):""}</button>`}).join("")}</div></main></div>`}
+function cameraApp(){const c=state.camera||{};const phoneUrl=c.phoneUrl||"";return`<div class="camera-shell"><main class="camera-stage"><video id="cameraVideo" class="camera-video ${c.mirror?"mirror":""}" autoplay playsinline muted></video></main><aside class="camera-side"><h2 style="font-weight:500;margin-bottom:8px">Camera</h2><div class="camera-status">${escapeHtml(c.status||"Camera ready.")}</div><button class="tool-btn primary" style="width:100%;margin-bottom:8px" data-camera-local>Start Local Camera</button><button class="tool-btn" style="width:100%;margin-bottom:8px" data-camera-phone>Use Phone Camera</button><button class="tool-btn" style="width:100%;margin-bottom:8px" data-camera-mirror>${c.mirror?"Mirror On":"Mirror Off"}</button><button class="tool-btn" style="width:100%;margin-bottom:8px" data-camera-shot>Capture Snapshot</button>${phoneUrl?`<div class="qr-box"><img alt="Phone camera QR" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(phoneUrl)}"></div><input class="tool-input" style="width:100%;margin-bottom:8px" readonly value="${escapeHtml(phoneUrl)}"><div class="camera-status">Open this link on your phone and allow camera access.</div>`:""}${c.photo?`<img class="camera-shot" alt="Captured snapshot" src="${c.photo}">`:""}</aside></div>`}
+function settingsApp(){return`<div class="app-shell"><main class="main-pane"><h2 style="font-weight:500;margin-bottom:12px">Settings</h2><div class="settings-row"><div><strong>Accent color</strong><div class="muted">Used for taskbar and focused controls.</div></div><div class="swatches">${accents.map(c=>`<button class="swatch ${state.accent===c?"active":""}" style="background:${c}" data-accent="${c}"></button>`).join("")}</div></div><div class="settings-row"><div><strong>Animated wallpaper</strong><div class="muted">Glass, liquid, and calm motion themes.</div></div><div class="wall-grid">${wallpaperChoices.map(w=>`<button class="wall-thumb ${state.wallpaper===w.id?"active":""}" style="background:${w.bg}" data-wallpaper="${w.id}"><span>${escapeHtml(w.name)}</span></button>`).join("")}</div></div><div class="settings-row"><div><strong>Persistence</strong><div class="muted">${token?"Local and server sync":"Local mode"}</div></div><button class="tool-btn primary" data-force-sync>Save now</button></div><div class="settings-row"><div><strong>Reset OS</strong><div class="muted">Restore default desktop.</div></div><button class="tool-btn danger" data-reset>Reset</button></div></main></div>`}
+function getCalc(){state.calc={display:"0",stored:null,operator:null,waiting:false,history:"",...(state.calc||{})};return state.calc}
+function getTtt(){const base={board:Array(9).fill(""),turn:"X",mode:"ai",status:"Your move",scores:{x:0,o:0,draw:0}};state.games=state.games||{};state.games.ttt={...base,...(state.games.ttt||{}),scores:{...base.scores,...((state.games.ttt&&state.games.ttt.scores)||{})}};return state.games.ttt}
+function resetTtt(keepScores=true){const old=getTtt();state.games.ttt={board:Array(9).fill(""),turn:"X",mode:old.mode,status:"Your move",scores:keepScores?old.scores:{x:0,o:0,draw:0}};saveState();renderAll()}
+function winningLine(board){return[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]].find(line=>line.every(i=>board[i]&&board[i]===board[line[0]]))}
+function finishTttIfNeeded(g){const win=winningLine(g.board);if(win){const who=g.board[win[0]];g.status=`${who} wins`;g.scores[who.toLowerCase()]++;return true}if(g.board.every(Boolean)){g.status="Draw";g.scores.draw++;return true}return false}
+function bestTttMove(board){const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]],pick=mark=>{for(const l of lines){const vals=l.map(i=>board[i]);if(vals.filter(v=>v===mark).length===2&&vals.includes(""))return l[vals.indexOf("")]}return null};return pick("O")??pick("X")??[4,0,2,6,8,1,3,5,7].find(i=>!board[i])}
+function playTtt(i){const g=getTtt();if(g.board[i]||winningLine(g.board)||g.board.every(Boolean))return;g.board[i]=g.turn;if(finishTttIfNeeded(g)){saveState();renderAll();return}if(g.mode==="ai"&&g.turn==="X"){g.turn="O";const ai=bestTttMove(g.board);if(ai!=null)g.board[ai]="O";finishTttIfNeeded(g);g.turn="X";if(!winningLine(g.board)&&!g.board.every(Boolean))g.status="Your move"}else{g.turn=g.turn==="X"?"O":"X";g.status=`${g.turn}'s turn`}saveState();renderAll()}
+function newMemoryDeck(){const faces=["A","B","C","D","E","F","G","H"],deck=[...faces,...faces].sort(()=>Math.random()-.5);return{cards:deck,flipped:[],matched:[],moves:0,startedAt:Date.now(),elapsed:0,done:false}}
+function getMemory(){state.games=state.games||{};if(!state.games.memory)state.games.memory=newMemoryDeck();return state.games.memory}
+function resetMemory(){state.games.memory=newMemoryDeck();saveState();renderAll()}
+function playMemory(i){const g=getMemory();if(g.done||g.matched.includes(i)||g.flipped.includes(i))return;if(g.flipped.length===2){const[a,b]=g.flipped;if(g.cards[a]!==g.cards[b])g.flipped=[]}g.flipped.push(i);if(g.flipped.length===2){g.moves++;const[a,b]=g.flipped;if(g.cards[a]===g.cards[b]){g.matched.push(a,b);g.flipped=[];if(g.matched.length===g.cards.length){g.done=true;g.elapsed=Math.floor((Date.now()-g.startedAt)/1000)}}}saveState();renderAll()}
+function loadPeer(){return new Promise((resolve,reject)=>{if(window.Peer)return resolve(window.Peer);const s=document.createElement("script");s.src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js";s.onload=()=>resolve(window.Peer);s.onerror=()=>reject(new Error("Could not load phone camera bridge."));document.head.appendChild(s)})}
+function attachCameraStreams(){const v=document.getElementById("cameraVideo");if(!v)return;const stream=phoneStream||cameraStream;if(stream&&v.srcObject!==stream)v.srcObject=stream}
+async function startLocalCamera(){try{cameraStream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});state.camera.status="Local camera connected.";saveState();renderAll()}catch(e){state.camera.status=e.message||"Camera permission denied.";saveState();renderAll()}}
+async function startPhoneCamera(){try{const Peer=await loadPeer();if(cameraPeer)cameraPeer.destroy();cameraPeer=new Peer();state.camera.status="Preparing phone camera link...";saveState();renderAll();cameraPeer.on("open",id=>{cameraPeerId=id;state.camera.phoneUrl=`${location.origin}${location.pathname}?phoneCamera=${encodeURIComponent(id)}`;state.camera.status="Scan the QR code with your phone.";saveState();renderAll()});cameraPeer.on("call",call=>{call.answer();call.on("stream",stream=>{phoneStream=stream;state.camera.status="Phone camera connected.";saveState();renderAll()})});cameraPeer.on("error",err=>{state.camera.status=err.message||"Phone camera bridge failed.";saveState();renderAll()})}catch(e){state.camera.status=e.message;saveState();renderAll()}}
+function captureCamera(){const v=document.getElementById("cameraVideo");if(!v||!v.videoWidth){state.camera.status="No camera frame available yet.";saveState();renderAll();return}const canvas=document.createElement("canvas");canvas.width=v.videoWidth;canvas.height=v.videoHeight;const ctx=canvas.getContext("2d");if(state.camera.mirror){ctx.translate(canvas.width,0);ctx.scale(-1,1)}ctx.drawImage(v,0,0);state.camera.photo=canvas.toDataURL("image/png");state.camera.status="Snapshot captured.";saveState();renderAll()}
+async function renderPhoneCameraPortal(targetId){document.body.innerHTML=`<main class="phone-portal"><section class="phone-card"><h1>WinOS Phone Camera</h1><p id="phoneStatus">Allow camera access to stream to WinOS.</p><video id="phoneVideo" autoplay playsinline muted></video><button class="login-btn" id="phoneStart">Start Phone Camera</button></section></main>`;document.getElementById("phoneStart").addEventListener("click",async()=>{const status=document.getElementById("phoneStatus");try{const Peer=await loadPeer(),stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false});document.getElementById("phoneVideo").srcObject=stream;const peer=new Peer();peer.on("open",()=>{peer.call(targetId,stream);status.textContent="Streaming to WinOS. Keep this page open."});peer.on("error",e=>status.textContent=e.message||"Connection failed.")}catch(e){status.textContent=e.message||"Camera failed."}})}
+function attachHandlers(root){
+  root.querySelectorAll("[data-folder]").forEach(b=>b.addEventListener("click",()=>{const[id,f]=b.dataset.folder.split(":");const w=state.windows.find(x=>x.id===id);w.data.folder=f;saveState();renderAll()}));
+  root.querySelectorAll("[data-new-file]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.newFile),input=document.getElementById("new_"+w.id);createFile(w.data.folder||"Documents",input.value||"New Text Document.txt");renderAll()}));
+  root.querySelectorAll("[data-open-note]").forEach(b=>b.addEventListener("click",()=>openApp("notepad")));
+  root.querySelectorAll("[data-file-open]").forEach(b=>b.addEventListener("dblclick",()=>openApp("notepad",{fileId:b.dataset.fileOpen})));
+  root.querySelectorAll("[data-file-del]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();deleteFile(b.dataset.fileDel)}));
+  root.querySelectorAll("[data-note-text]").forEach(a=>a.addEventListener("input",()=>{const w=state.windows.find(x=>x.id===a.dataset.noteText),name=root.querySelector(`[data-note-name="${w.id}"]`).value.trim()||"Untitled.txt";if(w.data.fileId)updateFile(w.data.fileId,{name,content:a.value});else{w.data.name=name;w.data.content=a.value;saveState()}document.getElementById("stat_"+w.id).textContent=`${a.value.trim()?a.value.trim().split(/\s+/).length:0} words, ${a.value.length} chars`})); 
+  root.querySelectorAll("[data-note-save]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.noteSave),name=root.querySelector(`[data-note-name="${w.id}"]`).value.trim()||"Untitled.txt",text=root.querySelector(`[data-note-text="${w.id}"]`).value;if(w.data.fileId)updateFile(w.data.fileId,{name,content:text});else{const f=createFile("Documents",name,text);w.data.fileId=f.id;delete w.data.content;delete w.data.name}w.title=name;saveState(true);renderAll()}));
+  root.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",e=>{if(e.target.dataset.tabClose)return;const[id,tid]=b.dataset.tab.split(":");const w=state.windows.find(x=>x.id===id);w.data.activeTab=tid;saveState();renderAll()}));
+  root.querySelectorAll("[data-tab-close]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const[id,tid]=b.dataset.tabClose.split(":");const w=state.windows.find(x=>x.id===id);w.data.tabs=w.data.tabs.filter(t=>t.id!==tid);if(!w.data.tabs.length)w.data.tabs=[{id:uid("tab"),title:"New tab",url:"https://www.google.com"}];w.data.activeTab=w.data.tabs[0].id;saveState();renderAll()}));
+  root.querySelectorAll("[data-tab-new]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.tabNew),t={id:uid("tab"),title:"New tab",url:"https://www.google.com"};w.data.tabs.push(t);w.data.activeTab=t.id;saveState();renderAll()}));
+  root.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>goChromium(b.dataset.go,root)));
+  root.querySelectorAll("[data-url]").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")goChromium(i.dataset.url,root)}));
+  root.querySelectorAll("[data-ext]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.ext),t=tabDefaults(w);window.open(normUrl(t.url),"_blank","noopener")}));
+  root.querySelectorAll("[data-refresh-tab]").forEach(b=>b.addEventListener("click",()=>renderAll()));
+  root.querySelectorAll("[data-google-go]").forEach(b=>b.addEventListener("click",()=>runGoogle(b.dataset.googleGo,root)));
+  root.querySelectorAll("[data-google-q]").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")runGoogle(i.dataset.googleQ,root)}));
+  root.querySelectorAll("[data-open-url]").forEach(b=>b.addEventListener("click",()=>openApp("chromium",{tabs:[{id:uid("tab"),title:"Result",url:b.dataset.openUrl}],activeTab:null})));
+  root.querySelectorAll("[data-open-external]").forEach(b=>b.addEventListener("click",()=>window.open(b.dataset.openExternal,"_blank","noopener")));
+  root.querySelectorAll("[data-yt-go]").forEach(b=>b.addEventListener("click",()=>runYoutube(b.dataset.ytGo,root)));
+  root.querySelectorAll("[data-yt-q]").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")runYoutube(i.dataset.ytQ,root)}));
+  root.querySelectorAll("[data-yt-open]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.app==="youtube");w.data.embed=b.dataset.ytOpen;saveState();renderAll()}));
+  root.querySelectorAll(".window.focused .cal-day[data-date]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.focused&&x.app==="calendar");if(w){w.data.selected=b.dataset.date;saveState();renderAll()}}));
+  root.querySelectorAll("[data-cal-prev]").forEach(b=>b.addEventListener("click",()=>moveCal(b.dataset.calPrev,-1)));
+  root.querySelectorAll("[data-cal-next]").forEach(b=>b.addEventListener("click",()=>moveCal(b.dataset.calNext,1)));
+  root.querySelectorAll("[data-event-add]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.eventAdd),i=root.querySelector(`[data-event-title="${w.id}"]`);if(!i.value.trim())return;const key=w.data.selected||new Date().toISOString().slice(0,10);state.events[key]=[...(state.events[key]||[]),{id:uid("evt"),title:i.value.trim()}];saveState();renderAll()}));
+  root.querySelectorAll("[data-event-del]").forEach(b=>b.addEventListener("click",()=>{const[wid,eid]=b.dataset.eventDel.split(":"),w=state.windows.find(x=>x.id===wid),key=w.data.selected;state.events[key]=(state.events[key]||[]).filter(e=>e.id!==eid);saveState();renderAll()}));
+  root.querySelectorAll("[data-weather]").forEach(b=>b.addEventListener("click",()=>runWeather(b.dataset.weather)));
+  root.querySelectorAll("[data-system]").forEach(b=>b.addEventListener("click",()=>runSystem(b.dataset.system)));
+  root.querySelector("[data-todo-add]")?.addEventListener("click",()=>addTodo(root));
+  root.querySelector("[data-todo-input]")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo(root)});
+  root.querySelectorAll("[data-todo-toggle]").forEach(b=>b.addEventListener("click",e=>{if(e.target.dataset.todoDel)return;const t=state.todos.find(x=>x.id===b.dataset.todoToggle);if(t)t.done=!t.done;saveState();renderAll()}));
+  root.querySelectorAll("[data-todo-del]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();state.todos=state.todos.filter(t=>t.id!==b.dataset.todoDel);saveState();renderAll()}));
+  root.querySelectorAll("[data-calc]").forEach(b=>b.addEventListener("click",()=>pressCalc(b.dataset.calc)));
+  root.querySelectorAll("[data-ttt-cell]").forEach(b=>b.addEventListener("click",()=>playTtt(Number(b.dataset.tttCell))));
+  root.querySelectorAll("[data-ttt-mode]").forEach(b=>b.addEventListener("click",()=>{getTtt().mode=b.dataset.tttMode;resetTtt(true)}));
+  root.querySelector("[data-ttt-reset]")?.addEventListener("click",()=>resetTtt(true));
+  root.querySelectorAll("[data-memory-card]").forEach(b=>b.addEventListener("click",()=>playMemory(Number(b.dataset.memoryCard))));
+  root.querySelector("[data-memory-reset]")?.addEventListener("click",resetMemory);
+  root.querySelector("[data-camera-local]")?.addEventListener("click",startLocalCamera);
+  root.querySelector("[data-camera-phone]")?.addEventListener("click",startPhoneCamera);
+  root.querySelector("[data-camera-mirror]")?.addEventListener("click",()=>{state.camera.mirror=!state.camera.mirror;saveState();renderAll()});
+  root.querySelector("[data-camera-shot]")?.addEventListener("click",captureCamera);
+  root.querySelectorAll("[data-accent]").forEach(b=>b.addEventListener("click",()=>{state.accent=b.dataset.accent;saveState();renderAll()}));
+  root.querySelectorAll("[data-wallpaper]").forEach(b=>b.addEventListener("click",()=>{state.wallpaper=b.dataset.wallpaper;saveState();renderAll()}));
+  root.querySelector("[data-force-sync]")?.addEventListener("click",()=>saveState(true));
+  root.querySelector("[data-reset]")?.addEventListener("click",()=>{if(confirm("Reset WinOS state?")){state=defaultState();saveState(true);renderAll()}});
+}
+async function goChromium(id,root){
+  const w=state.windows.find(x=>x.id===id),tab=tabDefaults(w),input=root.querySelector(`[data-url="${id}"]`),raw=input.value.trim();
+  if(!raw)return;
+  const isProbablyUrl=/^https?:\/\//i.test(raw)||/^[\w-]+(\.[\w-]+)+/.test(raw);
+  tab.title=raw;tab.error="";delete tab.results;
+  if(isProbablyUrl){tab.url=normUrl(raw);saveState();renderAll();return}
+  tab.loading=true;tab.url="https://duckduckgo.com/?q="+encodeURIComponent(raw);saveState();renderAll();
+  try{const d=await apiFetch("/api/web/search?q="+encodeURIComponent(raw));tab.results=d.results||[];tab.title=raw;delete tab.loading;saveState();renderAll()}catch(e){delete tab.loading;tab.error=e.message;saveState();renderAll()}
+}
+function moveCal(id,delta){const w=state.windows.find(x=>x.id===id),d=new Date(w.data.year||new Date().getFullYear(),w.data.month??new Date().getMonth(),1);d.setMonth(d.getMonth()+delta);w.data.year=d.getFullYear();w.data.month=d.getMonth();saveState();renderAll()}
+async function runGoogle(id,root){const w=state.windows.find(x=>x.id===id),q=root.querySelector(`[data-google-q="${id}"]`).value.trim(),out=document.getElementById("google_"+id);if(!q)return;out.innerHTML='<div class="empty">Searching...</div>';try{const d=await apiFetch("/api/web/search?q="+encodeURIComponent(q));w.data.query=q;w.data.results=d.results||[];saveState();renderAll()}catch(e){out.innerHTML=`<div class="empty">${escapeHtml(e.message)}</div>`}}
+async function runYoutube(id,root){const w=state.windows.find(x=>x.id===id),q=root.querySelector(`[data-yt-q="${id}"]`).value.trim(),out=document.getElementById("yt_"+id);if(!q)return;out.innerHTML='<div class="empty">Searching...</div>';try{const d=await apiFetch("/api/youtube/search?q="+encodeURIComponent(q));w.data.query=q;w.data.results=d.results||[];saveState();renderAll()}catch(e){out.innerHTML=`<div class="empty">${escapeHtml(e.message)}</div>`}}
+async function runWeather(id){const city=document.getElementById("city_"+id).value.trim()||"Delhi",out=document.getElementById("api_"+id);out.innerHTML='<div class="card">Loading...</div>';try{const w=await apiFetch("/api/weather?city="+encodeURIComponent(city));out.innerHTML=`<div class="card"><div class="card-label">${escapeHtml(w.city)}, ${escapeHtml(w.country)}</div><div class="big">${escapeHtml(w.temp_c)} C</div><div>${escapeHtml(w.description)}. Feels ${escapeHtml(w.feels_c)} C</div></div><div class="card"><div class="card-label">Humidity</div><div class="big">${escapeHtml(w.humidity)}%</div></div><div class="card"><div class="card-label">Wind</div><div class="big">${escapeHtml(w.wind_kmph)}</div><div>km/h</div></div>`}catch(e){out.innerHTML=`<div class="card">${escapeHtml(e.message)}</div>`}}
+async function runSystem(id){const out=document.getElementById("api_"+id);try{const s=await apiFetch("/api/os/system");out.innerHTML=`<div class="card"><div class="card-label">Status</div><div class="big">${escapeHtml(s.status)}</div><div>${escapeHtml(s.app)}</div></div><div class="card"><div class="card-label">Database</div><div class="big">${escapeHtml(s.db)}</div></div><div class="card"><div class="card-label">Features</div><div>${(s.features||[]).map(escapeHtml).join("<br>")}</div></div>`}catch(e){out.innerHTML=`<div class="card">${escapeHtml(e.message)}</div>`}}
+function addTodo(root){const i=root.querySelector("[data-todo-input]");if(!i.value.trim())return;state.todos.unshift({id:uid("todo"),text:i.value.trim(),done:false,createdAt:Date.now()});saveState();renderAll()}
+function calcNum(){const n=Number(getCalc().display);return Number.isFinite(n)?n:0}
+function calcFormat(n){if(!Number.isFinite(n))return"Error";const s=String(Math.round(n*1e10)/1e10);return s.length>14?Number(n).toExponential(8):s}
+function calcApply(){const c=getCalc(),a=Number(c.stored),b=calcNum();if(c.operator==="+")return a+b;if(c.operator==="-")return a-b;if(c.operator==="*")return a*b;if(c.operator==="/")return b===0?NaN:a/b;return b}
+function pressCalc(k){const c=getCalc();if(/^\d$/.test(k)){c.display=c.waiting?k:(c.display==="0"||c.display==="Error"?k:c.display+k);c.waiting=false}else if(k==="."){if(c.waiting){c.display="0.";c.waiting=false}else if(!c.display.includes("."))c.display+="."}else if(k==="AC"){Object.assign(c,{display:"0",stored:null,operator:null,waiting:false,history:""})}else if(k==="Back"){c.display=c.waiting?"0":(c.display.length>1?c.display.slice(0,-1):"0")}else if(k==="+/-"){if(c.display!=="0"&&c.display!=="Error")c.display=c.display.startsWith("-")?c.display.slice(1):"-"+c.display}else if(k==="%"){c.display=calcFormat(calcNum()/100)}else if(["+","-","*","/"].includes(k)){if(c.operator&&!c.waiting){const r=calcApply();c.display=calcFormat(r);c.stored=Number(c.display)}else c.stored=calcNum();c.operator=k;c.waiting=true;c.history=`${c.stored} ${k}`}else if(k==="="){if(c.operator){const old=`${c.stored} ${c.operator} ${c.display}`;const r=calcApply();c.display=calcFormat(r);c.history=`${old} =`;c.stored=null;c.operator=null;c.waiting=true}}saveState();renderAll()}
+function handleCalcKey(e){if(e.target.closest("input,textarea"))return;const focused=state.windows.find(w=>w.focused&&w.app==="calculator"&&!w.minimized);if(!focused)return;const map={Enter:"=",Backspace:"Back",Escape:"AC",x:"*",X:"*"};const k=map[e.key]||e.key;if(/^\d$/.test(k)||[".","+","-","*","/","=","Back","AC","%"].includes(k)){e.preventDefault();pressCalc(k)}}
+function logout(){saveState(true);token="";currentUser="";localStorage.removeItem(LS_TOKEN);localStorage.removeItem(LS_USER);switchScreen("lock")}
+document.getElementById("desktop").addEventListener("click",()=>{toggleStart(false);toggleCalendar(false)});
+document.addEventListener("keydown",handleCalcKey);
+window.addEventListener("beforeunload",()=>saveState(true));
+window.addEventListener("resize",()=>{state.windows=sanitizeWindows(state.windows);saveState();renderAll()});
+(async function boot(){const phoneTarget=new URLSearchParams(location.search).get("phoneCamera");if(phoneTarget){await renderPhoneCameraPortal(phoneTarget);return}applyTheme();tick();if(token&&currentUser){try{await apiFetch("/auth/me");await loadServerState();switchScreen("desktop")}catch{localStorage.removeItem(LS_TOKEN);token="";switchScreen("lock")}}else switchScreen("lock")})();
+</script>
+</body>
+</html>

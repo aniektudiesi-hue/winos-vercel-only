@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/os", "destination": "/index.html" },
+    { "source": "/taskbar", "destination": "/index.html" }
+  ]
+}
