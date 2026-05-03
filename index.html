@@ -3,25 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WinOS</title>
+<link rel="icon" href="data:,">
+<title>WebOS Glass</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --accent:#2563eb;
-  --bg:#0b1220;
-  --surface:rgba(243,246,255,.78);
-  --surface-solid:#f3f6ff;
-  --surface-dark:rgba(20,24,33,.86);
+  --bg:#07111f;
+  --surface:rgba(248,250,252,.72);
+  --surface-solid:#f7f9fd;
+  --surface-dark:rgba(13,18,30,.82);
   --text:#101827;
   --text-inv:#f8fafc;
   --muted:#5d6678;
-  --line:rgba(20,30,48,.16);
+  --line:rgba(20,30,48,.14);
   --line-dark:rgba(255,255,255,.16);
-  --shadow:0 24px 70px rgba(0,0,0,.28);
-  --taskbar-h:48px;
+  --shadow:0 26px 90px rgba(3,8,23,.3);
+  --taskbar-h:72px;
   --radius:8px;
 }
-html,body{width:100%;height:100%;overflow:hidden;background:#07111f;color:var(--text);font-family:"Segoe UI Variable","Segoe UI",system-ui,sans-serif}
+html,body{width:100%;height:100%;overflow:hidden;background:#07111f;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI Variable","Segoe UI",system-ui,sans-serif}
 button,input,textarea,select{font:inherit}
 button{border:0;background:transparent;color:inherit;cursor:pointer}
 input,textarea,select{outline:0;color:inherit}
@@ -40,22 +41,40 @@ svg{display:block}
 .wallpaper:after{content:"";position:absolute;inset:0;background:
   linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.17)),
   radial-gradient(circle at 50% 120%,rgba(255,255,255,.14),transparent 42%)}
+.wallpaper-video,.wallpaper-live{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease;pointer-events:none}
+.wallpaper-video{filter:saturate(108%) contrast(102%)}
+.wallpaper.video-on .wallpaper-video{opacity:1}
+.wallpaper.live-on .wallpaper-live{opacity:1}
+.wallpaper.video-on:before{opacity:.78}
+.wallpaper.video-on:after,.wallpaper.live-on:after{background:linear-gradient(180deg,rgba(3,7,18,.04),rgba(3,7,18,.24)),radial-gradient(circle at 50% 110%,rgba(255,255,255,.16),transparent 42%)}
 .wallpaper.glass-aurora{background:linear-gradient(125deg,#0a1228 0%,#103b6d 34%,#5a6dd8 62%,#0d1835 100%)}
 .wallpaper.glass-aurora:before{opacity:1;background:
   radial-gradient(ellipse 42% 36% at 18% 28%,rgba(116,211,255,.7),transparent 64%),
   radial-gradient(ellipse 48% 42% at 76% 22%,rgba(220,190,255,.62),transparent 66%),
   radial-gradient(ellipse 54% 50% at 54% 82%,rgba(45,255,190,.34),transparent 64%);
-  filter:blur(20px) saturate(145%);animation:auroraDrift 18s ease-in-out infinite alternate}
+  filter:blur(14px) saturate(130%);animation:auroraDrift 18s ease-in-out infinite alternate}
 .wallpaper.cosmic-flow{background:radial-gradient(circle at 28% 18%,#6d5dfc,transparent 26%),radial-gradient(circle at 72% 68%,#0cc7c7,transparent 24%),linear-gradient(135deg,#050713,#131730 58%,#03050d)}
 .wallpaper.cosmic-flow:before{opacity:1;background-image:radial-gradient(circle,rgba(255,255,255,.9) 0 1px,transparent 1.4px),radial-gradient(circle,rgba(125,211,252,.6) 0 1px,transparent 1.5px);background-size:86px 86px,142px 142px;animation:starFloat 26s linear infinite}
 .wallpaper.minimal-liquid{background:linear-gradient(135deg,#e9f4ff,#d6f4ef 42%,#f4e8ff)}
-.wallpaper.minimal-liquid:before{opacity:1;background:radial-gradient(circle at 24% 40%,rgba(37,99,235,.34),transparent 30%),radial-gradient(circle at 78% 56%,rgba(16,185,129,.3),transparent 28%),radial-gradient(circle at 54% 18%,rgba(236,72,153,.24),transparent 24%);filter:blur(24px);animation:liquidShift 16s ease-in-out infinite alternate}
+.wallpaper.minimal-liquid:before{opacity:1;background:radial-gradient(circle at 24% 40%,rgba(37,99,235,.34),transparent 30%),radial-gradient(circle at 78% 56%,rgba(16,185,129,.3),transparent 28%),radial-gradient(circle at 54% 18%,rgba(236,72,153,.24),transparent 24%);filter:blur(14px);animation:liquidShift 16s ease-in-out infinite alternate}
 .wallpaper.midnight-calm{background:linear-gradient(135deg,#050816,#12172e 48%,#07111f)}
 .wallpaper.midnight-calm:before{opacity:1;background:radial-gradient(ellipse at 50% 8%,rgba(59,130,246,.42),transparent 38%),radial-gradient(ellipse at 18% 76%,rgba(20,184,166,.18),transparent 36%);filter:blur(14px);animation:calmPulse 12s ease-in-out infinite alternate}
+.wallpaper.prism-tide{background:radial-gradient(ellipse at 14% 18%,rgba(56,189,248,.78),transparent 32%),radial-gradient(ellipse at 82% 18%,rgba(244,114,182,.6),transparent 30%),radial-gradient(ellipse at 50% 92%,rgba(34,197,94,.44),transparent 36%),linear-gradient(135deg,#07111f,#202a44 54%,#0a1020)}
+.wallpaper.prism-tide:before{opacity:1;background:conic-gradient(from 120deg at 50% 50%,rgba(255,255,255,.22),rgba(125,211,252,.08),rgba(251,113,133,.16),rgba(255,255,255,.2));filter:blur(10px) saturate(130%);animation:prismSpin 26s linear infinite}
+.wallpaper.silk-wave{background:linear-gradient(135deg,#16213e,#0f766e 42%,#4338ca 74%,#111827)}
+.wallpaper.silk-wave:before{opacity:1;background:repeating-radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.2) 0 2px,transparent 3px 26px),radial-gradient(ellipse at 72% 62%,rgba(250,204,21,.2),transparent 36%);filter:blur(8px);animation:silkSlide 18s ease-in-out infinite alternate}
+.wallpaper.neon-glass{background:radial-gradient(circle at 24% 24%,rgba(14,165,233,.72),transparent 26%),radial-gradient(circle at 76% 30%,rgba(236,72,153,.52),transparent 25%),radial-gradient(circle at 55% 78%,rgba(132,204,22,.42),transparent 24%),linear-gradient(135deg,#020617,#111827 60%,#030712)}
+.wallpaper.neon-glass:before{opacity:1;background-image:linear-gradient(115deg,transparent 0 46%,rgba(255,255,255,.18) 50%,transparent 55%),linear-gradient(70deg,transparent 0 38%,rgba(255,255,255,.1) 42%,transparent 48%);background-size:420px 420px,560px 560px;animation:glassSheen 16s linear infinite;filter:blur(.2px)}
+.wallpaper.solar-mist{background:radial-gradient(ellipse at 20% 28%,rgba(251,191,36,.68),transparent 30%),radial-gradient(ellipse at 78% 32%,rgba(45,212,191,.5),transparent 31%),radial-gradient(ellipse at 54% 78%,rgba(99,102,241,.52),transparent 35%),linear-gradient(135deg,#101827,#374151 52%,#0f172a)}
+.wallpaper.solar-mist:before{opacity:1;background:linear-gradient(90deg,rgba(255,255,255,.16),transparent 26% 72%,rgba(255,255,255,.12)),radial-gradient(circle at 50% 50%,rgba(255,255,255,.15),transparent 34%);filter:blur(12px);animation:mistBreathe 14s ease-in-out infinite alternate}
 @keyframes auroraDrift{from{transform:translate3d(-4%,-2%,0) rotate(-5deg) scale(1.04)}to{transform:translate3d(5%,3%,0) rotate(7deg) scale(1.12)}}
 @keyframes starFloat{from{transform:translate3d(0,0,0)}to{transform:translate3d(-72px,48px,0)}}
 @keyframes liquidShift{from{transform:translate3d(-5%,1%,0) scale(1)}to{transform:translate3d(5%,-2%,0) scale(1.08)}}
 @keyframes calmPulse{from{opacity:.78;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}
+@keyframes prismSpin{from{transform:rotate(0deg) scale(1.08)}to{transform:rotate(360deg) scale(1.08)}}
+@keyframes silkSlide{from{transform:translate3d(-4%,-2%,0) skewX(-4deg)}to{transform:translate3d(5%,3%,0) skewX(3deg)}}
+@keyframes glassSheen{from{background-position:0 0,0 0}to{background-position:420px 0,-560px 0}}
+@keyframes mistBreathe{from{opacity:.58;transform:scale(1)}to{opacity:1;transform:scale(1.08)}}
 
 .lock,.login{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;color:#fff}
 .lock{cursor:pointer}
@@ -86,28 +105,28 @@ svg{display:block}
 .welcome-cursor{display:inline-block;width:.08em;min-width:4px;height:.8em;margin-left:.09em;border-radius:999px;background:rgba(255,255,255,.92);vertical-align:-.08em;animation:welcomeBlink .85s steps(1,end) infinite;box-shadow:0 0 20px rgba(255,255,255,.56)}
 @keyframes welcomeBlink{50%{opacity:0}}
 
-.desktop{position:fixed;inset:0 0 var(--taskbar-h) 0;z-index:5;overflow:hidden;padding:12px}
-.desktop-icons{display:flex;flex-direction:column;flex-wrap:wrap;gap:4px;height:100%;width:84px;align-content:flex-start}
-.desk-icon{width:76px;height:78px;border:1px solid transparent;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.75)}
-.desk-icon:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.24)}
+.desktop{position:fixed;inset:0 0 var(--taskbar-h) 0;z-index:5;overflow:hidden;padding:16px}
+.desktop-icons{display:flex;flex-direction:column;flex-wrap:wrap;gap:8px;height:100%;width:92px;align-content:flex-start}
+.desk-icon{width:84px;height:84px;border:1px solid transparent;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.78);transition:background .16s,transform .16s,border-color .16s}
+.desk-icon:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.28);transform:translateY(-1px)}
 .desk-icon .app-ico{width:34px;height:34px}
 .desk-label{font-size:11px;line-height:1.2;text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 
-.taskbar{position:fixed;left:0;right:0;bottom:0;height:var(--taskbar-h);z-index:5000;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:rgba(240,244,252,.76);border-top:1px solid rgba(255,255,255,.62);backdrop-filter:blur(34px) saturate(190%);box-shadow:0 -1px 24px rgba(8,15,30,.16)}
+.taskbar{position:fixed;left:14px;right:14px;bottom:10px;height:58px;z-index:5000;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(238,244,255,.46));border:1px solid rgba(255,255,255,.68);border-radius:18px;backdrop-filter:blur(18px) saturate(155%);box-shadow:0 14px 44px rgba(3,8,23,.22),inset 0 1px 0 rgba(255,255,255,.58)}
 .tb-left,.tb-right,.tb-center{display:flex;align-items:center;gap:4px}
-.tb-center{position:absolute;left:50%;transform:translateX(-50%);max-width:calc(100vw - 320px);overflow:hidden}
-.tb-btn,.start-btn,.clock-zone{height:40px;border-radius:5px;display:grid;place-items:center;position:relative}
-.tb-btn,.start-btn{width:44px}
+.tb-center{position:absolute;left:50%;transform:translateX(-50%);max-width:calc(100vw - 360px);overflow:hidden;padding:6px;border-radius:16px}
+.tb-btn,.start-btn,.clock-zone{height:44px;border-radius:12px;display:grid;place-items:center;position:relative}
+.tb-btn,.start-btn{width:48px}
 .tb-btn,.start-btn{transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
-.tb-btn:hover,.start-btn:hover,.clock-zone:hover,.search-box:hover{background:rgba(255,255,255,.48);box-shadow:0 10px 26px rgba(15,23,42,.12)}
-.tb-btn:hover,.start-btn:hover{transform:translateY(-4px) scale(1.06)}
-.start-btn.open,.tb-btn.active{background:rgba(0,0,0,.09)}
+.tb-btn:hover,.start-btn:hover,.clock-zone:hover,.search-box:hover{background:rgba(255,255,255,.62);box-shadow:0 14px 34px rgba(15,23,42,.16)}
+.tb-btn:hover,.start-btn:hover{transform:translateY(-7px) scale(1.08)}
+.start-btn.open,.tb-btn.active{background:rgba(255,255,255,.74)}
 .tb-btn.running:after,.tb-btn.active:after{content:"";position:absolute;bottom:2px;left:50%;transform:translateX(-50%);height:3px;border-radius:4px;background:#64748b}
 .tb-btn.running:after{width:6px}
 .tb-btn.active:after{width:18px;background:var(--accent)}
 .tb-tip{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#20242d;color:#fff;border:1px solid rgba(255,255,255,.08);padding:5px 9px;border-radius:4px;font-size:11px;opacity:0;pointer-events:none;transition:.12s;box-shadow:0 8px 24px rgba(0,0,0,.28)}
 .tb-btn:hover .tb-tip{opacity:1}
-.search-box{height:34px;width:220px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.06);display:flex;align-items:center;gap:8px;padding:0 12px;color:#4b5563;font-size:13px}
+.search-box{height:38px;width:220px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.06);display:flex;align-items:center;gap:8px;padding:0 12px;color:#4b5563;font-size:13px}
 .tray{height:40px;border-radius:5px;display:flex;align-items:center;gap:8px;padding:0 8px;font-size:12px;color:#182033}
 .battery-text{font-size:12px;min-width:34px;text-align:right;color:#172033}
 .tray:hover{background:rgba(0,0,0,.07)}
@@ -144,19 +163,21 @@ svg{display:block}
 .cal-day.today{background:var(--accent);color:#fff;font-weight:600}
 .cal-day.has{box-shadow:0 0 0 1px var(--accent) inset}
 
-.window{position:fixed;z-index:20;min-width:286px;min-height:170px;background:rgba(249,250,252,.86);border:1px solid rgba(255,255,255,.66);border-radius:10px;box-shadow:0 26px 80px rgba(6,10,24,.28);overflow:hidden;display:flex;flex-direction:column;color:#101827;backdrop-filter:blur(24px) saturate(160%);animation:winIn .2s cubic-bezier(.2,.8,.2,1)}
-.window.focused{box-shadow:0 34px 100px rgba(0,0,0,.34);border-color:rgba(255,255,255,.82);transform:translateY(-1px)}
+.window{position:fixed;z-index:20;min-width:286px;min-height:170px;background:rgba(249,250,252,.78);border:1px solid rgba(255,255,255,.64);border-radius:16px;box-shadow:0 22px 72px rgba(3,8,23,.28);overflow:hidden;display:flex;flex-direction:column;color:#101827;backdrop-filter:blur(18px) saturate(145%);animation:winIn .22s cubic-bezier(.2,.8,.2,1)}
+.window.focused{box-shadow:0 34px 110px rgba(0,0,0,.36);border-color:rgba(255,255,255,.84);transform:translateY(-1px)}
 .window.maximized{border-radius:0;border-left:0;border-right:0;border-top:0;animation:none}
-.titlebar{height:34px;display:flex;align-items:center;gap:8px;padding:0 0 0 10px;background:rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.62);user-select:none;backdrop-filter:blur(18px)}
+.titlebar{height:38px;display:flex;align-items:center;gap:9px;padding:0 10px;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(244,248,255,.52));border-bottom:1px solid rgba(255,255,255,.58);user-select:none;backdrop-filter:blur(12px);touch-action:none}
 @keyframes winIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 .titlebar.drag{cursor:move}
-.win-ico{width:16px;height:16px;flex:0 0 auto}
+.win-ico{width:16px;height:16px;flex:0 0 auto;margin-left:2px}
 .win-title{font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.win-controls{display:flex;height:32px}
-.win-control{width:46px;height:32px;border-radius:0;display:grid;place-items:center;color:#111827}
-.win-control:hover{background:rgba(0,0,0,.08)}
-.win-control.close:hover{background:#c42b1c;color:#fff}
-.win-body{flex:1;min-height:0;overflow:hidden;background:#fff}
+.win-controls{display:flex;height:24px;gap:7px;order:-1}
+.win-control{width:13px;height:13px;border-radius:50%;display:grid;place-items:center;color:transparent;overflow:hidden;border:1px solid rgba(0,0,0,.12)}
+.win-control svg{opacity:0;transition:opacity .12s}
+.titlebar:hover .win-control svg{opacity:.72}
+.win-control[data-min]{background:#f6c453}.win-control[data-max]{background:#63c95d}.win-control.close{background:#ff5f57}
+.win-control:hover{filter:brightness(.96)}
+.win-body{flex:1;min-height:0;overflow:hidden;background:rgba(255,255,255,.82)}
 .resize-handle{position:absolute;z-index:3;background:transparent}
 .resize-handle.e{top:12px;right:0;width:8px;bottom:12px;cursor:ew-resize}
 .resize-handle.w{top:12px;left:0;width:8px;bottom:12px;cursor:ew-resize}
@@ -167,9 +188,9 @@ svg{display:block}
 .resize-handle.se:after{content:"";position:absolute;right:4px;bottom:4px;width:8px;height:8px;border-right:2px solid rgba(15,23,42,.28);border-bottom:2px solid rgba(15,23,42,.28);border-radius:1px}
 
 .app-shell{height:100%;display:flex;flex-direction:column;background:#fff}
-.toolbar{min-height:42px;display:flex;align-items:center;gap:7px;padding:6px 8px;border-bottom:1px solid #e5e7eb;background:#f8fafc}
-.tool-input{height:30px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;padding:0 9px;font-size:13px}
-.tool-btn{height:30px;border-radius:4px;background:#e9edf5;border:1px solid #d8dee9;padding:0 10px;font-size:12px;font-weight:500}
+.toolbar{min-height:44px;display:flex;align-items:center;gap:7px;padding:7px 9px;border-bottom:1px solid rgba(226,232,240,.9);background:rgba(248,250,252,.86)}
+.tool-input{height:32px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;padding:0 10px;font-size:13px}
+.tool-btn{height:32px;border-radius:7px;background:#e9edf5;border:1px solid #d8dee9;padding:0 11px;font-size:12px;font-weight:600}
 .tool-btn:hover{background:#dde5f0}
 .tool-btn.primary{background:#2563eb;border-color:#2563eb;color:#fff}
 .tool-btn.danger{background:#fee2e2;border-color:#fecaca;color:#991b1b}
@@ -178,7 +199,8 @@ svg{display:block}
 .side-item{height:32px;width:100%;border-radius:4px;display:flex;align-items:center;gap:8px;padding:0 9px;text-align:left;font-size:13px;color:#253044}
 .side-item:hover,.side-item.active{background:#e3eaf5}
 .main-pane{flex:1;min-width:0;overflow:auto;padding:12px}
-.pathbar{height:32px;display:flex;align-items:center;border:1px solid #d8dee9;background:#fff;border-radius:4px;padding:0 10px;font-size:13px;color:#475569;margin-bottom:10px}
+.pathbar{min-height:32px;display:flex;align-items:center;border:1px solid #d8dee9;background:#fff;border-radius:7px;padding:6px 10px;font-size:13px;color:#475569;margin-bottom:10px}
+.file-error{color:#dc2626;font-size:12px;margin-left:auto}
 .file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
 .file-card{height:92px;border:1px solid transparent;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative}
 .file-card:hover{background:#eef4ff;border-color:#d8e7ff}
@@ -192,15 +214,15 @@ svg{display:block}
 .note-stat{font-size:11px;color:#64748b;white-space:nowrap}
 .note-area{flex:1;resize:none;border:0;padding:14px 16px;font:14px/1.65 Consolas,"Cascadia Mono",monospace;background:#fff;color:#111827}
 
-.chrome{height:100%;display:flex;flex-direction:column;background:#f1f3f4}
-.chrome-tabs{height:36px;display:flex;align-items:end;gap:2px;padding:6px 8px 0;background:#dee1e6}
-.chrome-tab{height:30px;min-width:168px;max-width:220px;border-radius:8px 8px 0 0;background:#cfd4dc;display:flex;align-items:center;gap:7px;padding:0 10px;font-size:12px}
-.chrome-tab.active{background:#fff}
-.chrome-tab-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
-.chrome-plus{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;margin-bottom:2px}
-.chrome-plus:hover,.chrome-icon-btn:hover{background:rgba(0,0,0,.08)}
-.chrome-toolbar{height:42px;display:flex;align-items:center;gap:6px;padding:6px 8px;background:#fff;border-bottom:1px solid #d7dce5}
-.chrome-icon-btn{width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+.chromium{height:100%;display:flex;flex-direction:column;background:#f1f3f4}
+.chromium-tabs{height:36px;display:flex;align-items:end;gap:2px;padding:6px 8px 0;background:#dee1e6}
+.chromium-tab{height:30px;min-width:168px;max-width:220px;border-radius:8px 8px 0 0;background:#cfd4dc;display:flex;align-items:center;gap:7px;padding:0 10px;font-size:12px}
+.chromium-tab.active{background:#fff}
+.chromium-tab-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+.chromium-plus{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;margin-bottom:2px}
+.chromium-plus:hover,.chromium-icon-btn:hover{background:rgba(0,0,0,.08)}
+.chromium-toolbar{height:42px;display:flex;align-items:center;gap:6px;padding:6px 8px;background:#fff;border-bottom:1px solid #d7dce5}
+.chromium-icon-btn{width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
 .omnibox{flex:1;height:30px;border:0;border-radius:999px;background:#eef2f7;padding:0 13px;font-size:13px;color:#111827}
 .browser-view{flex:1;position:relative;background:#fff}
 .browser-view iframe{width:100%;height:100%;border:0;background:#fff}
@@ -263,25 +285,62 @@ svg{display:block}
 .camera-side{border-left:1px solid rgba(255,255,255,.12);background:rgba(15,23,42,.88);padding:14px;overflow:auto}
 .camera-status{font-size:12px;color:#cbd5e1;line-height:1.45;margin:8px 0 12px}
 .camera-shot{width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.16);margin-top:10px;background:#111827}
+.camera-tools{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
+.camera-meter{height:7px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin:8px 0 12px}
+.camera-meter span{display:block;height:100%;width:45%;background:linear-gradient(90deg,#22c55e,#38bdf8);animation:meterPulse 1.6s ease-in-out infinite alternate}
+@keyframes meterPulse{from{transform:translateX(-30%)}to{transform:translateX(130%)}}
 .qr-box{display:grid;place-items:center;background:#fff;border-radius:8px;padding:10px;margin:10px 0}
 .qr-box img{width:160px;height:160px}
+.roanime{height:100%;display:flex;flex-direction:column;background:#070914;color:#fff}
+.roanime-bar{height:44px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 10px;background:rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.12)}
+.roanime-title{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.04em}
+.roanime iframe{flex:1;border:0;background:#0b1020}
+.game-hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin-bottom:12px}
+.game-tile{min-height:74px;border:1px solid rgba(203,213,225,.8);border-radius:10px;background:linear-gradient(180deg,#fff,#f4f7fb);display:flex;align-items:center;gap:10px;padding:10px;text-align:left;box-shadow:0 10px 26px rgba(15,23,42,.06)}
+.game-tile:hover{transform:translateY(-1px);box-shadow:0 14px 34px rgba(15,23,42,.1)}
+.snake-board,.board-2048,.mine-board{display:grid;margin:12px auto;touch-action:none}
+.snake-board{grid-template-columns:repeat(14,1fr);width:min(420px,100%);aspect-ratio:1;gap:2px;background:#0f172a;border-radius:12px;padding:8px}
+.snake-cell{border-radius:4px;background:rgba(255,255,255,.06)}
+.snake-cell.snake{background:linear-gradient(135deg,#22c55e,#86efac);box-shadow:0 0 16px rgba(34,197,94,.36)}
+.snake-cell.food{background:linear-gradient(135deg,#f43f5e,#facc15);box-shadow:0 0 18px rgba(244,63,94,.42)}
+.game-controls{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.dpad{display:grid;grid-template-columns:repeat(3,38px);gap:6px;justify-content:center;margin-top:8px}
+.dpad button{height:38px;border-radius:9px;background:#e9edf5;border:1px solid #d8dee9;font-weight:700}
+.board-2048{grid-template-columns:repeat(4,1fr);width:min(420px,100%);aspect-ratio:1;gap:10px;background:#b9aa9b;border-radius:14px;padding:10px}
+.tile-2048{border-radius:10px;background:rgba(238,228,218,.42);display:grid;place-items:center;font-size:clamp(22px,5vw,38px);font-weight:800;color:#776e65}
+.tile-2048.v2{background:#eee4da}.tile-2048.v4{background:#ede0c8}.tile-2048.v8{background:#f2b179;color:#fff}.tile-2048.v16{background:#f59563;color:#fff}.tile-2048.v32{background:#f67c5f;color:#fff}.tile-2048.v64{background:#f65e3b;color:#fff}.tile-2048.v128,.tile-2048.v256,.tile-2048.v512{background:#edcf72;color:#fff;font-size:clamp(18px,4vw,30px)}.tile-2048.v1024,.tile-2048.v2048{background:#3c3a32;color:#fff;font-size:clamp(16px,3.6vw,26px)}
+.mine-board{grid-template-columns:repeat(9,1fr);width:min(430px,100%);aspect-ratio:1;gap:4px;background:#d9e2ef;border-radius:12px;padding:8px}
+.mine-cell{border-radius:7px;background:linear-gradient(180deg,#fff,#dbe5f3);border:1px solid rgba(148,163,184,.7);font-weight:800;color:#1d4ed8}
+.mine-cell.revealed{background:#f8fafc;color:#334155;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.mine-cell.flagged{color:#dc2626}.mine-cell.mine{background:#111827;color:#f8fafc}
 .phone-portal{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#050816,#173a72);color:#fff;font-family:"Segoe UI",system-ui,sans-serif}
 .phone-card{width:min(430px,100%);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:22px;backdrop-filter:blur(24px);box-shadow:0 24px 70px rgba(0,0,0,.34)}
 .phone-card video{width:100%;border-radius:8px;background:#000;margin:12px 0}
-@media (prefers-reduced-motion:reduce){.wallpaper:before,.window,.tb-btn,.start-btn,.memory-card{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){.wallpaper:before,.window,.tb-btn,.start-btn,.memory-card,.camera-meter span{animation:none!important;transition:none!important}}
 
 @media(max-width:760px){
   .search-box{display:none}
   .tb-left{display:none}
-  .tb-center{left:8px;right:108px;transform:none;max-width:none}
-  .start-menu{left:8px;right:8px;margin-left:0;width:auto}
+  .taskbar{left:8px;right:8px;bottom:8px}
+  .tb-center{left:8px;right:104px;transform:none;max-width:none;justify-content:flex-start}
+  .tb-btn,.start-btn{width:42px}
+  .start-menu{left:8px;right:8px;bottom:76px;margin-left:0;width:auto;padding:14px}
   .start-grid{grid-template-columns:repeat(4,1fr)}
-  .sidebar{width:132px}
+  .sidebar{width:126px}
+  .desktop{padding:10px}
+  .desktop-icons{width:78px;gap:4px}
+  .desk-icon{width:72px;height:74px}
+  .window:not(.maximized){left:6px!important;top:6px!important;width:calc(100vw - 12px)!important;height:calc(100vh - var(--taskbar-h) - 12px)!important}
+  .split{flex-direction:column}
+  .sidebar{width:100%;max-height:128px;border-right:0;border-bottom:1px solid #e5e7eb}
+  .toolbar{flex-wrap:wrap}
+  .camera-shell{grid-template-columns:1fr}
+  .camera-side{border-left:0;border-top:1px solid rgba(255,255,255,.12);max-height:230px}
 }
 </style>
 </head>
 <body>
-<div class="wallpaper" id="wallpaper"></div>
+<div class="wallpaper" id="wallpaper"><canvas class="wallpaper-live" id="wallpaperLive"></canvas><video class="wallpaper-video" id="wallpaperVideo" muted loop playsinline preload="none"></video></div>
 <section class="lock" id="lockScreen">
   <div class="lock-panel"><div class="lock-time" id="lockTime">--:--</div><div class="lock-date" id="lockDate">Loading</div></div>
   <div class="lock-hint">Click to sign in</div>
@@ -289,7 +348,7 @@ svg{display:block}
 <section class="login hidden" id="loginScreen">
   <form class="login-box" id="loginForm">
     <div class="login-avatar" id="loginAvatar">U</div>
-    <div class="login-title">WinOS</div>
+    <div class="login-title">WebOS Glass</div>
     <div class="login-tabs">
       <button class="login-tab active" type="button" data-auth-tab="login">Sign in</button>
       <button class="login-tab" type="button" data-auth-tab="register">Register</button>
@@ -325,6 +384,13 @@ const wallpaperChoices=[
   {id:"cosmic",name:"Cosmic Flow",cls:"cosmic-flow",bg:"radial-gradient(circle at 28% 18%,#6d5dfc,transparent 28%),radial-gradient(circle at 72% 68%,#0cc7c7,transparent 24%),linear-gradient(135deg,#050713,#131730)"},
   {id:"liquid",name:"Minimal Liquid",cls:"minimal-liquid",bg:"linear-gradient(135deg,#e9f4ff,#d6f4ef 42%,#f4e8ff)"},
   {id:"midnight",name:"Midnight Calm",cls:"midnight-calm",bg:"linear-gradient(135deg,#050816,#12172e 48%,#07111f)"},
+  {id:"prism",name:"Prism Tide",cls:"prism-tide",bg:"radial-gradient(ellipse at 14% 18%,#38bdf8,transparent 32%),radial-gradient(ellipse at 82% 18%,#f472b6,transparent 30%),linear-gradient(135deg,#07111f,#202a44)"},
+  {id:"silk",name:"Silk Wave",cls:"silk-wave",bg:"linear-gradient(135deg,#16213e,#0f766e 42%,#4338ca 74%,#111827)"},
+  {id:"neon",name:"Neon Glass",cls:"neon-glass",bg:"radial-gradient(circle at 24% 24%,#0ea5e9,transparent 26%),radial-gradient(circle at 76% 30%,#ec4899,transparent 25%),linear-gradient(135deg,#020617,#111827)"},
+  {id:"solar",name:"Solar Mist",cls:"solar-mist",bg:"radial-gradient(ellipse at 20% 28%,#fbbf24,transparent 30%),radial-gradient(ellipse at 78% 32%,#2dd4bf,transparent 31%),linear-gradient(135deg,#101827,#374151)"},
+  {id:"live-aurora",name:"Live Aurora",cls:"midnight-calm",live:"aurora",bg:"linear-gradient(135deg,#03111f,#0f766e 48%,#312e81)"},
+  {id:"live-ribbons",name:"Live Ribbons",cls:"prism-tide",live:"ribbons",bg:"linear-gradient(135deg,#082f49,#7c3aed 52%,#0f172a)"},
+  {id:"live-bloom",name:"Live Bloom",cls:"minimal-liquid",live:"bloom",bg:"linear-gradient(135deg,#e9f4ff,#d6f4ef 42%,#f4e8ff)"},
   {id:"bloom",name:"Bloom",bg:"radial-gradient(ellipse 70% 58% at 14% 30%,rgba(45,132,255,.9) 0%,rgba(33,111,225,.65) 30%,transparent 58%),radial-gradient(ellipse 72% 58% at 82% 76%,rgba(91,196,255,.82) 0%,rgba(45,135,220,.32) 31%,transparent 62%),radial-gradient(ellipse 64% 48% at 62% 8%,rgba(116,69,255,.35),transparent 62%),linear-gradient(135deg,#07111f 0%,#173a72 48%,#06101d 100%)"},
   {id:"forest",name:"Forest",bg:"linear-gradient(140deg,rgba(4,12,24,.08),rgba(0,0,0,.2)),url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2400&q=85') center/cover no-repeat"},
   {id:"lake",name:"Lake",bg:"linear-gradient(140deg,rgba(4,12,24,.05),rgba(0,0,0,.18)),url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=85') center/cover no-repeat"},
@@ -338,10 +404,10 @@ const fileTemplates={
   ".txt":"",
   ".md":"# New Document\n\n",
   ".json":"{\n  \"name\": \"new-file\"\n}\n",
-  ".js":"console.log(\"Hello from WinOS\");\n",
-  ".html":"<!doctype html>\n<html>\n<head>\n  <title>New Page</title>\n</head>\n<body>\n  <h1>Hello WinOS</h1>\n</body>\n</html>\n",
+  ".js":"console.log(\"Hello from WebOS Glass\");\n",
+  ".html":"<!doctype html>\n<html>\n<head>\n  <title>New Page</title>\n</head>\n<body>\n  <h1>Hello WebOS Glass</h1>\n</body>\n</html>\n",
   ".css":"body {\n  font-family: system-ui, sans-serif;\n}\n",
-  ".py":"print(\"Hello from WinOS\")\n"
+  ".py":"print(\"Hello from WebOS Glass\")\n"
 };
 const appDefs={
   explorer:{title:"File Explorer",icon:"folder",w:820,h:540,single:true},
@@ -354,11 +420,17 @@ const appDefs={
   todo:{title:"To Do",icon:"check",w:460,h:530,single:true},
   calculator:{title:"Calculator",icon:"calc",w:360,h:560,single:true},
   camera:{title:"Camera",icon:"camera",w:820,h:560,single:true},
+  roanime:{title:"Roanime",icon:"anime",w:980,h:660,single:true},
   tictactoe:{title:"Tic Tac Toe",icon:"game",w:470,h:560,single:true},
   memory:{title:"Memory Match",icon:"cards",w:560,h:620,single:true},
+  snake:{title:"Snake",icon:"snake",w:520,h:620,single:true},
+  game2048:{title:"2048",icon:"grid",w:520,h:620,single:true},
+  minesweeper:{title:"Minesweeper",icon:"mine",w:540,h:640,single:true},
   settings:{title:"Settings",icon:"settings",w:680,h:520,single:true}
 };
-const pinned=["explorer","chromium","notepad","google","youtube","calculator","camera","tictactoe","memory","settings"];
+const pinned=["explorer","chromium","notepad","roanime","youtube","calculator","camera","snake","game2048","minesweeper","settings"];
+const desktopApps=["explorer","chromium","notepad","roanime","google","youtube","calculator","camera","snake","game2048","minesweeper","tictactoe","memory","settings"];
+const ROANIME_URL="https://anime-search-api-burw.onrender.com/";
 let token=localStorage.getItem(LS_TOKEN)||"";
 let currentUser=localStorage.getItem(LS_USER)||"";
 let authMode="login";
@@ -370,6 +442,7 @@ let calendarView=new Date();
 let batteryState={supported:false,level:null,charging:false};
 let state=loadLocalState();
 let cameraStream=null, phoneStream=null, cameraPeer=null, cameraPeerId="";
+let activeWallpaper="", liveWallpaperFrame=0, liveWallpaperMode="", liveWallpaperLast=0;
 
 function jsonStore(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
 function saveJsonStore(key,value){localStorage.setItem(key,JSON.stringify(value))}
@@ -440,7 +513,7 @@ function icon(name,size=22){
   const fill=(body)=>`<svg ${s} viewBox="0 0 24 24">${body}</svg>`;
   const stroke=(body)=>`<svg ${common}>${body}</svg>`;
   const map={
-    start:fill('<rect x="3" y="3" width="8" height="8" fill="#00a4ef"/><rect x="13" y="3" width="8" height="8" fill="#7fba00"/><rect x="3" y="13" width="8" height="8" fill="#f25022"/><rect x="13" y="13" width="8" height="8" fill="#ffb900"/>'),
+    start:fill('<defs><linearGradient id="g" x1="3" y1="3" x2="21" y2="21"><stop stop-color="#38bdf8"/><stop offset=".52" stop-color="#a78bfa"/><stop offset="1" stop-color="#22c55e"/></linearGradient></defs><rect x="3" y="3" width="18" height="18" rx="6" fill="url(#g)"/><path d="M7 8.5c2.2-2.1 4.6-2.1 7.2-.2 1.2.9 2.1 1.1 2.8.4M7 15.5c2.2 2.1 4.6 2.1 7.2.2 1.2-.9 2.1-1.1 2.8-.4" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>'),
     folder:fill('<path d="M2.7 7.4c0-1 .8-1.8 1.8-1.8h5l1.8 2.1h8.2c1 0 1.8.8 1.8 1.8v8.3c0 1-.8 1.8-1.8 1.8h-15c-1 0-1.8-.8-1.8-1.8V7.4z" fill="#f7c948"/><path d="M2.7 9.2h18.6v8.6c0 1-.8 1.8-1.8 1.8h-15c-1 0-1.8-.8-1.8-1.8V9.2z" fill="#f9d66b"/>'),
     file:fill('<path d="M6 2.8h8l4 4v14.4H6z" fill="#fff" stroke="#8aa0bd"/><path d="M14 2.8v4h4" fill="#dbeafe"/><path d="M8.4 11h7.2M8.4 14h7.2M8.4 17h5" stroke="#64748b" stroke-width="1.2"/>'),
     notepad:fill('<path d="M6 3h11.5c.8 0 1.5.7 1.5 1.5v15c0 .8-.7 1.5-1.5 1.5H6z" fill="#fff" stroke="#8796ad"/><path d="M6 3h2.4v18H6z" fill="#dbeafe"/><path d="M10.2 8h6M10.2 11.5h6M10.2 15h4.2" stroke="#64748b" stroke-width="1.3"/><path d="M4.8 6h3M4.8 10h3M4.8 14h3M4.8 18h3" stroke="#64748b" stroke-width="1.1"/>'),
@@ -465,7 +538,11 @@ function icon(name,size=22){
     square:stroke('<rect x="7" y="7" width="10" height="10"/>'),
     camera:stroke('<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/>'),
     game:stroke('<rect x="3" y="7" width="18" height="10" rx="4"/><path d="M8 11v2M7 12h2M15.5 11.5h.01M18 13.5h.01"/>'),
-    cards:stroke('<rect x="5" y="4" width="10" height="14" rx="2"/><path d="M9 7h2M8 10h4M17 7l2 10-8 2"/>')
+    cards:stroke('<rect x="5" y="4" width="10" height="14" rx="2"/><path d="M9 7h2M8 10h4M17 7l2 10-8 2"/>'),
+    anime:fill('<defs><linearGradient id="a" x1="3" y1="4" x2="21" y2="20"><stop stop-color="#fb7185"/><stop offset=".5" stop-color="#8b5cf6"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="3" y="4" width="18" height="16" rx="5" fill="url(#a)"/><circle cx="9" cy="11" r="1.3" fill="#fff"/><circle cx="15" cy="11" r="1.3" fill="#fff"/><path d="M8.2 15c2.2 1.5 5.4 1.5 7.6 0" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M6 7l-2-3M18 7l2-3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>'),
+    snake:fill('<path d="M5 15c0-4 3-6 7-6h3.5a2.5 2.5 0 1 0 0-5H12" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/><path d="M5 15a3 3 0 1 0 3 3h5" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="6.5" r=".8" fill="#fff"/>'),
+    grid:fill('<rect x="3" y="3" width="18" height="18" rx="4" fill="#f59e0b"/><path d="M8 4v16M16 4v16M4 8h16M4 16h16" stroke="#fff" stroke-width="1.5" opacity=".85"/><text x="12" y="14.6" text-anchor="middle" font-size="5.2" font-family="system-ui" font-weight="800" fill="#fff">2048</text>'),
+    mine:fill('<circle cx="12" cy="12" r="5" fill="#111827"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="#111827" stroke-width="1.7" stroke-linecap="round"/><circle cx="10.5" cy="10.5" r="1" fill="#fff"/>')
   };
   return map[name]||map.file;
 }
@@ -477,14 +554,14 @@ function defaultState(){
   return {
     version:4,accent:"#2563eb",wallpaper:"glass",
     vfs:{
-      Desktop:[fileObj("Welcome.txt","Welcome to WinOS.\n\nOpen File Explorer, create text files, edit in Notepad, move windows, refresh, and everything restores.")],
+      Desktop:[fileObj("Welcome.txt","Welcome to WebOS Glass.\n\nOpen File Explorer, create named files, edit in Notepad, move windows, play games, switch live wallpapers, refresh, and everything restores.")],
       Documents:[fileObj("notes.txt","Multiple files are stored in the virtual file system and synced with the server when signed in.")],
       Downloads:[],Pictures:[],Music:[]
     },
-    events:{},todos:[{id:uid("todo"),text:"Make the web OS feel like Windows",done:false,createdAt:Date.now()}],
+    events:{},todos:[{id:uid("todo"),text:"Make this web OS feel polished and alive",done:false,createdAt:Date.now()}],
     calc:{display:"0",stored:null,operator:null,waiting:false,history:""},
-    games:{ttt:{board:Array(9).fill(""),turn:"X",mode:"ai",status:"Your move",scores:{x:0,o:0,draw:0}},memory:null},
-    camera:{mirror:true,status:"Camera ready."},
+    games:{ttt:{board:Array(9).fill(""),turn:"X",mode:"ai",status:"Your move",scores:{x:0,o:0,draw:0}},memory:null,snake:null,g2048:null,mines:null},
+    camera:{mirror:true,status:"Camera ready. Use HTTPS or localhost and allow permission.",details:""},
     windows:[]
   };
 }
@@ -526,14 +603,20 @@ function sanitizeWindows(wins){
   return (wins||[]).filter(w=>appDefs[w.app]).map((w,i)=>{
     const d=appDefs[w.app], ww=Math.max(320,innerWidth-18), wh=Math.max(210,innerHeight-60);
     const out={id:w.id||uid("win"),app:w.app,title:w.title||d.title,icon:w.icon||d.icon,x:clamp(Number(w.x)||80,0,Math.max(0,innerWidth-100)),y:clamp(Number(w.y)||60,0,Math.max(0,innerHeight-80)),w:clamp(Number(w.w)||d.w,286,ww),h:clamp(Number(w.h)||d.h,170,wh),z:Number(w.z)||100+i,minimized:!!w.minimized,maximized:!!w.maximized,focused:!!w.focused&&!focused,data:w.data||{}};
+    if(innerWidth<=760)out.maximized=true;
     if(out.focused)focused=true; zTop=Math.max(zTop,out.z); return out;
   });
 }
 function applyTheme(){
+  if(String(state.wallpaper||"").startsWith("video-"))state.wallpaper="live-aurora";
   document.documentElement.style.setProperty("--accent",state.accent||"#2563eb");
+  if(activeWallpaper===state.wallpaper)return;
+  activeWallpaper=state.wallpaper;
   const wall=document.getElementById("wallpaper");
+  const video=document.getElementById("wallpaperVideo");
+  const live=document.getElementById("wallpaperLive");
   const picked=wallpaperChoices.find(w=>w.id===state.wallpaper);
-  wall.className="wallpaper "+((picked&&picked.cls)||"");
+  wall.className="wallpaper "+((picked&&picked.cls)||"")+(picked&&picked.video?" video-on":"")+(picked&&picked.live?" live-on":"");
   if(String(state.wallpaper||"").startsWith("url:")){
     const url=state.wallpaper.slice(4);
     wall.style.background=`linear-gradient(140deg,rgba(4,12,24,.08),rgba(0,0,0,.22)),url('${url}') center/cover no-repeat`;
@@ -542,10 +625,62 @@ function applyTheme(){
   }else{
     wall.style.background="";
   }
+  if(video){
+    if(picked&&picked.video&&matchMedia("(prefers-reduced-motion: no-preference)").matches){
+      if(video.src!==picked.video)video.src=picked.video;
+      video.play().catch(()=>{});
+    }else{
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    }
+  }
+  if(live){
+    if(picked&&picked.live&&matchMedia("(prefers-reduced-motion: no-preference)").matches)startLiveWallpaper(picked.live);
+    else stopLiveWallpaper();
+  }
   wall.style.filter=state.wallpaper==="dark"||state.wallpaper==="midnight"?"brightness(.78)":"";
+}
+function startLiveWallpaper(mode){
+  if(liveWallpaperMode===mode&&liveWallpaperFrame)return;
+  stopLiveWallpaper();
+  liveWallpaperMode=mode;
+  liveWallpaperFrame=requestAnimationFrame(drawLiveWallpaper);
+}
+function stopLiveWallpaper(){
+  if(liveWallpaperFrame)cancelAnimationFrame(liveWallpaperFrame);
+  liveWallpaperFrame=0;liveWallpaperMode="";liveWallpaperLast=0;
+}
+function drawLiveWallpaper(t){
+  const c=document.getElementById("wallpaperLive");if(!c||!liveWallpaperMode)return;
+  if(t-liveWallpaperLast<33){liveWallpaperFrame=requestAnimationFrame(drawLiveWallpaper);return}
+  liveWallpaperLast=t;
+  const dpr=Math.min(devicePixelRatio||1,1.25),w=Math.max(640,Math.floor(innerWidth*dpr)),h=Math.max(420,Math.floor(innerHeight*dpr));
+  if(c.width!==w||c.height!==h){c.width=w;c.height=h}
+  const ctx=c.getContext("2d"),time=t*.00018;
+  const bg=ctx.createLinearGradient(0,0,w,h);
+  if(liveWallpaperMode==="bloom"){bg.addColorStop(0,"#e9f4ff");bg.addColorStop(.52,"#d7f7ef");bg.addColorStop(1,"#f3e8ff")}
+  else{bg.addColorStop(0,"#020617");bg.addColorStop(.5,liveWallpaperMode==="ribbons"?"#312e81":"#064e3b");bg.addColorStop(1,"#0f172a")}
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  const palette=liveWallpaperMode==="bloom"?["rgba(56,189,248,.34)","rgba(244,114,182,.26)","rgba(34,197,94,.22)"]:["rgba(45,212,191,.42)","rgba(129,140,248,.34)","rgba(244,114,182,.22)","rgba(250,204,21,.16)"];
+  for(let i=0;i<7;i++){
+    const x=(Math.sin(time*(1.2+i*.19)+i)*.42+.5)*w;
+    const y=(Math.cos(time*(1.05+i*.13)+i*1.7)*.38+.5)*h;
+    const r=(.18+((i%3)*.055))*Math.max(w,h);
+    const g=ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,palette[i%palette.length]);g.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+  }
+  if(liveWallpaperMode==="ribbons"){
+    ctx.globalAlpha=.55;ctx.lineWidth=Math.max(18,w*.018);ctx.lineCap="round";
+    for(let i=0;i<5;i++){ctx.strokeStyle=palette[i%palette.length];ctx.beginPath();for(let x=-80;x<w+80;x+=80){const y=h*(.22+i*.14)+Math.sin(x*.008+time*10+i)*h*.06;ctx[i?"lineTo":"moveTo"](x,y)}ctx.stroke()}
+    ctx.globalAlpha=1;
+  }
+  liveWallpaperFrame=requestAnimationFrame(drawLiveWallpaper);
 }
 function switchScreen(next){screen=next;["lockScreen","loginScreen","welcomeScreen","desktop","taskbar"].forEach(id=>document.getElementById(id).classList.add("hidden"));if(next==="lock")document.getElementById("lockScreen").classList.remove("hidden");if(next==="login")document.getElementById("loginScreen").classList.remove("hidden");if(next==="welcome")document.getElementById("welcomeScreen").classList.remove("hidden");if(next==="desktop"){document.getElementById("desktop").classList.remove("hidden");document.getElementById("taskbar").classList.remove("hidden");renderAll()}}
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+function timeout(ms,message){return new Promise((_,reject)=>setTimeout(()=>reject(new Error(message)),ms))}
 async function showWelcomeAnimation(user){
   const welcome=document.getElementById("welcomeScreen"),line=document.getElementById("welcomeLine");
   if(!welcome||!line)return;
@@ -562,6 +697,7 @@ async function showWelcomeAnimation(user){
 }
 function tick(){const n=new Date();document.getElementById("lockTime").textContent=n.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});document.getElementById("lockDate").textContent=n.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"});renderClock();const mt=document.getElementById("memoryTimer"),g=state.games&&state.games.memory;if(mt&&g&&g.startedAt&&!g.done)mt.textContent=String(Math.floor((Date.now()-g.startedAt)/1000))}
 setInterval(tick,1000);
+setInterval(stepSnake,220);
 document.getElementById("lockScreen").addEventListener("click",()=>switchScreen("login"));
 document.querySelectorAll("[data-auth-tab]").forEach(b=>b.addEventListener("click",()=>{authMode=b.dataset.authTab;document.querySelectorAll("[data-auth-tab]").forEach(x=>x.classList.toggle("active",x.dataset.authTab===authMode));document.getElementById("loginSubmit").textContent=authMode==="login"?"Sign in":"Create"}));
 document.getElementById("loginUser").addEventListener("input",e=>document.getElementById("loginAvatar").textContent=(e.target.value||"U")[0].toUpperCase());
@@ -580,7 +716,26 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
 function extOf(name){const m=String(name||"").match(/(\.[a-z0-9]+)$/i);return m?m[1].toLowerCase():""}
 function fileIcon(name){const ext=extOf(name);return [".txt",".md",".json",".js",".html",".css",".py"].includes(ext)?icon("file",34):icon("file",34)}
 function findFile(id){for(const folder of folders){const f=(state.vfs[folder]||[]).find(x=>x.id===id);if(f)return{folder,file:f}}return null}
-function createFile(folder,name,content=""){let clean=(name||"New Text Document.txt").trim();if(!/\.[a-z0-9]+$/i.test(clean))clean+=".txt";const ext=extOf(clean);const f=fileObj(clean,content || fileTemplates[ext] || "");state.vfs[folder]=[...(state.vfs[folder]||[]),f];saveState();return f}
+function normalizeFileName(name,defaultExt=".txt"){
+  let clean=String(name||"").trim().replace(/[\\/:*?"<>|]/g,"-").replace(/\s+/g," ");
+  clean=clean.replace(/^\.+/,"").slice(0,80);
+  if(!clean)return"";
+  if(!/\.[a-z0-9]+$/i.test(clean))clean+=defaultExt;
+  return clean;
+}
+function uniqueFileName(folder,name){
+  const list=state.vfs[folder]||[],ext=extOf(name),base=ext?name.slice(0,-ext.length):name;
+  let candidate=name,n=2;
+  while(list.some(f=>f.name.toLowerCase()===candidate.toLowerCase()))candidate=`${base} ${n++}${ext}`;
+  return candidate;
+}
+function createFile(folder,name,content=""){
+  const clean=normalizeFileName(name);
+  if(!clean)throw new Error("Please enter a file name.");
+  const finalName=uniqueFileName(folder,clean),ext=extOf(finalName);
+  const f=fileObj(finalName,content || fileTemplates[ext] || "");
+  state.vfs[folder]=[...(state.vfs[folder]||[]),f];saveState();return f;
+}
 function updateFile(id,patch){const found=findFile(id);if(!found)return;state.vfs[found.folder]=state.vfs[found.folder].map(f=>f.id===id?{...f,...patch,updatedAt:iso()}:f);saveState()}
 function deleteFile(id){const found=findFile(id);if(!found)return;state.vfs[found.folder]=state.vfs[found.folder].filter(f=>f.id!==id);saveState();renderAll()}
 function openApp(app,data={}){
@@ -588,7 +743,8 @@ function openApp(app,data={}){
   if(d.single){const existing=state.windows.find(w=>w.app===app);if(existing){existing.minimized=false;focusWindow(existing.id);renderAll();return}}
   zTop++;const offset=Math.min(80,state.windows.length*22);
   state.windows.forEach(w=>w.focused=false);
-  state.windows.push({id:uid("win"),app,title:d.title,icon:d.icon,x:clamp(Math.round((innerWidth-d.w)/2)+offset,4,innerWidth-120),y:clamp(Math.round((innerHeight-48-d.h)/2)+offset,4,innerHeight-90),w:Math.min(d.w,innerWidth-12),h:Math.min(d.h,innerHeight-56),z:zTop,minimized:false,maximized:false,focused:true,data});
+  const mobile=innerWidth<=760;
+  state.windows.push({id:uid("win"),app,title:d.title,icon:d.icon,x:clamp(Math.round((innerWidth-d.w)/2)+offset,4,innerWidth-120),y:clamp(Math.round((innerHeight-48-d.h)/2)+offset,4,innerHeight-90),w:Math.min(d.w,innerWidth-12),h:Math.min(d.h,innerHeight-varTaskbar()-12),z:zTop,minimized:false,maximized:mobile,focused:true,data});
   saveState();renderAll();
 }
 function focusWindow(id){zTop++;state.windows.forEach(w=>{w.focused=w.id===id;if(w.id===id){w.z=zTop;w.minimized=false}});saveState()}
@@ -598,27 +754,28 @@ function maxWindow(id){const w=state.windows.find(x=>x.id===id);if(w){w.maximize
 function renderAll(){applyTheme();renderDesktop();renderWindows();renderTaskbar();renderStart();renderCalendarPop()}
 function renderDesktop(){
   const el=document.getElementById("desktopIcons");
-  const desktopApps=["explorer","chromium","notepad","google","youtube","calculator","camera","tictactoe","memory","settings"];
   const appIcons=desktopApps.map(a=>`<button class="desk-icon" data-open="${a}"><span class="app-ico">${icon(appDefs[a].icon,34)}</span><span class="desk-label">${appDefs[a].title}</span></button>`).join("");
   const files=(state.vfs.Desktop||[]).map(f=>`<button class="desk-icon" data-file="${f.id}"><span class="app-ico">${fileIcon(f.name)}</span><span class="desk-label">${escapeHtml(f.name)}</span></button>`).join("");
-  el.innerHTML=appIcons+files;el.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("dblclick",()=>openApp(b.dataset.open)));el.querySelectorAll("[data-file]").forEach(b=>b.addEventListener("dblclick",()=>openApp("notepad",{fileId:b.dataset.file})));
+  el.innerHTML=appIcons+files;
+  el.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openApp(b.dataset.open)));
+  el.querySelectorAll("[data-file]").forEach(b=>b.addEventListener("click",()=>openApp("notepad",{fileId:b.dataset.file})));
 }
 function renderWindows(){
   const root=document.getElementById("windows");
   root.innerHTML=state.windows.map(w=>w.minimized?"":`<section class="window ${w.focused?"focused":""} ${w.maximized?"maximized":""}" data-win="${w.id}" style="${w.maximized?`left:0;top:0;width:100vw;height:calc(100vh - var(--taskbar-h));z-index:${w.z}`:`left:${w.x}px;top:${w.y}px;width:${w.w}px;height:${w.h}px;z-index:${w.z}`}">
     <div class="titlebar drag" data-drag="${w.id}"><span class="win-ico">${icon(w.icon,16)}</span><span class="win-title">${escapeHtml(w.title)}</span><div class="win-controls"><button class="win-control" data-min="${w.id}">${icon("minus",12)}</button><button class="win-control" data-max="${w.id}">${icon("square",12)}</button><button class="win-control close" data-close="${w.id}">${icon("close",13)}</button></div></div>
     <div class="win-body">${renderApp(w)}</div>${w.maximized?"":["n","s","e","w","ne","nw","se","sw"].map(h=>`<div class="resize-handle ${h}" data-resize="${w.id}:${h}"></div>`).join("")}</section>`).join("");
-  root.querySelectorAll("[data-win]").forEach(e=>e.addEventListener("mousedown",()=>focusWindow(e.dataset.win),{capture:true}));
+  root.querySelectorAll("[data-win]").forEach(e=>e.addEventListener("pointerdown",()=>focusWindow(e.dataset.win),{capture:true}));
   root.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();closeWindow(b.dataset.close)}));
   root.querySelectorAll("[data-min]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();minWindow(b.dataset.min)}));
   root.querySelectorAll("[data-max]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();maxWindow(b.dataset.max)}));
-  root.querySelectorAll("[data-drag]").forEach(b=>b.addEventListener("mousedown",startDrag));
-  root.querySelectorAll("[data-resize]").forEach(b=>b.addEventListener("mousedown",startResize));
+  root.querySelectorAll("[data-drag]").forEach(b=>b.addEventListener("pointerdown",startDrag));
+  root.querySelectorAll("[data-resize]").forEach(b=>b.addEventListener("pointerdown",startResize));
   attachHandlers(root);
   attachCameraStreams();
 }
-function startDrag(e){if(e.target.closest(".win-controls"))return;const id=e.currentTarget.dataset.drag,w=state.windows.find(x=>x.id===id);if(!w||w.maximized)return;focusWindow(id);const el=document.querySelector(`[data-win="${id}"]`),sx=e.clientX,sy=e.clientY,ox=w.x,oy=w.y;function mv(ev){w.x=clamp(ox+ev.clientX-sx,0,innerWidth-90);w.y=clamp(oy+ev.clientY-sy,0,innerHeight-60);el.style.left=w.x+"px";el.style.top=w.y+"px";saveState()}function up(){document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);saveState(true)}document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up)}
-function startResize(e){e.stopPropagation();const parts=e.currentTarget.dataset.resize.split(":"),id=parts[0],dir=parts[1]||"se",w=state.windows.find(x=>x.id===id),el=document.querySelector(`[data-win="${id}"]`),sx=e.clientX,sy=e.clientY,ox=w.x,oy=w.y,ow=w.w,oh=w.h,minW=appDefs[w.app]?.minW||286,minH=appDefs[w.app]?.minH||170;function mv(ev){let dx=ev.clientX-sx,dy=ev.clientY-sy,nx=ox,ny=oy,nw=ow,nh=oh;if(dir.includes("e"))nw=ow+dx;if(dir.includes("s"))nh=oh+dy;if(dir.includes("w")){nw=ow-dx;nx=ox+dx;if(nw<minW){nx=ox+ow-minW;nw=minW}}if(dir.includes("n")){nh=oh-dy;ny=oy+dy;if(nh<minH){ny=oy+oh-minH;nh=minH}}nx=clamp(nx,0,innerWidth-minW);ny=clamp(ny,0,innerHeight-varTaskbar()-minH);nw=clamp(nw,minW,innerWidth-nx);nh=clamp(nh,minH,innerHeight-varTaskbar()-ny);Object.assign(w,{x:nx,y:ny,w:nw,h:nh});el.style.left=nx+"px";el.style.top=ny+"px";el.style.width=nw+"px";el.style.height=nh+"px"}function up(){document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);saveState(true)}document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up)}
+function startDrag(e){if(e.target.closest(".win-controls"))return;const id=e.currentTarget.dataset.drag,w=state.windows.find(x=>x.id===id);if(!w||w.maximized)return;e.preventDefault();focusWindow(id);const el=document.querySelector(`[data-win="${id}"]`),sx=e.clientX,sy=e.clientY,ox=w.x,oy=w.y,pid=e.pointerId;e.currentTarget.setPointerCapture?.(pid);function mv(ev){w.x=clamp(ox+ev.clientX-sx,0,innerWidth-90);w.y=clamp(oy+ev.clientY-sy,0,innerHeight-varTaskbar()-40);el.style.left=w.x+"px";el.style.top=w.y+"px"}function up(){document.removeEventListener("pointermove",mv);document.removeEventListener("pointerup",up);document.removeEventListener("pointercancel",up);saveState(true)}document.addEventListener("pointermove",mv);document.addEventListener("pointerup",up);document.addEventListener("pointercancel",up)}
+function startResize(e){e.preventDefault();e.stopPropagation();const parts=e.currentTarget.dataset.resize.split(":"),id=parts[0],dir=parts[1]||"se",w=state.windows.find(x=>x.id===id),el=document.querySelector(`[data-win="${id}"]`),sx=e.clientX,sy=e.clientY,ox=w.x,oy=w.y,ow=w.w,oh=w.h,minW=appDefs[w.app]?.minW||286,minH=appDefs[w.app]?.minH||170,pid=e.pointerId;e.currentTarget.setPointerCapture?.(pid);function mv(ev){let dx=ev.clientX-sx,dy=ev.clientY-sy,nx=ox,ny=oy,nw=ow,nh=oh;if(dir.includes("e"))nw=ow+dx;if(dir.includes("s"))nh=oh+dy;if(dir.includes("w")){nw=ow-dx;nx=ox+dx;if(nw<minW){nx=ox+ow-minW;nw=minW}}if(dir.includes("n")){nh=oh-dy;ny=oy+dy;if(nh<minH){ny=oy+oh-minH;nh=minH}}nx=clamp(nx,0,innerWidth-minW);ny=clamp(ny,0,innerHeight-varTaskbar()-minH);nw=clamp(nw,minW,innerWidth-nx);nh=clamp(nh,minH,innerHeight-varTaskbar()-ny);Object.assign(w,{x:nx,y:ny,w:nw,h:nh});el.style.left=nx+"px";el.style.top=ny+"px";el.style.width=nw+"px";el.style.height=nh+"px"}function up(){document.removeEventListener("pointermove",mv);document.removeEventListener("pointerup",up);document.removeEventListener("pointercancel",up);saveState(true)}document.addEventListener("pointermove",mv);document.addEventListener("pointerup",up);document.addEventListener("pointercancel",up)}
 function varTaskbar(){return parseInt(getComputedStyle(document.documentElement).getPropertyValue("--taskbar-h"))||48}
 function renderClock(){const t=document.querySelector(".clock-time"),d=document.querySelector(".clock-date");if(!t||!d)return;const n=new Date();t.textContent=n.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});d.textContent=n.toLocaleDateString([],{month:"numeric",day:"numeric"})}
 function batteryLabel(){return batteryState.level==null?"--%":`${batteryState.level}%${batteryState.charging?" ⚡":""}`}
@@ -635,9 +792,9 @@ function toggleStart(force){const el=document.getElementById("startMenu");const 
 function toggleCalendar(force){const el=document.getElementById("calendarPop");el.classList.toggle("open",typeof force==="boolean"?force:!el.classList.contains("open"));renderCalendarPop()}
 function renderCalendarPop(){const el=document.getElementById("calendarPop"),y=calendarView.getFullYear(),m=calendarView.getMonth();el.innerHTML=`<div class="cal-head"><div class="cal-title">${calendarView.toLocaleDateString([],{month:"long",year:"numeric"})}</div><div class="cal-nav"><button id="calPrev">&lt;</button><button id="calNext">&gt;</button></div></div>${calendarGrid(y,m)}<button class="tool-btn primary" style="width:100%;margin-top:12px" id="openCal">Open Calendar</button>`;el.querySelector("#calPrev").addEventListener("click",()=>{calendarView.setMonth(calendarView.getMonth()-1);renderCalendarPop()});el.querySelector("#calNext").addEventListener("click",()=>{calendarView.setMonth(calendarView.getMonth()+1);renderCalendarPop()});el.querySelector("#openCal").addEventListener("click",()=>{openApp("calendar");toggleCalendar(false)})}
 function calendarGrid(y,m){const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),today=new Date();let html=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div class="cal-dow">${d}</div>`).join("");for(let i=0;i<first;i++)html+="<div></div>";for(let d=1;d<=days;d++){const key=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,cls=`${today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d?"today":""} ${(state.events[key]||[]).length?"has":""}`;html+=`<button class="cal-day ${cls}" data-date="${key}">${d}</button>`}return`<div class="cal-grid">${html}</div>`}
-function renderApp(w){return ({explorer:explorerApp,notepad:notepadApp,chromium:chromiumApp,google:googleApp,youtube:youtubeApp,calendar:calendarApp,apis:apisApp,todo:todoApp,calculator:calculatorApp,camera:cameraApp,tictactoe:ticTacToeApp,memory:memoryApp,settings:settingsApp}[w.app]||(()=>"<div></div>"))(w)}
-function explorerApp(w){const folder=w.data.folder||"Documents",files=state.vfs[folder]||[];return`<div class="app-shell"><div class="toolbar"><input class="tool-input" id="new_${w.id}" placeholder="New file name"><button class="tool-btn primary" data-new-file="${w.id}">New</button><button class="tool-btn" data-open-note="${w.id}">Notepad</button></div><div class="split"><aside class="sidebar">${folders.map(f=>`<button class="side-item ${f===folder?"active":""}" data-folder="${w.id}:${f}">${icon("folder",18)} ${f}</button>`).join("")}</aside><main class="main-pane"><div class="pathbar">This PC / ${folder}</div><div class="file-grid">${files.length?files.map(f=>`<button class="file-card" data-file-open="${f.id}"><span class="app-ico">${fileIcon(f.name)}</span><span class="file-name">${escapeHtml(f.name)}</span><button class="tool-btn danger" style="position:absolute;right:4px;top:4px;height:22px;padding:0 7px" data-file-del="${f.id}">x</button></button>`).join(""):`<div class="empty">This folder is empty.</div>`}</div></main></div></div>`}
-function notepadApp(w){const found=w.data.fileId?findFile(w.data.fileId):null,file=found&&found.file,name=file?file.name:(w.data.name||"Untitled.txt"),text=file?file.content:(w.data.content||""),words=text.trim()?text.trim().split(/\s+/).length:0;return`<div class="notepad"><div class="note-bar"><input class="note-title" data-note-name="${w.id}" value="${escapeHtml(name)}"><span class="note-stat" id="stat_${w.id}">${words} words, ${text.length} chars</span><button class="tool-btn primary" data-note-save="${w.id}">Save</button></div><textarea class="note-area" data-note-text="${w.id}" spellcheck="false">${escapeHtml(text)}</textarea></div>`}
+function renderApp(w){return ({explorer:explorerApp,notepad:notepadApp,chromium:chromiumApp,google:googleApp,youtube:youtubeApp,calendar:calendarApp,apis:apisApp,todo:todoApp,calculator:calculatorApp,camera:cameraApp,roanime:roanimeApp,tictactoe:ticTacToeApp,memory:memoryApp,snake:snakeApp,game2048:game2048App,minesweeper:minesweeperApp,settings:settingsApp}[w.app]||(()=>"<div></div>"))(w)}
+function explorerApp(w){const folder=w.data.folder||"Documents",files=state.vfs[folder]||[],draft=w.data.newName||"",err=w.data.fileError||"";return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="min-width:210px" id="new_${w.id}" data-new-name="${w.id}" value="${escapeHtml(draft)}" placeholder="Name file, e.g. story.md"><button class="tool-btn primary" data-new-file="${w.id}">Create</button><button class="tool-btn" data-open-note="${w.id}">Notepad</button>${err?`<span class="file-error">${escapeHtml(err)}</span>`:""}</div><div class="split"><aside class="sidebar">${folders.map(f=>`<button class="side-item ${f===folder?"active":""}" data-folder="${w.id}:${f}">${icon("folder",18)} ${f}</button>`).join("")}</aside><main class="main-pane"><div class="pathbar">WebOS / ${folder} / ${files.length} item${files.length===1?"":"s"}</div><div class="file-grid">${files.length?files.map(f=>`<button class="file-card" data-file-open="${f.id}"><span class="app-ico">${fileIcon(f.name)}</span><span class="file-name">${escapeHtml(f.name)}</span><button class="tool-btn danger" title="Delete" style="position:absolute;right:4px;top:4px;height:22px;padding:0 7px" data-file-del="${f.id}">x</button></button>`).join(""):`<div class="empty">This folder is empty.</div>`}</div></main></div></div>`}
+function notepadApp(w){const found=w.data.fileId?findFile(w.data.fileId):null,file=found&&found.file,name=file?file.name:(w.data.name||"Untitled.txt"),text=file?file.content:(w.data.content||""),words=text.trim()?text.trim().split(/\s+/).length:0,status=w.data.saveStatus||(file?`Saved in ${found.folder}`:"Unsaved document");return`<div class="notepad"><div class="note-bar"><input class="note-title" data-note-name="${w.id}" value="${escapeHtml(name)}" title="File name"><span class="note-stat" id="stat_${w.id}">${words} words, ${text.length} chars</span><span class="note-stat" id="noteStatus_${w.id}">${escapeHtml(status)}</span><button class="tool-btn primary" data-note-save="${w.id}">Save</button></div><textarea class="note-area" data-note-text="${w.id}" spellcheck="false">${escapeHtml(text)}</textarea></div>`}
 function tabDefaults(w){if(!w.data.tabs)w.data.tabs=[{id:uid("tab"),title:"New tab",url:"about:blank"}];if(!w.data.activeTab)w.data.activeTab=w.data.tabs[0].id;return w.data.tabs.find(t=>t.id===w.data.activeTab)||w.data.tabs[0]}
 function normUrl(v){v=(v||"").trim();if(!v)return"about:blank";if(/\s/.test(v))return"https://www.google.com/search?q="+encodeURIComponent(v);if(/^https?:\/\//i.test(v))return v;return"https://"+v}
 function chromiumContent(tab){
@@ -648,7 +805,7 @@ function chromiumContent(tab){
   const url=normUrl(tab.url);
   return`<iframe src="/api/browser/page?url=${encodeURIComponent(url)}"></iframe><button class="browser-open" data-open-external="${escapeHtml(url)}">Open original page</button><div class="browser-note">Chromium web view</div>`;
 }
-function chromiumApp(w){const tab=tabDefaults(w);return`<div class="chrome"><div class="chrome-tabs">${w.data.tabs.map(t=>`<button class="chrome-tab ${t.id===w.data.activeTab?"active":""}" data-tab="${w.id}:${t.id}"><span>${icon("chromium",15)}</span><span class="chrome-tab-title">${escapeHtml(t.title||t.url)}</span><span data-tab-close="${w.id}:${t.id}">x</span></button>`).join("")}<button class="chrome-plus" data-tab-new="${w.id}">+</button></div><div class="chrome-toolbar"><button class="chrome-icon-btn">${icon("back",16)}</button><button class="chrome-icon-btn">${icon("forward",16)}</button><button class="chrome-icon-btn" data-refresh-tab="${w.id}">${icon("refresh",16)}</button><input class="omnibox" data-url="${w.id}" value="${escapeHtml(tab.url==="about:blank"?"":tab.url)}" placeholder="Search or enter address"><button class="tool-btn primary" data-go="${w.id}">Go</button><button class="tool-btn" data-ext="${w.id}">Open</button></div><div class="browser-view">${chromiumContent(tab)}</div></div>`}
+function chromiumApp(w){const tab=tabDefaults(w);return`<div class="chromium"><div class="chromium-tabs">${w.data.tabs.map(t=>`<button class="chromium-tab ${t.id===w.data.activeTab?"active":""}" data-tab="${w.id}:${t.id}"><span>${icon("chromium",15)}</span><span class="chromium-tab-title">${escapeHtml(t.title||t.url)}</span><span data-tab-close="${w.id}:${t.id}">x</span></button>`).join("")}<button class="chromium-plus" data-tab-new="${w.id}">+</button></div><div class="chromium-toolbar"><button class="chromium-icon-btn">${icon("back",16)}</button><button class="chromium-icon-btn">${icon("forward",16)}</button><button class="chromium-icon-btn" data-refresh-tab="${w.id}">${icon("refresh",16)}</button><input class="omnibox" data-url="${w.id}" value="${escapeHtml(tab.url==="about:blank"?"":tab.url)}" placeholder="Search or enter address"><button class="tool-btn primary" data-go="${w.id}">Go</button><button class="tool-btn" data-ext="${w.id}">Open</button></div><div class="browser-view">${chromiumContent(tab)}</div></div>`}
 function googleApp(w){const q=w.data.query||"";return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="flex:1" data-google-q="${w.id}" value="${escapeHtml(q)}" placeholder="Search the web"><button class="tool-btn primary" data-google-go="${w.id}">Search</button></div><main class="main-pane"><div class="results" id="google_${w.id}">${w.data.results?renderWebResults(w.data.results):"Search from the box above."}</div></main></div>`}
 function renderWebResults(results){return(results||[]).map(r=>`<div class="result"><div><div class="result-title">${escapeHtml(r.title)}</div><div class="result-url">${escapeHtml(r.url)}</div><div class="result-text">${escapeHtml(r.snippet||"")}</div><button class="tool-btn primary" style="margin-top:8px" data-open-url="${escapeHtml(r.url)}">Open in Chromium</button></div></div>`).join("")||'<div class="empty">No results.</div>'}
 function youtubeApp(w){const q=w.data.query||"lofi";return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="flex:1" data-yt-q="${w.id}" value="${escapeHtml(q)}" placeholder="Search YouTube"><button class="tool-btn primary" data-yt-go="${w.id}">Search</button></div><div class="split">${w.data.embed?`<main style="flex:1;background:#000"><iframe style="width:100%;height:100%;border:0" allowfullscreen src="${escapeHtml(w.data.embed)}"></iframe></main>`:""}<aside class="main-pane" style="${w.data.embed?"width:340px;flex:0 0 340px":""}"><div class="results" id="yt_${w.id}">${w.data.results?renderYtResults(w.data.results):"Search videos."}</div></aside></div></div>`}
@@ -659,8 +816,9 @@ function todoApp(){return`<div class="app-shell"><div class="toolbar"><input cla
 function calculatorApp(){const c=getCalc(),keys=["AC","Back","%","/","7","8","9","*","4","5","6","-","1","2","3","+","+/-","0",".","="];return`<div class="calc"><div class="calc-screen"><div class="calc-history">${escapeHtml(c.history||"")}</div><div class="calc-display" id="calcDisplay">${escapeHtml(c.display||"0")}</div></div><div class="calc-grid">${keys.map(k=>`<button class="calc-key ${"/*-+=".includes(k)?"op":""} ${k==="="?"eq":""} ${["AC","Back","%","+/-"].includes(k)?"utility":""}" data-calc="${k}" style="${k==="0"?"grid-column:span 1":""}">${k}</button>`).join("")}</div></div>`}
 function ticTacToeApp(){const g=getTtt(),wins=winningLine(g.board)||[];return`<div class="app-shell"><div class="toolbar"><div class="segmented"><button class="${g.mode==="ai"?"active":""}" data-ttt-mode="ai">Vs AI</button><button class="${g.mode==="pvp"?"active":""}" data-ttt-mode="pvp">2 Player</button></div><button class="tool-btn primary" data-ttt-reset>New Game</button></div><main class="main-pane"><div class="game-stats"><strong>${escapeHtml(g.status)}</strong><span>X ${g.scores.x} / O ${g.scores.o} / Draw ${g.scores.draw}</span></div><div class="game-board ttt-board">${g.board.map((v,i)=>`<button class="ttt-cell ${wins.includes(i)?"matched":""}" data-ttt-cell="${i}">${escapeHtml(v)}</button>`).join("")}</div></main></div>`}
 function memoryApp(){const g=getMemory();const elapsed=g.startedAt&&!g.done?Math.floor((Date.now()-g.startedAt)/1000):g.elapsed||0;return`<div class="app-shell"><div class="toolbar"><button class="tool-btn primary" data-memory-reset>New Board</button><span class="muted">Moves ${g.moves} / Matches ${g.matched.length/2} / Time <span id="memoryTimer">${elapsed}</span>s</span></div><main class="main-pane"><div class="game-stats"><strong>${g.done?"Board cleared":"Find every pair"}</strong><span>${g.flipped.length?`${g.flipped.length} selected`:"Choose a card"}</span></div><div class="game-board memory-board">${g.cards.map((card,i)=>{const on=g.flipped.includes(i)||g.matched.includes(i);return`<button class="memory-card ${on?"flipped":""} ${g.matched.includes(i)?"matched":""}" data-memory-card="${i}">${on?escapeHtml(card):""}</button>`}).join("")}</div></main></div>`}
-function cameraApp(){const c=state.camera||{};const phoneUrl=c.phoneUrl||"";return`<div class="camera-shell"><main class="camera-stage"><video id="cameraVideo" class="camera-video ${c.mirror?"mirror":""}" autoplay playsinline muted></video></main><aside class="camera-side"><h2 style="font-weight:500;margin-bottom:8px">Camera</h2><div class="camera-status">${escapeHtml(c.status||"Camera ready.")}</div><button class="tool-btn primary" style="width:100%;margin-bottom:8px" data-camera-local>Start Local Camera</button><button class="tool-btn" style="width:100%;margin-bottom:8px" data-camera-phone>Use Phone Camera</button><button class="tool-btn" style="width:100%;margin-bottom:8px" data-camera-mirror>${c.mirror?"Mirror On":"Mirror Off"}</button><button class="tool-btn" style="width:100%;margin-bottom:8px" data-camera-shot>Capture Snapshot</button>${phoneUrl?`<div class="qr-box"><img alt="Phone camera QR" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(phoneUrl)}"></div><input class="tool-input" style="width:100%;margin-bottom:8px" readonly value="${escapeHtml(phoneUrl)}"><div class="camera-status">Open this link on your phone and allow camera access.</div>`:""}${c.photo?`<img class="camera-shot" alt="Captured snapshot" src="${c.photo}">`:""}</aside></div>`}
-function settingsApp(){return`<div class="app-shell"><main class="main-pane"><h2 style="font-weight:500;margin-bottom:12px">Settings</h2><div class="settings-row"><div><strong>Accent color</strong><div class="muted">Used for taskbar and focused controls.</div></div><div class="swatches">${accents.map(c=>`<button class="swatch ${state.accent===c?"active":""}" style="background:${c}" data-accent="${c}"></button>`).join("")}</div></div><div class="settings-row"><div><strong>Animated wallpaper</strong><div class="muted">Glass, liquid, and calm motion themes.</div></div><div class="wall-grid">${wallpaperChoices.map(w=>`<button class="wall-thumb ${state.wallpaper===w.id?"active":""}" style="background:${w.bg}" data-wallpaper="${w.id}"><span>${escapeHtml(w.name)}</span></button>`).join("")}</div></div><div class="settings-row"><div><strong>Persistence</strong><div class="muted">${token?"Local and server sync":"Local mode"}</div></div><button class="tool-btn primary" data-force-sync>Save now</button></div><div class="settings-row"><div><strong>Reset OS</strong><div class="muted">Restore default desktop.</div></div><button class="tool-btn danger" data-reset>Reset</button></div></main></div>`}
+function cameraApp(){const c=state.camera||{},phoneUrl=c.phoneUrl||"",live=!!(cameraStream||phoneStream);return`<div class="camera-shell"><main class="camera-stage"><video id="cameraVideo" class="camera-video ${c.mirror?"mirror":""}" autoplay playsinline muted></video></main><aside class="camera-side"><h2 style="font-weight:600;margin-bottom:8px">Camera</h2><div class="camera-status">${escapeHtml(c.status||"Camera ready.")}</div>${live?'<div class="camera-meter"><span></span></div>':""}<div class="camera-tools"><button class="tool-btn primary" data-camera-local>${live?"Restart Local Camera":"Start Local Camera"}</button><button class="tool-btn" data-camera-phone>Use Phone Camera</button><button class="tool-btn" data-camera-mirror>${c.mirror?"Mirror On":"Mirror Off"}</button><button class="tool-btn" data-camera-shot>Capture Snapshot</button><button class="tool-btn danger" data-camera-stop>Stop Camera</button></div>${c.details?`<div class="camera-status">${escapeHtml(c.details)}</div>`:""}${phoneUrl?`<div class="qr-box"><img alt="Phone camera QR" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(phoneUrl)}"></div><input class="tool-input" style="width:100%;margin-bottom:8px" readonly value="${escapeHtml(phoneUrl)}"><div class="camera-status">Open this link on your phone and allow camera access.</div>`:""}${c.photo?`<img class="camera-shot" alt="Captured snapshot" src="${c.photo}">`:""}</aside></div>`}
+function roanimeApp(){return`<div class="roanime"><div class="roanime-bar"><div class="roanime-title">${icon("anime",24)}<span>ROANIME</span></div><button class="tool-btn primary" data-open-roanime>Open Full Site</button></div><iframe title="Roanime" src="${ROANIME_URL}" allow="fullscreen; autoplay; encrypted-media; picture-in-picture"></iframe></div>`}
+function settingsApp(){return`<div class="app-shell"><main class="main-pane"><h2 style="font-weight:600;margin-bottom:12px">Settings</h2><div class="settings-row"><div><strong>Accent color</strong><div class="muted">Used for dock, active windows, and controls.</div></div><div class="swatches">${accents.map(c=>`<button class="swatch ${state.accent===c?"active":""}" style="background:${c}" data-accent="${c}"></button>`).join("")}</div></div><div class="settings-row"><div><strong>Motion wallpaper</strong><div class="muted">Lightweight live wallpapers, glass, liquid, and calm motion themes.</div></div><div class="wall-grid">${wallpaperChoices.map(w=>`<button class="wall-thumb ${state.wallpaper===w.id?"active":""}" style="background:${w.bg}" data-wallpaper="${w.id}"><span>${escapeHtml(w.live?"Live "+w.name:w.name)}</span></button>`).join("")}</div></div><div class="settings-row"><div><strong>Persistence</strong><div class="muted">${token?"Local and server sync":"Local mode"}</div></div><button class="tool-btn primary" data-force-sync>Save now</button></div><div class="settings-row"><div><strong>Reset OS</strong><div class="muted">Restore default desktop.</div></div><button class="tool-btn danger" data-reset>Reset</button></div></main></div>`}
 function getCalc(){state.calc={display:"0",stored:null,operator:null,waiting:false,history:"",...(state.calc||{})};return state.calc}
 function getTtt(){const base={board:Array(9).fill(""),turn:"X",mode:"ai",status:"Your move",scores:{x:0,o:0,draw:0}};state.games=state.games||{};state.games.ttt={...base,...(state.games.ttt||{}),scores:{...base.scores,...((state.games.ttt&&state.games.ttt.scores)||{})}};return state.games.ttt}
 function resetTtt(keepScores=true){const old=getTtt();state.games.ttt={board:Array(9).fill(""),turn:"X",mode:old.mode,status:"Your move",scores:keepScores?old.scores:{x:0,o:0,draw:0}};saveState();renderAll()}
@@ -672,20 +830,79 @@ function newMemoryDeck(){const faces=["A","B","C","D","E","F","G","H"],deck=[...
 function getMemory(){state.games=state.games||{};if(!state.games.memory)state.games.memory=newMemoryDeck();return state.games.memory}
 function resetMemory(){state.games.memory=newMemoryDeck();saveState();renderAll()}
 function playMemory(i){const g=getMemory();if(g.done||g.matched.includes(i)||g.flipped.includes(i))return;if(g.flipped.length===2){const[a,b]=g.flipped;if(g.cards[a]!==g.cards[b])g.flipped=[]}g.flipped.push(i);if(g.flipped.length===2){g.moves++;const[a,b]=g.flipped;if(g.cards[a]===g.cards[b]){g.matched.push(a,b);g.flipped=[];if(g.matched.length===g.cards.length){g.done=true;g.elapsed=Math.floor((Date.now()-g.startedAt)/1000)}}}saveState();renderAll()}
+function snakeFresh(){return{size:14,snake:[{x:6,y:7},{x:5,y:7},{x:4,y:7}],dir:{x:1,y:0},next:{x:1,y:0},food:{x:10,y:7},score:0,best:state.games?.snake?.best||0,running:false,status:"Press Start"}}
+function getSnake(){state.games=state.games||{};if(!state.games.snake)state.games.snake=snakeFresh();return state.games.snake}
+function snakeKey(p){return p.x+","+p.y}
+function placeSnakeFood(g){const used=new Set(g.snake.map(snakeKey));let p;do{p={x:Math.floor(Math.random()*g.size),y:Math.floor(Math.random()*g.size)}}while(used.has(snakeKey(p)));g.food=p}
+function resetSnake(){state.games.snake=snakeFresh();placeSnakeFood(state.games.snake);saveState();renderAll()}
+function setSnakeDir(x,y){const g=getSnake();if(g.dir.x+x===0&&g.dir.y+y===0)return;g.next={x,y};g.status=g.running?"Running":"Ready";saveState();renderAll()}
+function stepSnake(){const win=state.windows.find(w=>w.app==="snake");if(!win||win.minimized||!win.focused)return;const g=getSnake();if(!g.running)return;g.dir=g.next;const head=g.snake[0],next={x:(head.x+g.dir.x+g.size)%g.size,y:(head.y+g.dir.y+g.size)%g.size};if(g.snake.some(p=>p.x===next.x&&p.y===next.y)){g.running=false;g.status="Game over";g.best=Math.max(g.best,g.score);saveState();renderAll();return}g.snake.unshift(next);let scored=false;if(next.x===g.food.x&&next.y===g.food.y){g.score+=10;g.best=Math.max(g.best,g.score);placeSnakeFood(g);scored=true}else g.snake.pop();if(scored)saveState();else renderAll()}
+function snakeApp(){const g=getSnake(),used=new Set(g.snake.map(snakeKey));return`<div class="app-shell"><div class="toolbar"><button class="tool-btn primary" data-snake-start>${g.running?"Pause":"Start"}</button><button class="tool-btn" data-snake-reset>New</button><span class="muted">Score ${g.score} / Best ${g.best} / ${escapeHtml(g.status)}</span></div><main class="main-pane"><div class="snake-board">${Array.from({length:g.size*g.size},(_,i)=>{const p={x:i%g.size,y:Math.floor(i/g.size)},cls=used.has(snakeKey(p))?" snake":(p.x===g.food.x&&p.y===g.food.y?" food":"");return`<span class="snake-cell${cls}"></span>`}).join("")}</div><div class="dpad"><span></span><button data-snake-dir="0:-1">Up</button><span></span><button data-snake-dir="-1:0">Left</button><button data-snake-dir="0:1">Down</button><button data-snake-dir="1:0">Right</button></div></main></div>`}
+function new2048Grid(){const g={grid:Array(16).fill(0),score:0,best:state.games?.g2048?.best||0,status:"Join matching tiles"};add2048Tile(g);add2048Tile(g);return g}
+function get2048(){state.games=state.games||{};if(!state.games.g2048)state.games.g2048=new2048Grid();return state.games.g2048}
+function add2048Tile(g){const empty=g.grid.map((v,i)=>v?null:i).filter(v=>v!=null);if(!empty.length)return;g.grid[empty[Math.floor(Math.random()*empty.length)]]=Math.random()<.9?2:4}
+function reset2048(){state.games.g2048=new2048Grid();saveState();renderAll()}
+function collapse2048(line){const vals=line.filter(Boolean),out=[];let gained=0;for(let i=0;i<vals.length;i++){if(vals[i]===vals[i+1]){out.push(vals[i]*2);gained+=vals[i]*2;i++}else out.push(vals[i])}while(out.length<4)out.push(0);return{line:out,gained}}
+function move2048(dir){const g=get2048(),old=g.grid.join(","),next=Array(16).fill(0);let gained=0;for(let a=0;a<4;a++){const line=[];for(let b=0;b<4;b++){const x=dir==="left"?b:dir==="right"?3-b:a,y=dir==="up"?b:dir==="down"?3-b:a;line.push(g.grid[y*4+x])}const c=collapse2048(line);gained+=c.gained;for(let b=0;b<4;b++){const x=dir==="left"?b:dir==="right"?3-b:a,y=dir==="up"?b:dir==="down"?3-b:a;next[y*4+x]=c.line[b]}}if(next.join(",")===old)return;g.grid=next;g.score+=gained;g.best=Math.max(g.best,g.score);add2048Tile(g);g.status=g.grid.includes(2048)?"2048 reached":"Nice move";if(!g.grid.includes(0)&&!can2048Move(g.grid))g.status="No moves left";saveState();renderAll()}
+function can2048Move(grid){for(let y=0;y<4;y++)for(let x=0;x<4;x++){const v=grid[y*4+x];if(grid[y*4+x+1]===v&&x<3)return true;if(grid[(y+1)*4+x]===v&&y<3)return true}return false}
+function game2048App(){const g=get2048();return`<div class="app-shell"><div class="toolbar"><button class="tool-btn primary" data-2048-reset>New Game</button><span class="muted">Score ${g.score} / Best ${g.best} / ${escapeHtml(g.status)}</span></div><main class="main-pane"><div class="board-2048">${g.grid.map(v=>`<button class="tile-2048 ${v?"v"+v:""}" data-2048-tile>${v||""}</button>`).join("")}</div><div class="dpad"><span></span><button data-2048-dir="up">Up</button><span></span><button data-2048-dir="left">Left</button><button data-2048-dir="down">Down</button><button data-2048-dir="right">Right</button></div></main></div>`}
+function newMines(){const width=9,height=9,total=width*height,mines=10,cells=Array(total).fill(0),spots=[...Array(total).keys()].sort(()=>Math.random()-.5).slice(0,mines);spots.forEach(i=>cells[i]=-1);for(let i=0;i<total;i++){if(cells[i]===-1)continue;cells[i]=mineNeighbors(cells,width,height,i).filter(n=>cells[n]===-1).length}return{width,height,mines,cells,revealed:[],flagged:[],status:"Find all safe tiles",done:false,won:false,flagMode:false}}
+function mineNeighbors(cells,w,h,i){const x=i%w,y=Math.floor(i/w),out=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy)continue;const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<w&&ny<h)out.push(ny*w+nx)}return out}
+function getMines(){state.games=state.games||{};if(!state.games.mines)state.games.mines=newMines();return state.games.mines}
+function resetMines(){state.games.mines=newMines();saveState();renderAll()}
+function flagMine(i){const g=getMines();if(g.done||g.revealed.includes(i))return;g.flagged=g.flagged.includes(i)?g.flagged.filter(x=>x!==i):[...g.flagged,i];saveState();renderAll()}
+function revealMine(i){const g=getMines();if(g.done||g.flagged.includes(i)||g.revealed.includes(i))return;if(g.cells[i]===-1){g.done=true;g.status="Mine hit";g.revealed=[...Array(g.cells.length).keys()];saveState();renderAll();return}const q=[i],seen=new Set(g.revealed);while(q.length){const n=q.shift();if(seen.has(n))continue;seen.add(n);if(g.cells[n]===0)mineNeighbors(g.cells,g.width,g.height,n).forEach(x=>{if(!seen.has(x)&&g.cells[x]!==-1)q.push(x)})}g.revealed=[...seen];if(g.revealed.length===g.cells.length-g.mines){g.done=true;g.won=true;g.status="Cleared"}saveState();renderAll()}
+function minesweeperApp(){const g=getMines();return`<div class="app-shell"><div class="toolbar"><button class="tool-btn primary" data-mine-reset>New Field</button><button class="tool-btn ${g.flagMode?"primary":""}" data-mine-flag-mode>${g.flagMode?"Flag Mode On":"Flag Mode"}</button><span class="muted">${escapeHtml(g.status)} / Flags ${g.flagged.length}/${g.mines}</span></div><main class="main-pane"><div class="mine-board">${g.cells.map((v,i)=>{const rev=g.revealed.includes(i),flag=g.flagged.includes(i),txt=flag?"F":rev?(v===-1?"*":(v||"")):"";return`<button class="mine-cell ${rev?"revealed":""} ${flag?"flagged":""} ${rev&&v===-1?"mine":""}" data-mine-cell="${i}">${txt}</button>`}).join("")}</div></main></div>`}
 function loadPeer(){return new Promise((resolve,reject)=>{if(window.Peer)return resolve(window.Peer);const s=document.createElement("script");s.src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js";s.onload=()=>resolve(window.Peer);s.onerror=()=>reject(new Error("Could not load phone camera bridge."));document.head.appendChild(s)})}
 function attachCameraStreams(){const v=document.getElementById("cameraVideo");if(!v)return;const stream=phoneStream||cameraStream;if(stream&&v.srcObject!==stream)v.srcObject=stream}
-async function startLocalCamera(){try{cameraStream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});state.camera.status="Local camera connected.";saveState();renderAll()}catch(e){state.camera.status=e.message||"Camera permission denied.";saveState();renderAll()}}
+async function startLocalCamera(){
+  try{
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("Camera needs HTTPS, localhost, and a supported browser.");
+    stopCamera(false);
+    state.camera.status="Requesting camera permission...";
+    state.camera.details="Choose Allow in the browser permission prompt.";
+    saveState();renderAll();
+    cameraStream=await Promise.race([
+      navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:"user"},audio:false}),
+      timeout(5000,"Camera permission timed out. Check browser permission and device access.")
+    ]);
+    const track=cameraStream.getVideoTracks()[0],settings=track?.getSettings?.()||{};
+    state.camera.status="Local camera connected.";
+    state.camera.details=settings.width?`${settings.width}x${settings.height||""} ${settings.frameRate?Math.round(settings.frameRate)+" fps":""}`:"Live preview active.";
+    saveState();renderAll();
+  }catch(e){
+    state.camera.status="Camera not connected.";
+    state.camera.details=e.message||"Permission denied or camera unavailable.";
+    saveState();renderAll();
+  }
+}
 async function startPhoneCamera(){try{const Peer=await loadPeer();if(cameraPeer)cameraPeer.destroy();cameraPeer=new Peer();state.camera.status="Preparing phone camera link...";saveState();renderAll();cameraPeer.on("open",id=>{cameraPeerId=id;state.camera.phoneUrl=`${location.origin}${location.pathname}?phoneCamera=${encodeURIComponent(id)}`;state.camera.status="Scan the QR code with your phone.";saveState();renderAll()});cameraPeer.on("call",call=>{call.answer();call.on("stream",stream=>{phoneStream=stream;state.camera.status="Phone camera connected.";saveState();renderAll()})});cameraPeer.on("error",err=>{state.camera.status=err.message||"Phone camera bridge failed.";saveState();renderAll()})}catch(e){state.camera.status=e.message;saveState();renderAll()}}
 function captureCamera(){const v=document.getElementById("cameraVideo");if(!v||!v.videoWidth){state.camera.status="No camera frame available yet.";saveState();renderAll();return}const canvas=document.createElement("canvas");canvas.width=v.videoWidth;canvas.height=v.videoHeight;const ctx=canvas.getContext("2d");if(state.camera.mirror){ctx.translate(canvas.width,0);ctx.scale(-1,1)}ctx.drawImage(v,0,0);state.camera.photo=canvas.toDataURL("image/png");state.camera.status="Snapshot captured.";saveState();renderAll()}
-async function renderPhoneCameraPortal(targetId){document.body.innerHTML=`<main class="phone-portal"><section class="phone-card"><h1>WinOS Phone Camera</h1><p id="phoneStatus">Allow camera access to stream to WinOS.</p><video id="phoneVideo" autoplay playsinline muted></video><button class="login-btn" id="phoneStart">Start Phone Camera</button></section></main>`;document.getElementById("phoneStart").addEventListener("click",async()=>{const status=document.getElementById("phoneStatus");try{const Peer=await loadPeer(),stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false});document.getElementById("phoneVideo").srcObject=stream;const peer=new Peer();peer.on("open",()=>{peer.call(targetId,stream);status.textContent="Streaming to WinOS. Keep this page open."});peer.on("error",e=>status.textContent=e.message||"Connection failed.")}catch(e){status.textContent=e.message||"Camera failed."}})}
+function stopCamera(render=true){[cameraStream,phoneStream].forEach(stream=>stream&&stream.getTracks().forEach(t=>t.stop()));cameraStream=null;phoneStream=null;if(cameraPeer){cameraPeer.destroy();cameraPeer=null}state.camera.status="Camera stopped.";state.camera.details="";if(render){saveState();renderAll()}}
+async function renderPhoneCameraPortal(targetId){document.body.innerHTML=`<main class="phone-portal"><section class="phone-card"><h1>WebOS Glass Phone Camera</h1><p id="phoneStatus">Allow camera access to stream to WebOS Glass.</p><video id="phoneVideo" autoplay playsinline muted></video><button class="login-btn" id="phoneStart">Start Phone Camera</button></section></main>`;document.getElementById("phoneStart").addEventListener("click",async()=>{const status=document.getElementById("phoneStatus");try{const Peer=await loadPeer(),stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false});document.getElementById("phoneVideo").srcObject=stream;const peer=new Peer();peer.on("open",()=>{peer.call(targetId,stream);status.textContent="Streaming to WebOS Glass. Keep this page open."});peer.on("error",e=>status.textContent=e.message||"Connection failed.")}catch(e){status.textContent=e.message||"Camera failed."}})}
+function createExplorerFile(id){
+  const w=state.windows.find(x=>x.id===id);if(!w)return;
+  const input=document.getElementById("new_"+w.id),folder=w.data.folder||"Documents";
+  try{
+    const f=createFile(folder,input.value);
+    w.data.newName="";
+    w.data.fileError="";
+    openApp("notepad",{fileId:f.id});
+  }catch(e){
+    w.data.fileError=e.message||"Could not create file.";
+  }
+  saveState();renderAll();
+}
 function attachHandlers(root){
   root.querySelectorAll("[data-folder]").forEach(b=>b.addEventListener("click",()=>{const[id,f]=b.dataset.folder.split(":");const w=state.windows.find(x=>x.id===id);w.data.folder=f;saveState();renderAll()}));
-  root.querySelectorAll("[data-new-file]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.newFile),input=document.getElementById("new_"+w.id);createFile(w.data.folder||"Documents",input.value||"New Text Document.txt");renderAll()}));
+  root.querySelectorAll("[data-new-name]").forEach(i=>i.addEventListener("input",()=>{const w=state.windows.find(x=>x.id===i.dataset.newName);if(w){w.data.newName=i.value;w.data.fileError="";saveState()}}));
+  root.querySelectorAll("[data-new-name]").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")createExplorerFile(i.dataset.newName)}));
+  root.querySelectorAll("[data-new-file]").forEach(b=>b.addEventListener("click",()=>createExplorerFile(b.dataset.newFile)));
   root.querySelectorAll("[data-open-note]").forEach(b=>b.addEventListener("click",()=>openApp("notepad")));
   root.querySelectorAll("[data-file-open]").forEach(b=>b.addEventListener("dblclick",()=>openApp("notepad",{fileId:b.dataset.fileOpen})));
   root.querySelectorAll("[data-file-del]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();deleteFile(b.dataset.fileDel)}));
-  root.querySelectorAll("[data-note-text]").forEach(a=>a.addEventListener("input",()=>{const w=state.windows.find(x=>x.id===a.dataset.noteText),name=root.querySelector(`[data-note-name="${w.id}"]`).value.trim()||"Untitled.txt";if(w.data.fileId)updateFile(w.data.fileId,{name,content:a.value});else{w.data.name=name;w.data.content=a.value;saveState()}document.getElementById("stat_"+w.id).textContent=`${a.value.trim()?a.value.trim().split(/\s+/).length:0} words, ${a.value.length} chars`})); 
-  root.querySelectorAll("[data-note-save]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.noteSave),name=root.querySelector(`[data-note-name="${w.id}"]`).value.trim()||"Untitled.txt",text=root.querySelector(`[data-note-text="${w.id}"]`).value;if(w.data.fileId)updateFile(w.data.fileId,{name,content:text});else{const f=createFile("Documents",name,text);w.data.fileId=f.id;delete w.data.content;delete w.data.name}w.title=name;saveState(true);renderAll()}));
+  root.querySelectorAll("[data-note-text]").forEach(a=>a.addEventListener("input",()=>{const w=state.windows.find(x=>x.id===a.dataset.noteText),name=normalizeFileName(root.querySelector(`[data-note-name="${w.id}"]`).value,".txt")||"Untitled.txt";if(w.data.fileId)updateFile(w.data.fileId,{name,content:a.value});else{w.data.name=name;w.data.content=a.value;saveState()}w.data.saveStatus=w.data.fileId?"Auto saved":"Unsaved document";document.getElementById("stat_"+w.id).textContent=`${a.value.trim()?a.value.trim().split(/\s+/).length:0} words, ${a.value.length} chars`;document.getElementById("noteStatus_"+w.id).textContent=w.data.saveStatus}));
+  root.querySelectorAll("[data-note-save]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.noteSave),name=normalizeFileName(root.querySelector(`[data-note-name="${w.id}"]`).value,".txt")||"Untitled.txt",text=root.querySelector(`[data-note-text="${w.id}"]`).value;if(w.data.fileId)updateFile(w.data.fileId,{name,content:text});else{const f=createFile("Documents",name,text);w.data.fileId=f.id;delete w.data.content;delete w.data.name}w.title=name;w.data.saveStatus="Saved";saveState(true);renderAll()}));
   root.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",e=>{if(e.target.dataset.tabClose)return;const[id,tid]=b.dataset.tab.split(":");const w=state.windows.find(x=>x.id===id);w.data.activeTab=tid;saveState();renderAll()}));
   root.querySelectorAll("[data-tab-close]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const[id,tid]=b.dataset.tabClose.split(":");const w=state.windows.find(x=>x.id===id);w.data.tabs=w.data.tabs.filter(t=>t.id!==tid);if(!w.data.tabs.length)w.data.tabs=[{id:uid("tab"),title:"New tab",url:"https://www.google.com"}];w.data.activeTab=w.data.tabs[0].id;saveState();renderAll()}));
   root.querySelectorAll("[data-tab-new]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.tabNew),t={id:uid("tab"),title:"New tab",url:"https://www.google.com"};w.data.tabs.push(t);w.data.activeTab=t.id;saveState();renderAll()}));
@@ -717,14 +934,24 @@ function attachHandlers(root){
   root.querySelector("[data-ttt-reset]")?.addEventListener("click",()=>resetTtt(true));
   root.querySelectorAll("[data-memory-card]").forEach(b=>b.addEventListener("click",()=>playMemory(Number(b.dataset.memoryCard))));
   root.querySelector("[data-memory-reset]")?.addEventListener("click",resetMemory);
+  root.querySelector("[data-snake-start]")?.addEventListener("click",()=>{const g=getSnake();g.running=!g.running;g.status=g.running?"Running":"Paused";saveState();renderAll()});
+  root.querySelector("[data-snake-reset]")?.addEventListener("click",resetSnake);
+  root.querySelectorAll("[data-snake-dir]").forEach(b=>b.addEventListener("click",()=>{const[x,y]=b.dataset.snakeDir.split(":").map(Number);setSnakeDir(x,y)}));
+  root.querySelector("[data-2048-reset]")?.addEventListener("click",reset2048);
+  root.querySelectorAll("[data-2048-dir]").forEach(b=>b.addEventListener("click",()=>move2048(b.dataset["2048Dir"])));
+  root.querySelector("[data-mine-reset]")?.addEventListener("click",resetMines);
+  root.querySelector("[data-mine-flag-mode]")?.addEventListener("click",()=>{const g=getMines();g.flagMode=!g.flagMode;saveState();renderAll()});
+  root.querySelectorAll("[data-mine-cell]").forEach(b=>{b.addEventListener("click",()=>{const g=getMines(),i=Number(b.dataset.mineCell);g.flagMode?flagMine(i):revealMine(i)});b.addEventListener("contextmenu",e=>{e.preventDefault();flagMine(Number(b.dataset.mineCell))})});
   root.querySelector("[data-camera-local]")?.addEventListener("click",startLocalCamera);
   root.querySelector("[data-camera-phone]")?.addEventListener("click",startPhoneCamera);
   root.querySelector("[data-camera-mirror]")?.addEventListener("click",()=>{state.camera.mirror=!state.camera.mirror;saveState();renderAll()});
   root.querySelector("[data-camera-shot]")?.addEventListener("click",captureCamera);
+  root.querySelector("[data-camera-stop]")?.addEventListener("click",stopCamera);
+  root.querySelector("[data-open-roanime]")?.addEventListener("click",()=>window.open(ROANIME_URL,"_blank","noopener"));
   root.querySelectorAll("[data-accent]").forEach(b=>b.addEventListener("click",()=>{state.accent=b.dataset.accent;saveState();renderAll()}));
   root.querySelectorAll("[data-wallpaper]").forEach(b=>b.addEventListener("click",()=>{state.wallpaper=b.dataset.wallpaper;saveState();renderAll()}));
   root.querySelector("[data-force-sync]")?.addEventListener("click",()=>saveState(true));
-  root.querySelector("[data-reset]")?.addEventListener("click",()=>{if(confirm("Reset WinOS state?")){state=defaultState();saveState(true);renderAll()}});
+  root.querySelector("[data-reset]")?.addEventListener("click",()=>{if(confirm("Reset WebOS Glass state?")){state=defaultState();saveState(true);renderAll()}});
 }
 async function goChromium(id,root){
   const w=state.windows.find(x=>x.id===id),tab=tabDefaults(w),input=root.querySelector(`[data-url="${id}"]`),raw=input.value.trim();
@@ -746,9 +973,25 @@ function calcFormat(n){if(!Number.isFinite(n))return"Error";const s=String(Math.
 function calcApply(){const c=getCalc(),a=Number(c.stored),b=calcNum();if(c.operator==="+")return a+b;if(c.operator==="-")return a-b;if(c.operator==="*")return a*b;if(c.operator==="/")return b===0?NaN:a/b;return b}
 function pressCalc(k){const c=getCalc();if(/^\d$/.test(k)){c.display=c.waiting?k:(c.display==="0"||c.display==="Error"?k:c.display+k);c.waiting=false}else if(k==="."){if(c.waiting){c.display="0.";c.waiting=false}else if(!c.display.includes("."))c.display+="."}else if(k==="AC"){Object.assign(c,{display:"0",stored:null,operator:null,waiting:false,history:""})}else if(k==="Back"){c.display=c.waiting?"0":(c.display.length>1?c.display.slice(0,-1):"0")}else if(k==="+/-"){if(c.display!=="0"&&c.display!=="Error")c.display=c.display.startsWith("-")?c.display.slice(1):"-"+c.display}else if(k==="%"){c.display=calcFormat(calcNum()/100)}else if(["+","-","*","/"].includes(k)){if(c.operator&&!c.waiting){const r=calcApply();c.display=calcFormat(r);c.stored=Number(c.display)}else c.stored=calcNum();c.operator=k;c.waiting=true;c.history=`${c.stored} ${k}`}else if(k==="="){if(c.operator){const old=`${c.stored} ${c.operator} ${c.display}`;const r=calcApply();c.display=calcFormat(r);c.history=`${old} =`;c.stored=null;c.operator=null;c.waiting=true}}saveState();renderAll()}
 function handleCalcKey(e){if(e.target.closest("input,textarea"))return;const focused=state.windows.find(w=>w.focused&&w.app==="calculator"&&!w.minimized);if(!focused)return;const map={Enter:"=",Backspace:"Back",Escape:"AC",x:"*",X:"*"};const k=map[e.key]||e.key;if(/^\d$/.test(k)||[".","+","-","*","/","=","Back","AC","%"].includes(k)){e.preventDefault();pressCalc(k)}}
+function handleGameKeys(e){
+  if(e.target.closest("input,textarea"))return;
+  const focused=state.windows.find(w=>w.focused&&!w.minimized);
+  if(!focused)return;
+  const key=e.key;
+  if(focused.app==="snake"){
+    const dirs={ArrowUp:[0,-1],w:[0,-1],W:[0,-1],ArrowDown:[0,1],s:[0,1],S:[0,1],ArrowLeft:[-1,0],a:[-1,0],A:[-1,0],ArrowRight:[1,0],d:[1,0],D:[1,0]};
+    if(key===" "){e.preventDefault();const g=getSnake();g.running=!g.running;g.status=g.running?"Running":"Paused";saveState();renderAll();return}
+    if(dirs[key]){e.preventDefault();setSnakeDir(...dirs[key])}
+  }
+  if(focused.app==="game2048"){
+    const dirs={ArrowUp:"up",w:"up",W:"up",ArrowDown:"down",s:"down",S:"down",ArrowLeft:"left",a:"left",A:"left",ArrowRight:"right",d:"right",D:"right"};
+    if(dirs[key]){e.preventDefault();move2048(dirs[key])}
+  }
+}
 function logout(){saveState(true);token="";currentUser="";localStorage.removeItem(LS_TOKEN);localStorage.removeItem(LS_USER);switchScreen("lock")}
 document.getElementById("desktop").addEventListener("click",()=>{toggleStart(false);toggleCalendar(false)});
 document.addEventListener("keydown",handleCalcKey);
+document.addEventListener("keydown",handleGameKeys);
 window.addEventListener("beforeunload",()=>saveState(true));
 window.addEventListener("resize",()=>{state.windows=sanitizeWindows(state.windows);saveState();renderAll()});
 (async function boot(){const phoneTarget=new URLSearchParams(location.search).get("phoneCamera");if(phoneTarget){await renderPhoneCameraPortal(phoneTarget);return}applyTheme();tick();if(token&&currentUser){try{await apiFetch("/auth/me");await loadServerState();switchScreen("desktop")}catch{localStorage.removeItem(LS_TOKEN);token="";switchScreen("lock")}}else switchScreen("lock")})();
