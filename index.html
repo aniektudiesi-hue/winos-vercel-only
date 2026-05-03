@@ -379,7 +379,10 @@ const wallpaperChoices=[
   {id:"live-aurora",name:"Live Aurora",cls:"midnight-calm",live:"aurora",bg:"linear-gradient(135deg,#03111f,#0f766e 48%,#312e81)"},
   {id:"live-ribbons",name:"Live Ribbons",cls:"prism-tide",live:"ribbons",bg:"linear-gradient(135deg,#082f49,#7c3aed 52%,#0f172a)"},
   {id:"live-bloom",name:"Live Bloom",cls:"minimal-liquid",live:"bloom",bg:"linear-gradient(135deg,#e9f4ff,#d6f4ef 42%,#f4e8ff)"},
-  {id:"mp4-rain",name:"Your MP4",cls:"midnight-calm",video:"/assets/wallpapers/71570-538974134.mp4",bg:"linear-gradient(135deg,#0f172a,#334155)"},
+  {id:"mp4-rain",name:"Original Flow",cls:"midnight-calm",video:"/assets/wallpapers/71570-538974134.mp4",filter:"saturate(112%) contrast(104%)",speed:1,bg:"linear-gradient(135deg,#0f172a,#334155)"},
+  {id:"mp4-cyber",name:"Cyber Glass",cls:"neon-glass",video:"/assets/wallpapers/71570-538974134.mp4",filter:"hue-rotate(38deg) saturate(155%) contrast(110%) brightness(.92)",speed:.9,bg:"linear-gradient(135deg,#020617,#0ea5e9 48%,#7c3aed)"},
+  {id:"mp4-aurora",name:"Aurora Deep",cls:"glass-aurora",video:"/assets/wallpapers/71570-538974134.mp4",filter:"hue-rotate(105deg) saturate(135%) contrast(108%) brightness(.86)",speed:.75,bg:"linear-gradient(135deg,#03111f,#0f766e 48%,#312e81)"},
+  {id:"mp4-noir",name:"Noir Focus",cls:"midnight-calm",video:"/assets/wallpapers/71570-538974134.mp4",filter:"saturate(70%) contrast(125%) brightness(.72)",speed:.65,bg:"linear-gradient(135deg,#030712,#1f2937 58%,#020617)"},
   {id:"bloom",name:"Bloom",bg:"radial-gradient(ellipse 70% 58% at 14% 30%,rgba(45,132,255,.9) 0%,rgba(33,111,225,.65) 30%,transparent 58%),radial-gradient(ellipse 72% 58% at 82% 76%,rgba(91,196,255,.82) 0%,rgba(45,135,220,.32) 31%,transparent 62%),radial-gradient(ellipse 64% 48% at 62% 8%,rgba(116,69,255,.35),transparent 62%),linear-gradient(135deg,#07111f 0%,#173a72 48%,#06101d 100%)"},
   {id:"forest",name:"Forest",bg:"linear-gradient(140deg,rgba(4,12,24,.08),rgba(0,0,0,.2)),url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2400&q=85') center/cover no-repeat"},
   {id:"lake",name:"Lake",bg:"linear-gradient(140deg,rgba(4,12,24,.05),rgba(0,0,0,.18)),url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=85') center/cover no-repeat"},
@@ -615,6 +618,8 @@ function applyTheme(){
   if(video){
     if(picked&&picked.video&&matchMedia("(prefers-reduced-motion: no-preference)").matches){
       video.muted=true;video.loop=true;video.autoplay=true;video.playsInline=true;
+      video.style.filter=picked.filter||"saturate(108%) contrast(102%)";
+      video.playbackRate=picked.speed||1;
       video.onerror=()=>{state.wallpaper="live-aurora";activeWallpaper="";applyTheme()};
       if(video.getAttribute("src")!==picked.video){video.setAttribute("src",picked.video);video.load()}
       const play=()=>video.play().catch(()=>setTimeout(()=>video.play().catch(()=>{}),250));
@@ -622,6 +627,8 @@ function applyTheme(){
     }else{
       video.pause();
       video.removeAttribute("src");
+      video.style.filter="";
+      video.playbackRate=1;
       video.load();
     }
   }
