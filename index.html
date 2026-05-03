@@ -634,8 +634,8 @@ function applyTheme(){
       video.playbackRate=picked.speed||1;
       video.onerror=()=>console.warn("MP4 wallpaper failed to load",picked.video);
       if(video.getAttribute("src")!==picked.video){video.setAttribute("src",picked.video);video.load()}
-      const play=()=>resumeWallpaperVideo();
-      if(video.readyState>=2)play();else video.oncanplay=play;
+      video.oncanplay=()=>resumeWallpaperVideo();
+      resumeWallpaperVideo();
     }else{
       video.pause();
       video.oncanplay=null;
