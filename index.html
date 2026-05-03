@@ -37,11 +37,11 @@ svg{display:block}
   radial-gradient(ellipse 72% 58% at 82% 76%,rgba(91,196,255,.82) 0%,rgba(45,135,220,.32) 31%,transparent 62%),
   radial-gradient(ellipse 64% 48% at 62% 8%,rgba(116,69,255,.35),transparent 62%),
   linear-gradient(135deg,#07111f 0%,#173a72 48%,#06101d 100%);background-size:cover;background-position:center;transition:filter .2s,background .35s}
-.wallpaper:before{content:"";position:absolute;inset:-18%;opacity:0;pointer-events:none;transition:opacity .35s}
-.wallpaper:after{content:"";position:absolute;inset:0;background:
+.wallpaper:before{content:"";position:absolute;inset:-18%;z-index:1;opacity:0;pointer-events:none;transition:opacity .35s}
+.wallpaper:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:
   linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.17)),
   radial-gradient(circle at 50% 120%,rgba(255,255,255,.14),transparent 42%)}
-.wallpaper-video,.wallpaper-live{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease;pointer-events:none}
+.wallpaper-video,.wallpaper-live{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease;pointer-events:none}
 .wallpaper-video{filter:saturate(108%) contrast(102%)}
 .wallpaper.video-on .wallpaper-video{opacity:1}
 .wallpaper.live-on .wallpaper-live{opacity:1}
@@ -97,13 +97,16 @@ svg{display:block}
 .login-error{height:18px;margin-top:10px;font-size:12px;color:#fee2e2}
 
 .welcome{position:fixed;inset:0;z-index:9200;display:grid;place-items:center;color:#fff;pointer-events:none;opacity:1;transform:scale(1);transition:opacity .9s ease,transform .9s ease}
-.welcome:before{content:"";position:absolute;inset:0;background:rgba(248,250,252,.08);backdrop-filter:blur(28px) saturate(170%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-.welcome:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.02) 44%,rgba(0,0,0,.14));mix-blend-mode:screen}
+.welcome:before{content:"";position:absolute;inset:0;background:rgba(248,250,252,.08);backdrop-filter:blur(30px) saturate(178%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.welcome:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,rgba(255,255,255,.28),transparent 18%),linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.02) 44%,rgba(0,0,0,.14));mix-blend-mode:screen}
 .welcome.welcome-out{opacity:0;transform:scale(1.035)}
-.welcome-copy{position:relative;z-index:1;max-width:calc(100vw - 32px);padding:0 16px;text-align:center;text-shadow:0 22px 58px rgba(0,0,0,.34),0 2px 10px rgba(0,0,0,.26)}
-.welcome-line{font-family:"Segoe Script","Snell Roundhand","Brush Script MT",cursive;font-size:clamp(50px,9vw,132px);font-weight:400;line-height:1.05;overflow-wrap:anywhere}
+.welcome-copy{position:relative;z-index:1;max-width:calc(100vw - 32px);padding:0 16px;text-align:center;text-shadow:0 24px 62px rgba(0,0,0,.36),0 2px 10px rgba(0,0,0,.28)}
+.welcome-copy:before{content:"";position:absolute;left:50%;top:50%;z-index:-1;width:min(560px,78vw);aspect-ratio:1;transform:translate(-50%,-50%) scale(.86);border-radius:999px;background:radial-gradient(circle,rgba(255,255,255,.34),rgba(96,165,250,.22) 36%,rgba(168,85,247,.18) 55%,transparent 72%);filter:blur(14px);animation:welcomeAura 2.4s ease-in-out infinite alternate}
+.welcome-line{display:inline-block;font-family:"Segoe Script","Snell Roundhand","Brush Script MT",cursive;font-size:clamp(50px,9vw,132px);font-weight:400;line-height:1.05;overflow-wrap:anywhere;animation:welcomeFloat 1.7s cubic-bezier(.22,1,.36,1) both}
 .welcome-cursor{display:inline-block;width:.08em;min-width:4px;height:.8em;margin-left:.09em;border-radius:999px;background:rgba(255,255,255,.92);vertical-align:-.08em;animation:welcomeBlink .85s steps(1,end) infinite;box-shadow:0 0 20px rgba(255,255,255,.56)}
 @keyframes welcomeBlink{50%{opacity:0}}
+@keyframes welcomeAura{from{opacity:.58;transform:translate(-50%,-50%) scale(.84)}to{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes welcomeFloat{from{opacity:0;transform:translateY(14px) scale(.98);filter:blur(10px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
 
 .desktop{position:fixed;inset:0 0 var(--taskbar-h) 0;z-index:5;overflow:hidden;padding:16px}
 .desktop-icons{display:flex;flex-direction:column;flex-wrap:wrap;gap:8px;height:100%;width:92px;align-content:flex-start}
@@ -280,6 +283,11 @@ svg{display:block}
 .camera-side{border-left:1px solid rgba(255,255,255,.12);background:rgba(15,23,42,.88);padding:14px;overflow:auto}
 .camera-status{font-size:12px;color:#cbd5e1;line-height:1.45;margin:8px 0 12px}
 .camera-shot{width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.16);margin-top:10px;background:#111827}
+.image-viewer{height:100%;display:grid;grid-template-rows:42px minmax(0,1fr);background:#0b1020;color:#f8fafc}
+.image-viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(15,23,42,.88)}
+.image-viewer-name{font-size:12px;color:#cbd5e1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.image-viewer-stage{min-height:0;display:grid;place-items:center;padding:14px;background:radial-gradient(circle at 50% 15%,rgba(37,99,235,.18),transparent 34%),#020617}
+.image-viewer-stage img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;box-shadow:0 18px 70px rgba(0,0,0,.48)}
 .camera-tools{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
 .camera-meter{height:7px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin:8px 0 12px}
 .camera-meter span{display:block;height:100%;width:45%;background:linear-gradient(90deg,#22c55e,#38bdf8);animation:meterPulse 1.6s ease-in-out infinite alternate}
@@ -304,7 +312,7 @@ svg{display:block}
 .phone-portal{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#050816,#173a72);color:#fff;font-family:"Segoe UI",system-ui,sans-serif}
 .phone-card{width:min(430px,100%);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:22px;backdrop-filter:blur(24px);box-shadow:0 24px 70px rgba(0,0,0,.34)}
 .phone-card video{width:100%;border-radius:8px;background:#000;margin:12px 0}
-@media (prefers-reduced-motion:reduce){.wallpaper:before,.window,.tb-btn,.start-btn,.camera-meter span{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){.wallpaper:before,.window,.tb-btn,.start-btn,.camera-meter span,.welcome-copy:before,.welcome-line{animation:none!important;transition:none!important}}
 
 @media(max-width:760px){
   .search-box{display:none}
@@ -328,7 +336,7 @@ svg{display:block}
 </style>
 </head>
 <body>
-<div class="wallpaper" id="wallpaper"><canvas class="wallpaper-live" id="wallpaperLive"></canvas><video class="wallpaper-video" id="wallpaperVideo" muted loop playsinline preload="none"></video></div>
+<div class="wallpaper" id="wallpaper"><canvas class="wallpaper-live" id="wallpaperLive"></canvas><video class="wallpaper-video" id="wallpaperVideo" muted loop playsinline preload="auto"></video></div>
 <section class="lock" id="lockScreen">
   <div class="lock-panel"><div class="lock-time" id="lockTime">--:--</div><div class="lock-date" id="lockDate">Loading</div></div>
   <div class="lock-hint">Click to sign in</div>
@@ -412,6 +420,7 @@ const appDefs={
   todo:{title:"To Do",icon:"check",w:460,h:530,single:true},
   calculator:{title:"Calculator",icon:"calc",w:360,h:560,single:true},
   camera:{title:"Camera",icon:"camera",w:820,h:560,single:true},
+  viewer:{title:"Image Viewer",icon:"image",w:760,h:560,single:false,hidden:true},
   roanime:{title:"Roanime",icon:"anime",w:980,h:660,single:true},
   tictactoe:{title:"Tic Tac Toe",icon:"game",w:470,h:560,single:true},
   snake:{title:"Snake",icon:"snake",w:520,h:620,single:true},
@@ -526,6 +535,7 @@ function icon(name,size=22){
     minus:stroke('<path d="M6 12h12"/>'),
     square:stroke('<rect x="7" y="7" width="10" height="10"/>'),
     camera:stroke('<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/>'),
+    image:fill('<rect x="3.5" y="4" width="17" height="16" rx="3" fill="#e0f2fe" stroke="#60a5fa"/><circle cx="8.5" cy="9" r="1.7" fill="#38bdf8"/><path d="M5.5 17l4.4-4.6 3.1 3.1 2.2-2.4 3.3 3.9z" fill="#2563eb"/>'),
     game:stroke('<rect x="3" y="7" width="18" height="10" rx="4"/><path d="M8 11v2M7 12h2M15.5 11.5h.01M18 13.5h.01"/>'),
     cards:stroke('<rect x="5" y="4" width="10" height="14" rx="2"/><path d="M9 7h2M8 10h4M17 7l2 10-8 2"/>'),
     anime:fill('<defs><linearGradient id="a" x1="3" y1="4" x2="21" y2="20"><stop stop-color="#fb7185"/><stop offset=".5" stop-color="#8b5cf6"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="3" y="4" width="18" height="16" rx="5" fill="url(#a)"/><circle cx="9" cy="11" r="1.3" fill="#fff"/><circle cx="15" cy="11" r="1.3" fill="#fff"/><path d="M8.2 15c2.2 1.5 5.4 1.5 7.6 0" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M6 7l-2-3M18 7l2-3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>'),
@@ -539,7 +549,7 @@ function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
 function iso(){return new Date().toISOString()}
 function defaultState(){
   return {
-    version:5,accent:"#2563eb",wallpaper:"mp4-rain",
+    version:6,accent:"#2563eb",wallpaper:"mp4-rain",
     vfs:{
       Desktop:[fileObj("Welcome.txt","Welcome to WebOS Glass.\n\nOpen File Explorer, create named files, edit in Notepad, move windows, play games, switch live wallpapers, refresh, and everything restores.")],
       Documents:[fileObj("notes.txt","Multiple files are stored in the virtual file system and synced with the server when signed in.")],
@@ -561,8 +571,9 @@ function mergeState(raw){
   out.calc={...base.calc,...(out.calc||{})};
   out.games={...base.games,...(out.games||{})};
   out.camera={...base.camera,...(out.camera||{})};
-  if((raw&&Number(raw.version||0)<5)||String(out.wallpaper||"").startsWith("video-"))out.wallpaper="mp4-rain";
-  out.version=5;
+  const rawVersion=raw?Number(raw.version||0):0,mp4Ids=new Set(wallpaperChoices.filter(w=>w.video).map(w=>w.id));
+  if(!wallpaperChoices.some(w=>w.id===out.wallpaper)||String(out.wallpaper||"").startsWith("video-")||(rawVersion<6&&!mp4Ids.has(out.wallpaper)))out.wallpaper="mp4-rain";
+  out.version=6;
   return out;
 }
 function loadLocalState(){try{return mergeState(JSON.parse(localStorage.getItem(LS_STATE)||"null"))}catch{return defaultState()}}
@@ -598,9 +609,9 @@ function sanitizeWindows(wins){
   });
 }
 function applyTheme(){
-  if(String(state.wallpaper||"").startsWith("video-"))state.wallpaper="live-aurora";
+  if(String(state.wallpaper||"").startsWith("video-"))state.wallpaper="mp4-rain";
   document.documentElement.style.setProperty("--accent",state.accent||"#2563eb");
-  if(activeWallpaper===state.wallpaper)return;
+  if(activeWallpaper===state.wallpaper){resumeWallpaperVideo();return}
   activeWallpaper=state.wallpaper;
   const wall=document.getElementById("wallpaper");
   const video=document.getElementById("wallpaperVideo");
@@ -618,14 +629,16 @@ function applyTheme(){
   if(video){
     if(picked&&picked.video&&matchMedia("(prefers-reduced-motion: no-preference)").matches){
       video.muted=true;video.loop=true;video.autoplay=true;video.playsInline=true;
+      video.preload="auto";
       video.style.filter=picked.filter||"saturate(108%) contrast(102%)";
       video.playbackRate=picked.speed||1;
-      video.onerror=()=>{state.wallpaper="live-aurora";activeWallpaper="";applyTheme()};
+      video.onerror=()=>console.warn("MP4 wallpaper failed to load",picked.video);
       if(video.getAttribute("src")!==picked.video){video.setAttribute("src",picked.video);video.load()}
-      const play=()=>video.play().catch(()=>setTimeout(()=>video.play().catch(()=>{}),250));
+      const play=()=>resumeWallpaperVideo();
       if(video.readyState>=2)play();else video.oncanplay=play;
     }else{
       video.pause();
+      video.oncanplay=null;
       video.removeAttribute("src");
       video.style.filter="";
       video.playbackRate=1;
@@ -637,6 +650,15 @@ function applyTheme(){
     else stopLiveWallpaper();
   }
   wall.style.filter=state.wallpaper==="dark"||state.wallpaper==="midnight"?"brightness(.78)":"";
+}
+function resumeWallpaperVideo(){
+  const video=document.getElementById("wallpaperVideo"),picked=wallpaperChoices.find(w=>w.id===state.wallpaper);
+  if(!video||!picked||!picked.video||!matchMedia("(prefers-reduced-motion: no-preference)").matches)return;
+  if(video.getAttribute("src")!==picked.video){video.setAttribute("src",picked.video);video.load()}
+  video.muted=true;video.loop=true;video.autoplay=true;video.playsInline=true;
+  const tryPlay=()=>video.play().catch(()=>{});
+  tryPlay();
+  setTimeout(tryPlay,180);
 }
 function startLiveWallpaper(mode){
   if(liveWallpaperMode===mode&&liveWallpaperFrame)return;
@@ -681,14 +703,14 @@ function timeout(ms,message){return new Promise((_,reject)=>setTimeout(()=>rejec
 async function showWelcomeAnimation(user){
   const welcome=document.getElementById("welcomeScreen"),line=document.getElementById("welcomeLine");
   if(!welcome||!line)return;
-  const name=String(user||"User").trim()||"User",message=`Welcome, ${name}`;
+  const name=String(user||"User").trim()||"User",message=`Welcome back, ${name}`;
   welcome.classList.remove("welcome-out");
   line.textContent="";
   switchScreen("welcome");
   await wait(320);
-  const delay=clamp(Math.round(2500/message.length),55,120);
+  const delay=clamp(Math.round(2100/message.length),42,96);
   for(const ch of message){line.textContent+=ch;await wait(ch===" "?delay*1.7:delay)}
-  await wait(900);
+  await wait(1050);
   welcome.classList.add("welcome-out");
   await wait(900);
 }
@@ -699,10 +721,10 @@ if(navigator.getBattery)navigator.getBattery().then(b=>{
   const update=()=>{batteryState={supported:true,level:Math.round((b.level||0)*100),charging:!!b.charging};renderTaskbar()};
   update();["levelchange","chargingchange"].forEach(ev=>b.addEventListener(ev,update));
 }).catch(()=>{batteryState={supported:false,level:100,charging:false}});
-document.getElementById("lockScreen").addEventListener("click",()=>switchScreen("login"));
+document.getElementById("lockScreen").addEventListener("click",()=>{resumeWallpaperVideo();switchScreen("login")});
 document.querySelectorAll("[data-auth-tab]").forEach(b=>b.addEventListener("click",()=>{authMode=b.dataset.authTab;document.querySelectorAll("[data-auth-tab]").forEach(x=>x.classList.toggle("active",x.dataset.authTab===authMode));document.getElementById("loginSubmit").textContent=authMode==="login"?"Sign in":"Create"}));
 document.getElementById("loginUser").addEventListener("input",e=>document.getElementById("loginAvatar").textContent=(e.target.value||"U")[0].toUpperCase());
-document.getElementById("localLogin").addEventListener("click",()=>{currentUser=document.getElementById("loginUser").value.trim()||"Local User";token="";localStorage.removeItem(LS_TOKEN);localStorage.setItem(LS_USER,currentUser);switchScreen("desktop")});
+document.getElementById("localLogin").addEventListener("click",async()=>{currentUser=document.getElementById("loginUser").value.trim()||"Local User";token="";localStorage.removeItem(LS_TOKEN);localStorage.setItem(LS_USER,currentUser);await showWelcomeAnimation(currentUser);switchScreen("desktop")});
 document.getElementById("loginForm").addEventListener("submit",async e=>{
   e.preventDefault();const u=document.getElementById("loginUser").value.trim(),p=document.getElementById("loginPass").value.trim(),err=document.getElementById("loginError");err.textContent="";
   if(u.length<3||p.length<4){err.textContent="Username/password too short.";return}
@@ -715,8 +737,10 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
 });
 
 function extOf(name){const m=String(name||"").match(/(\.[a-z0-9]+)$/i);return m?m[1].toLowerCase():""}
-function fileIcon(name){const ext=extOf(name);return [".txt",".md",".json",".js",".html",".css",".py"].includes(ext)?icon("file",34):icon("file",34)}
+function fileIcon(name,file=null){const ext=extOf(name);return file&&file.kind==="image"?icon("image",34):[".png",".jpg",".jpeg",".webp",".gif"].includes(ext)?icon("image",34):icon("file",34)}
 function findFile(id){for(const folder of folders){const f=(state.vfs[folder]||[]).find(x=>x.id===id);if(f)return{folder,file:f}}return null}
+function isImageFile(file){return !!file&&(file.kind==="image"||[".png",".jpg",".jpeg",".webp",".gif"].includes(extOf(file.name)))}
+function openFile(id){const found=findFile(id);if(!found)return;openApp(isImageFile(found.file)?"viewer":"notepad",{fileId:id})}
 function normalizeFileName(name,defaultExt=".txt"){
   let clean=String(name||"").trim().replace(/[\\/:*?"<>|]/g,"-").replace(/\s+/g," ");
   clean=clean.replace(/^\.+/,"").slice(0,80);
@@ -735,6 +759,12 @@ function createFile(folder,name,content=""){
   if(!clean)throw new Error("Please enter a file name.");
   const finalName=uniqueFileName(folder,clean),ext=extOf(finalName);
   const f=fileObj(finalName,content || fileTemplates[ext] || "");
+  state.vfs[folder]=[...(state.vfs[folder]||[]),f];saveState();return f;
+}
+function createImageFile(folder,name,dataUrl){
+  const clean=normalizeFileName(name,".png");
+  if(!clean)throw new Error("Please enter a file name.");
+  const f={...fileObj(uniqueFileName(folder,clean),dataUrl),kind:"image",content:dataUrl};
   state.vfs[folder]=[...(state.vfs[folder]||[]),f];saveState();return f;
 }
 function updateFile(id,patch){const found=findFile(id);if(!found)return;state.vfs[found.folder]=state.vfs[found.folder].map(f=>f.id===id?{...f,...patch,updatedAt:iso()}:f);saveState()}
@@ -756,10 +786,10 @@ function renderAll(){applyTheme();renderDesktop();renderWindows();renderTaskbar(
 function renderDesktop(){
   const el=document.getElementById("desktopIcons");
   const appIcons=desktopApps.map(a=>`<button class="desk-icon" data-open="${a}"><span class="app-ico">${icon(appDefs[a].icon,34)}</span><span class="desk-label">${appDefs[a].title}</span></button>`).join("");
-  const files=(state.vfs.Desktop||[]).map(f=>`<button class="desk-icon" data-file="${f.id}"><span class="app-ico">${fileIcon(f.name)}</span><span class="desk-label">${escapeHtml(f.name)}</span></button>`).join("");
+  const files=(state.vfs.Desktop||[]).map(f=>`<button class="desk-icon" data-file="${f.id}"><span class="app-ico">${fileIcon(f.name,f)}</span><span class="desk-label">${escapeHtml(f.name)}</span></button>`).join("");
   el.innerHTML=appIcons+files;
   el.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openApp(b.dataset.open)));
-  el.querySelectorAll("[data-file]").forEach(b=>b.addEventListener("click",()=>openApp("notepad",{fileId:b.dataset.file})));
+  el.querySelectorAll("[data-file]").forEach(b=>b.addEventListener("click",()=>openFile(b.dataset.file)));
 }
 function renderWindows(){
   const root=document.getElementById("windows");
@@ -788,13 +818,14 @@ function renderTaskbar(){if(screen!=="desktop")return;const cls=syncState==="syn
   document.querySelectorAll("[data-task]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.task);if(!w)return;if(w.focused&&!w.minimized)w.minimized=true;else focusWindow(w.id);saveState();renderAll()}));
   renderClock();
 }
-function renderStart(){const el=document.getElementById("startMenu");el.innerHTML=`<input class="start-search" id="startSearch" placeholder="Type here to search"><div class="start-sec">Pinned</div><div class="start-grid">${Object.entries(appDefs).map(([id,a])=>`<button class="start-app" data-start="${id}"><span class="app-ico">${icon(a.icon,30)}</span><span class="start-app-name">${a.title}</span></button>`).join("")}</div><div class="start-footer"><div class="user-chip"><span class="avatar">${escapeHtml((currentUser||"U")[0].toUpperCase())}</span><span>${escapeHtml(currentUser||"Local User")}</span></div><button class="power-btn" id="logoutBtn">${icon("power",17)}</button></div>`;el.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>{openApp(b.dataset.start);toggleStart(false)}));document.getElementById("logoutBtn").addEventListener("click",logout);document.getElementById("startSearch").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.value.trim()){openApp("google",{query:e.target.value.trim()});toggleStart(false)}})}
+function renderStart(){const el=document.getElementById("startMenu");el.innerHTML=`<input class="start-search" id="startSearch" placeholder="Type here to search"><div class="start-sec">Pinned</div><div class="start-grid">${Object.entries(appDefs).filter(([,a])=>!a.hidden).map(([id,a])=>`<button class="start-app" data-start="${id}"><span class="app-ico">${icon(a.icon,30)}</span><span class="start-app-name">${a.title}</span></button>`).join("")}</div><div class="start-footer"><div class="user-chip"><span class="avatar">${escapeHtml((currentUser||"U")[0].toUpperCase())}</span><span>${escapeHtml(currentUser||"Local User")}</span></div><button class="power-btn" id="logoutBtn">${icon("power",17)}</button></div>`;el.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>{openApp(b.dataset.start);toggleStart(false)}));document.getElementById("logoutBtn").addEventListener("click",logout);document.getElementById("startSearch").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.value.trim()){openApp("google",{query:e.target.value.trim()});toggleStart(false)}})}
 function toggleStart(force){const el=document.getElementById("startMenu");const open=typeof force==="boolean"?force:!el.classList.contains("open");el.classList.toggle("open",open);document.getElementById("startBtn")?.classList.toggle("open",open);if(open)setTimeout(()=>document.getElementById("startSearch")?.focus(),20)}
 function toggleCalendar(force){const el=document.getElementById("calendarPop");el.classList.toggle("open",typeof force==="boolean"?force:!el.classList.contains("open"));renderCalendarPop()}
 function renderCalendarPop(){const el=document.getElementById("calendarPop"),y=calendarView.getFullYear(),m=calendarView.getMonth();el.innerHTML=`<div class="cal-head"><div class="cal-title">${calendarView.toLocaleDateString([],{month:"long",year:"numeric"})}</div><div class="cal-nav"><button id="calPrev">&lt;</button><button id="calNext">&gt;</button></div></div>${calendarGrid(y,m)}<button class="tool-btn primary" style="width:100%;margin-top:12px" id="openCal">Open Calendar</button>`;el.querySelector("#calPrev").addEventListener("click",()=>{calendarView.setMonth(calendarView.getMonth()-1);renderCalendarPop()});el.querySelector("#calNext").addEventListener("click",()=>{calendarView.setMonth(calendarView.getMonth()+1);renderCalendarPop()});el.querySelector("#openCal").addEventListener("click",()=>{openApp("calendar");toggleCalendar(false)})}
 function calendarGrid(y,m){const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),today=new Date();let html=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div class="cal-dow">${d}</div>`).join("");for(let i=0;i<first;i++)html+="<div></div>";for(let d=1;d<=days;d++){const key=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,cls=`${today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d?"today":""} ${(state.events[key]||[]).length?"has":""}`;html+=`<button class="cal-day ${cls}" data-date="${key}">${d}</button>`}return`<div class="cal-grid">${html}</div>`}
-function renderApp(w){return ({explorer:explorerApp,notepad:notepadApp,chromium:chromiumApp,google:googleApp,youtube:youtubeApp,calendar:calendarApp,apis:apisApp,todo:todoApp,calculator:calculatorApp,camera:cameraApp,roanime:roanimeApp,tictactoe:ticTacToeApp,snake:snakeApp,settings:settingsApp}[w.app]||(()=>"<div></div>"))(w)}
-function explorerApp(w){const folder=w.data.folder||"Documents",files=state.vfs[folder]||[],draft=w.data.newName||"",err=w.data.fileError||"";return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="min-width:210px" id="new_${w.id}" data-new-name="${w.id}" value="${escapeHtml(draft)}" placeholder="Name file, e.g. story.md"><button class="tool-btn primary" data-new-file="${w.id}">Create</button><button class="tool-btn" data-open-note="${w.id}">Notepad</button>${err?`<span class="file-error">${escapeHtml(err)}</span>`:""}</div><div class="split"><aside class="sidebar">${folders.map(f=>`<button class="side-item ${f===folder?"active":""}" data-folder="${w.id}:${f}">${icon("folder",18)} ${f}</button>`).join("")}</aside><main class="main-pane"><div class="pathbar">WebOS / ${folder} / ${files.length} item${files.length===1?"":"s"}</div><div class="file-grid">${files.length?files.map(f=>`<button class="file-card" data-file-open="${f.id}"><span class="app-ico">${fileIcon(f.name)}</span><span class="file-name">${escapeHtml(f.name)}</span><button class="tool-btn danger" title="Delete" style="position:absolute;right:4px;top:4px;height:22px;padding:0 7px" data-file-del="${f.id}">x</button></button>`).join(""):`<div class="empty">This folder is empty.</div>`}</div></main></div></div>`}
+function renderApp(w){return ({explorer:explorerApp,notepad:notepadApp,viewer:viewerApp,chromium:chromiumApp,google:googleApp,youtube:youtubeApp,calendar:calendarApp,apis:apisApp,todo:todoApp,calculator:calculatorApp,camera:cameraApp,roanime:roanimeApp,tictactoe:ticTacToeApp,snake:snakeApp,settings:settingsApp}[w.app]||(()=>"<div></div>"))(w)}
+function explorerApp(w){const folder=w.data.folder||"Documents",files=state.vfs[folder]||[],draft=w.data.newName||"",err=w.data.fileError||"";return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="min-width:210px" id="new_${w.id}" data-new-name="${w.id}" value="${escapeHtml(draft)}" placeholder="Name file, e.g. story.md"><button class="tool-btn primary" data-new-file="${w.id}">Create</button><button class="tool-btn" data-open-note="${w.id}">Notepad</button>${err?`<span class="file-error">${escapeHtml(err)}</span>`:""}</div><div class="split"><aside class="sidebar">${folders.map(f=>`<button class="side-item ${f===folder?"active":""}" data-folder="${w.id}:${f}">${icon("folder",18)} ${f}</button>`).join("")}</aside><main class="main-pane"><div class="pathbar">WebOS / ${folder} / ${files.length} item${files.length===1?"":"s"}</div><div class="file-grid">${files.length?files.map(f=>`<button class="file-card" data-file-open="${f.id}"><span class="app-ico">${fileIcon(f.name,f)}</span><span class="file-name">${escapeHtml(f.name)}</span><button class="tool-btn danger" title="Delete" style="position:absolute;right:4px;top:4px;height:22px;padding:0 7px" data-file-del="${f.id}">x</button></button>`).join(""):`<div class="empty">This folder is empty.</div>`}</div></main></div></div>`}
+function viewerApp(w){const found=w.data.fileId?findFile(w.data.fileId):null,file=found&&found.file;if(!file)return'<div class="image-viewer"><div class="image-viewer-bar"><span class="image-viewer-name">Image not found</span></div><div class="image-viewer-stage"><div class="empty">This picture is missing.</div></div></div>';return`<div class="image-viewer"><div class="image-viewer-bar"><span class="image-viewer-name">${escapeHtml(file.name)} - ${escapeHtml(found.folder)}</span></div><div class="image-viewer-stage"><img alt="${escapeHtml(file.name)}" src="${file.content}"></div></div>`}
 function notepadApp(w){const found=w.data.fileId?findFile(w.data.fileId):null,file=found&&found.file,name=file?file.name:(w.data.name||"Untitled.txt"),text=file?file.content:(w.data.content||""),words=text.trim()?text.trim().split(/\s+/).length:0,status=w.data.saveStatus||(file?`Saved in ${found.folder}`:"Unsaved document");return`<div class="notepad"><div class="note-bar"><input class="note-title" data-note-name="${w.id}" value="${escapeHtml(name)}" title="File name"><span class="note-stat" id="stat_${w.id}">${words} words, ${text.length} chars</span><span class="note-stat" id="noteStatus_${w.id}">${escapeHtml(status)}</span><button class="tool-btn primary" data-note-save="${w.id}">Save</button></div><textarea class="note-area" data-note-text="${w.id}" spellcheck="false">${escapeHtml(text)}</textarea></div>`}
 function tabDefaults(w){if(!w.data.tabs)w.data.tabs=[{id:uid("tab"),title:"New tab",url:"about:blank"}];if(!w.data.activeTab)w.data.activeTab=w.data.tabs[0].id;return w.data.tabs.find(t=>t.id===w.data.activeTab)||w.data.tabs[0]}
 function normUrl(v){v=(v||"").trim();if(!v)return"about:blank";if(/\s/.test(v))return"https://www.google.com/search?q="+encodeURIComponent(v);if(/^https?:\/\//i.test(v))return v;return"https://"+v}
@@ -859,7 +890,7 @@ async function startLocalCamera(){
   }
 }
 async function startPhoneCamera(){try{const Peer=await loadPeer();if(cameraPeer)cameraPeer.destroy();cameraPeer=new Peer();state.camera.status="Preparing phone camera link...";saveState();renderAll();cameraPeer.on("open",id=>{cameraPeerId=id;state.camera.phoneUrl=`${location.origin}${location.pathname}?phoneCamera=${encodeURIComponent(id)}`;state.camera.status="Scan the QR code with your phone.";saveState();renderAll()});cameraPeer.on("call",call=>{call.answer();call.on("stream",stream=>{phoneStream=stream;state.camera.status="Phone camera connected.";saveState();renderAll()})});cameraPeer.on("error",err=>{state.camera.status=err.message||"Phone camera bridge failed.";saveState();renderAll()})}catch(e){state.camera.status=e.message;saveState();renderAll()}}
-function captureCamera(){const v=document.getElementById("cameraVideo");if(!v||!v.videoWidth){state.camera.status="No camera frame available yet.";saveState();renderAll();return}const canvas=document.createElement("canvas");canvas.width=v.videoWidth;canvas.height=v.videoHeight;const ctx=canvas.getContext("2d");if(state.camera.mirror){ctx.translate(canvas.width,0);ctx.scale(-1,1)}ctx.drawImage(v,0,0);state.camera.photo=canvas.toDataURL("image/png");state.camera.status="Snapshot captured.";saveState();renderAll()}
+function captureCamera(){const v=document.getElementById("cameraVideo");if(!v||!v.videoWidth){state.camera.status="No camera frame available yet.";saveState();renderAll();return}const canvas=document.createElement("canvas");canvas.width=v.videoWidth;canvas.height=v.videoHeight;const ctx=canvas.getContext("2d");if(state.camera.mirror){ctx.translate(canvas.width,0);ctx.scale(-1,1)}ctx.drawImage(v,0,0);const dataUrl=canvas.toDataURL("image/png"),stamp=new Date().toISOString().replace(/[:.]/g,"-").slice(0,23),file=createImageFile("Pictures",`Snapshot ${stamp}.png`,dataUrl);state.camera.photo=dataUrl;state.camera.status=`Snapshot saved to Pictures as ${file.name}.`;state.camera.details="Open File Explorer > Pictures to view the snapshot.";saveState();renderAll()}
 function stopCamera(render=true){[cameraStream,phoneStream].forEach(stream=>stream&&stream.getTracks().forEach(t=>t.stop()));cameraStream=null;phoneStream=null;if(cameraPeer){cameraPeer.destroy();cameraPeer=null}state.camera.status="Camera stopped.";state.camera.details="";if(render){saveState();renderAll()}}
 async function renderPhoneCameraPortal(targetId){document.body.innerHTML=`<main class="phone-portal"><section class="phone-card"><h1>WebOS Glass Phone Camera</h1><p id="phoneStatus">Allow camera access to stream to WebOS Glass.</p><video id="phoneVideo" autoplay playsinline muted></video><button class="login-btn" id="phoneStart">Start Phone Camera</button></section></main>`;document.getElementById("phoneStart").addEventListener("click",async()=>{const status=document.getElementById("phoneStatus");try{const Peer=await loadPeer(),stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false});document.getElementById("phoneVideo").srcObject=stream;const peer=new Peer();peer.on("open",()=>{peer.call(targetId,stream);status.textContent="Streaming to WebOS Glass. Keep this page open."});peer.on("error",e=>status.textContent=e.message||"Connection failed.")}catch(e){status.textContent=e.message||"Camera failed."}})}
 function createExplorerFile(id){
@@ -881,7 +912,7 @@ function attachHandlers(root){
   root.querySelectorAll("[data-new-name]").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")createExplorerFile(i.dataset.newName)}));
   root.querySelectorAll("[data-new-file]").forEach(b=>b.addEventListener("click",()=>createExplorerFile(b.dataset.newFile)));
   root.querySelectorAll("[data-open-note]").forEach(b=>b.addEventListener("click",()=>openApp("notepad")));
-  root.querySelectorAll("[data-file-open]").forEach(b=>b.addEventListener("dblclick",()=>openApp("notepad",{fileId:b.dataset.fileOpen})));
+  root.querySelectorAll("[data-file-open]").forEach(b=>{b.addEventListener("dblclick",()=>openFile(b.dataset.fileOpen));b.addEventListener("keydown",e=>{if(e.key==="Enter")openFile(b.dataset.fileOpen)})});
   root.querySelectorAll("[data-file-del]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();deleteFile(b.dataset.fileDel)}));
   root.querySelectorAll("[data-note-text]").forEach(a=>a.addEventListener("input",()=>{const w=state.windows.find(x=>x.id===a.dataset.noteText),name=normalizeFileName(root.querySelector(`[data-note-name="${w.id}"]`).value,".txt")||"Untitled.txt";if(w.data.fileId)updateFile(w.data.fileId,{name,content:a.value});else{w.data.name=name;w.data.content=a.value;saveState()}w.data.saveStatus=w.data.fileId?"Auto saved":"Unsaved document";document.getElementById("stat_"+w.id).textContent=`${a.value.trim()?a.value.trim().split(/\s+/).length:0} words, ${a.value.length} chars`;document.getElementById("noteStatus_"+w.id).textContent=w.data.saveStatus}));
   root.querySelectorAll("[data-note-save]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.noteSave),name=normalizeFileName(root.querySelector(`[data-note-name="${w.id}"]`).value,".txt")||"Untitled.txt",text=root.querySelector(`[data-note-text="${w.id}"]`).value;if(w.data.fileId)updateFile(w.data.fileId,{name,content:text});else{const f=createFile("Documents",name,text);w.data.fileId=f.id;delete w.data.content;delete w.data.name}w.title=name;w.data.saveStatus="Saved";saveState(true);renderAll()}));
@@ -924,7 +955,7 @@ function attachHandlers(root){
   root.querySelector("[data-camera-stop]")?.addEventListener("click",stopCamera);
   root.querySelector("[data-open-roanime]")?.addEventListener("click",()=>window.open(ROANIME_URL,"_blank","noopener"));
   root.querySelectorAll("[data-accent]").forEach(b=>b.addEventListener("click",()=>{state.accent=b.dataset.accent;saveState();renderAll()}));
-  root.querySelectorAll("[data-wallpaper]").forEach(b=>b.addEventListener("click",()=>{state.wallpaper=b.dataset.wallpaper;saveState();renderAll()}));
+  root.querySelectorAll("[data-wallpaper]").forEach(b=>b.addEventListener("click",()=>{state.wallpaper=b.dataset.wallpaper;activeWallpaper="";saveState();renderAll();resumeWallpaperVideo()}));
   root.querySelector("[data-force-sync]")?.addEventListener("click",()=>saveState(true));
   root.querySelector("[data-reset]")?.addEventListener("click",()=>{if(confirm("Reset WebOS Glass state?")){state=defaultState();saveState(true);renderAll()}});
 }
@@ -963,6 +994,8 @@ function logout(){saveState(true);token="";currentUser="";localStorage.removeIte
 document.getElementById("desktop").addEventListener("click",()=>{toggleStart(false);toggleCalendar(false)});
 document.addEventListener("keydown",handleCalcKey);
 document.addEventListener("keydown",handleGameKeys);
+document.addEventListener("pointerdown",resumeWallpaperVideo,{passive:true});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)resumeWallpaperVideo()});
 window.addEventListener("beforeunload",()=>saveState(true));
 window.addEventListener("resize",()=>{state.windows=sanitizeWindows(state.windows);saveState();renderAll()});
 (async function boot(){const phoneTarget=new URLSearchParams(location.search).get("phoneCamera");if(phoneTarget){await renderPhoneCameraPortal(phoneTarget);return}applyTheme();tick();if(token&&currentUser){try{await apiFetch("/auth/me");await loadServerState();switchScreen("desktop")}catch{localStorage.removeItem(LS_TOKEN);token="";switchScreen("lock")}}else switchScreen("lock")})();
