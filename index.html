@@ -76,25 +76,32 @@ svg{display:block}
 @keyframes glassSheen{from{background-position:0 0,0 0}to{background-position:420px 0,-560px 0}}
 @keyframes mistBreathe{from{opacity:.58;transform:scale(1)}to{opacity:1;transform:scale(1.08)}}
 
-.lock,.login{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;color:#fff}
-.lock{cursor:pointer}
+.lock,.login{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;color:#fff;overflow:hidden}
+.lock{cursor:pointer;transform-origin:50% 22%}
 .lock:before,.login:before{content:"";position:absolute;inset:0;background:rgba(3,8,16,.18);backdrop-filter:blur(1px)}
-.lock-panel{position:relative;text-align:center;text-shadow:0 8px 28px rgba(0,0,0,.34)}
-.lock-time{font-size:92px;line-height:1;font-weight:300;letter-spacing:-2px}
+.lock.unlocking{animation:lockLift .72s cubic-bezier(.2,.84,.2,1) forwards}
+.lock-panel{position:relative;text-align:center;text-shadow:0 8px 28px rgba(0,0,0,.34);animation:lockFloat .7s cubic-bezier(.2,.84,.2,1) both}
+.lock-time{font-size:92px;line-height:1;font-weight:300;letter-spacing:0}
 .lock-date{font-size:20px;margin-top:12px;font-weight:400}
 .lock-hint{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);font-size:13px;color:rgba(255,255,255,.76)}
-.login-box{position:relative;width:360px;max-width:calc(100vw - 40px);padding:30px 32px 26px;background:rgba(244,247,255,.18);border:1px solid rgba(255,255,255,.34);border-radius:10px;box-shadow:var(--shadow);backdrop-filter:blur(34px) saturate(150%)}
-.login-avatar{width:76px;height:76px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.9);color:#1f2937;font-size:32px;font-weight:600}
-.login-title{text-align:center;font-size:20px;font-weight:500;margin-bottom:16px}
-.login-tabs{display:grid;grid-template-columns:1fr 1fr;margin-bottom:12px;background:rgba(255,255,255,.2);border-radius:7px;padding:3px}
-.login-tab{height:32px;border-radius:5px;color:rgba(255,255,255,.78);font-size:13px}
-.login-tab.active{background:rgba(255,255,255,.86);color:#111827}
-.login-input{width:100%;height:40px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.85);border-radius:4px;padding:0 11px;margin-bottom:9px;color:#111827}
-.login-input:focus{border-color:#60a5fa;box-shadow:0 0 0 1px #60a5fa}
-.login-actions{display:flex;gap:8px;margin-top:5px}
-.login-btn{height:38px;flex:1;border-radius:4px;background:#2563eb;color:#fff;font-weight:500}
-.login-btn.secondary{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.38)}
-.login-error{height:18px;margin-top:10px;font-size:12px;color:#fee2e2}
+.login:before{background:linear-gradient(180deg,rgba(5,10,22,.22),rgba(5,10,22,.48));backdrop-filter:blur(28px) saturate(160%)}
+.login-box{position:relative;width:386px;max-width:calc(100vw - 40px);padding:34px 34px 28px;background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.13));border:1px solid rgba(255,255,255,.42);border-radius:8px;box-shadow:0 30px 96px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.5);backdrop-filter:blur(34px) saturate(150%)}
+.login.login-enter .login-box{animation:loginRise .55s cubic-bezier(.2,.84,.2,1) both}
+.login-avatar{width:88px;height:88px;margin:0 auto 15px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(226,232,240,.9));color:#111827;font-size:34px;font-weight:600;box-shadow:0 18px 42px rgba(0,0,0,.26),0 0 0 1px rgba(255,255,255,.78)}
+.login-title{text-align:center;font-size:22px;font-weight:600;margin-bottom:4px}
+.login-subtitle{text-align:center;font-size:13px;color:rgba(255,255,255,.74);margin-bottom:18px}
+.login-tabs{display:grid;grid-template-columns:1fr 1fr;margin-bottom:13px;background:rgba(255,255,255,.16);border-radius:8px;padding:3px}
+.login-tab{height:34px;border-radius:6px;color:rgba(255,255,255,.78);font-size:13px}
+.login-tab.active{background:rgba(255,255,255,.9);color:#111827;box-shadow:0 8px 20px rgba(0,0,0,.14)}
+.login-input{width:100%;height:42px;border:1px solid rgba(255,255,255,.44);background:rgba(255,255,255,.88);border-radius:7px;padding:0 12px;margin-bottom:10px;color:#111827}
+.login-input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(147,197,253,.28)}
+.login-actions{display:flex;gap:8px;margin-top:6px}
+.login-btn{height:40px;flex:1;border-radius:7px;background:#2563eb;color:#fff;font-weight:600;box-shadow:0 12px 28px rgba(37,99,235,.28)}
+.login-btn.secondary{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.38);box-shadow:none}
+.login-error{height:18px;margin-top:11px;font-size:12px;color:#fee2e2;text-align:center}
+@keyframes lockFloat{from{opacity:0;transform:translateY(16px);filter:blur(10px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes lockLift{0%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}65%{opacity:.72;transform:translateY(-8%) scale(1.025);filter:blur(3px)}100%{opacity:0;transform:translateY(-16%) scale(1.06);filter:blur(18px)}}
+@keyframes loginRise{from{opacity:0;transform:translateY(42px) scale(.965);filter:blur(12px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
 
 .welcome{position:fixed;inset:0;z-index:9200;display:grid;place-items:center;color:#fff;pointer-events:none;opacity:1;transform:scale(1);transition:opacity .9s ease,transform .9s ease}
 .welcome:before{content:"";position:absolute;inset:0;background:rgba(248,250,252,.08);backdrop-filter:blur(30px) saturate(178%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
@@ -115,9 +122,9 @@ svg{display:block}
 .desk-icon .app-ico{width:34px;height:34px}
 .desk-label{font-size:11px;line-height:1.2;text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 
-.taskbar{position:fixed;left:14px;right:14px;bottom:10px;height:58px;z-index:5000;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(238,244,255,.46));border:1px solid rgba(255,255,255,.68);border-radius:18px;backdrop-filter:blur(18px) saturate(155%);box-shadow:0 14px 44px rgba(3,8,23,.22),inset 0 1px 0 rgba(255,255,255,.58)}
-.tb-left,.tb-right,.tb-center{display:flex;align-items:center;gap:4px}
-.tb-center{position:absolute;left:50%;transform:translateX(-50%);max-width:calc(100vw - 360px);overflow:hidden;padding:6px;border-radius:16px}
+.taskbar{position:fixed;left:14px;right:14px;bottom:10px;height:58px;z-index:5000;display:grid;grid-template-columns:minmax(92px,max-content) minmax(0,1fr) max-content;align-items:center;gap:8px;padding:0 12px;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(238,244,255,.46));border:1px solid rgba(255,255,255,.68);border-radius:18px;backdrop-filter:blur(18px) saturate(155%);box-shadow:0 14px 44px rgba(3,8,23,.22),inset 0 1px 0 rgba(255,255,255,.58)}
+.tb-left,.tb-right,.tb-center{display:flex;align-items:center;gap:4px;min-width:0}
+.tb-center{justify-content:center;overflow:hidden;padding:6px;border-radius:16px}
 .tb-btn,.start-btn,.clock-zone{height:44px;border-radius:12px;display:grid;place-items:center;position:relative}
 .tb-btn,.start-btn{width:48px}
 .tb-btn,.start-btn{transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
@@ -130,6 +137,17 @@ svg{display:block}
 .tb-tip{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#20242d;color:#fff;border:1px solid rgba(255,255,255,.08);padding:5px 9px;border-radius:4px;font-size:11px;opacity:0;pointer-events:none;transition:.12s;box-shadow:0 8px 24px rgba(0,0,0,.28)}
 .tb-btn:hover .tb-tip{opacity:1}
 .search-box{height:38px;width:220px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.06);display:flex;align-items:center;gap:8px;padding:0 12px;color:#4b5563;font-size:13px}
+.taskbar.compact .search-box{width:44px;justify-content:center;padding:0}
+.taskbar.compact .search-box span{display:none}
+.taskbar.compact .tb-btn,.taskbar.compact .start-btn{width:42px}
+.taskbar.dense .tb-btn,.taskbar.dense .start-btn{width:36px;height:40px;border-radius:10px}
+.taskbar.dense .tb-center{gap:3px}
+.taskbar.dense .tb-btn svg,.taskbar.dense .start-btn svg{width:19px;height:19px}
+.taskbar.ultra .tb-btn,.taskbar.ultra .start-btn{width:30px;height:38px;border-radius:9px}
+.taskbar.ultra .tb-center{gap:2px;padding-inline:4px}
+.taskbar.ultra .tb-btn svg,.taskbar.ultra .start-btn svg{width:17px;height:17px}
+.taskbar.ultra .tray{gap:5px;padding-inline:6px}
+.taskbar.ultra .battery-text{display:none}
 .tray{height:40px;border-radius:5px;display:flex;align-items:center;gap:8px;padding:0 8px;font-size:12px;color:#182033}
 .battery-text{font-size:12px;min-width:34px;text-align:right;color:#172033}
 .tray:hover{background:rgba(0,0,0,.07)}
@@ -215,6 +233,20 @@ svg{display:block}
 .note-title{flex:1;height:28px;border:0;background:transparent;font-size:13px}
 .note-stat{font-size:11px;color:#64748b;white-space:nowrap}
 .note-area{flex:1;resize:none;border:0;padding:14px 16px;font:14px/1.65 Consolas,"Cascadia Mono",monospace;background:#fff;color:#111827}
+
+.terminal{height:100%;display:flex;flex-direction:column;background:#05070d;color:#dbeafe;font:13px/1.55 Consolas,"Cascadia Mono","SFMono-Regular",monospace}
+.term-output{flex:1;min-height:0;overflow:auto;padding:15px 16px 8px;white-space:pre-wrap;word-break:break-word}
+.term-line{margin:0 0 5px;color:#dbeafe}
+.term-line.cmd{color:#fff}
+.term-line.err{color:#fca5a5}
+.term-line.dim{color:#94a3b8}
+.term-prompt{color:#7dd3fc;margin-right:8px;font-weight:700}
+.term-input-row{min-height:42px;display:flex;align-items:center;gap:8px;padding:8px 16px 12px;border-top:1px solid rgba(148,163,184,.18);background:rgba(15,23,42,.72)}
+.term-input{flex:1;min-width:0;border:0;background:transparent;color:#f8fafc;font:inherit;caret-color:#93c5fd}
+.term-input::selection{background:#2563eb;color:#fff}
+.runner{height:100%;display:flex;flex-direction:column;background:#0b1020;color:#e5e7eb}
+.runner-bar{height:38px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(15,23,42,.92);font-size:12px}
+.runner iframe{flex:1;border:0;background:#fff}
 
 .chromium{height:100%;display:flex;flex-direction:column;background:#f1f3f4}
 .chromium-tabs{height:36px;display:flex;align-items:end;gap:2px;padding:6px 8px 0;background:#dee1e6}
@@ -317,8 +349,8 @@ svg{display:block}
 @media(max-width:760px){
   .search-box{display:none}
   .tb-left{display:none}
-  .taskbar{left:8px;right:8px;bottom:8px}
-  .tb-center{left:8px;right:104px;transform:none;max-width:none;justify-content:flex-start}
+  .taskbar{left:8px;right:8px;bottom:8px;grid-template-columns:minmax(0,1fr) max-content}
+  .tb-center{justify-content:flex-start}
   .tb-btn,.start-btn{width:42px}
   .start-menu{left:8px;right:8px;bottom:76px;margin-left:0;width:auto;padding:14px}
   .start-grid{grid-template-columns:repeat(4,1fr)}
@@ -344,7 +376,8 @@ svg{display:block}
 <section class="login hidden" id="loginScreen">
   <form class="login-box" id="loginForm">
     <div class="login-avatar" id="loginAvatar">U</div>
-    <div class="login-title">WebOS Glass</div>
+    <div class="login-title">Infinix OS</div>
+    <div class="login-subtitle">Welcome back</div>
     <div class="login-tabs">
       <button class="login-tab active" type="button" data-auth-tab="login">Sign in</button>
       <button class="login-tab" type="button" data-auth-tab="register">Register</button>
@@ -412,6 +445,7 @@ const fileTemplates={
 const appDefs={
   explorer:{title:"File Explorer",icon:"folder",w:820,h:540,single:true},
   notepad:{title:"Notepad",icon:"notepad",w:700,h:520,single:false},
+  terminal:{title:"Terminal",icon:"terminal",w:740,h:470,single:false,minW:430,minH:280},
   chromium:{title:"Chromium",icon:"chromium",w:940,h:620,single:false},
   google:{title:"Search",icon:"search",w:780,h:560,single:true},
   youtube:{title:"YouTube",icon:"play",w:880,h:620,single:true},
@@ -421,13 +455,14 @@ const appDefs={
   calculator:{title:"Calculator",icon:"calc",w:360,h:560,single:true},
   camera:{title:"Camera",icon:"camera",w:820,h:560,single:true},
   viewer:{title:"Image Viewer",icon:"image",w:760,h:560,single:false,hidden:true},
+  runner:{title:"Runner",icon:"terminal",w:760,h:560,single:false,hidden:true},
   roanime:{title:"Roanime",icon:"anime",w:980,h:660,single:true},
   tictactoe:{title:"Tic Tac Toe",icon:"game",w:470,h:560,single:true},
   snake:{title:"Snake",icon:"snake",w:520,h:620,single:true},
   settings:{title:"Settings",icon:"settings",w:680,h:520,single:true}
 };
-const pinned=["explorer","chromium","notepad","roanime","youtube","calculator","camera","snake","tictactoe","settings"];
-const desktopApps=["explorer","chromium","notepad","roanime","google","youtube","calculator","camera","snake","tictactoe","settings"];
+const pinned=["explorer","chromium","notepad","terminal","roanime","youtube","calculator","camera","snake","tictactoe","settings"];
+const desktopApps=["explorer","chromium","notepad","terminal","roanime","google","youtube","calculator","camera","snake","tictactoe","settings"];
 const ROANIME_URL="https://anime-search-api-burw.onrender.com/";
 let token=localStorage.getItem(LS_TOKEN)||"";
 let currentUser=localStorage.getItem(LS_USER)||"";
@@ -515,6 +550,7 @@ function icon(name,size=22){
     folder:fill('<path d="M2.7 7.4c0-1 .8-1.8 1.8-1.8h5l1.8 2.1h8.2c1 0 1.8.8 1.8 1.8v8.3c0 1-.8 1.8-1.8 1.8h-15c-1 0-1.8-.8-1.8-1.8V7.4z" fill="#f7c948"/><path d="M2.7 9.2h18.6v8.6c0 1-.8 1.8-1.8 1.8h-15c-1 0-1.8-.8-1.8-1.8V9.2z" fill="#f9d66b"/>'),
     file:fill('<path d="M6 2.8h8l4 4v14.4H6z" fill="#fff" stroke="#8aa0bd"/><path d="M14 2.8v4h4" fill="#dbeafe"/><path d="M8.4 11h7.2M8.4 14h7.2M8.4 17h5" stroke="#64748b" stroke-width="1.2"/>'),
     notepad:fill('<path d="M6 3h11.5c.8 0 1.5.7 1.5 1.5v15c0 .8-.7 1.5-1.5 1.5H6z" fill="#fff" stroke="#8796ad"/><path d="M6 3h2.4v18H6z" fill="#dbeafe"/><path d="M10.2 8h6M10.2 11.5h6M10.2 15h4.2" stroke="#64748b" stroke-width="1.3"/><path d="M4.8 6h3M4.8 10h3M4.8 14h3M4.8 18h3" stroke="#64748b" stroke-width="1.1"/>'),
+    terminal:fill('<rect x="3" y="4" width="18" height="16" rx="3" fill="#0f172a" stroke="#38bdf8"/><path d="M7 9l3 3-3 3" fill="none" stroke="#7dd3fc" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15h5" stroke="#e2e8f0" stroke-width="1.7" stroke-linecap="round"/>'),
     chromium:fill('<circle cx="12" cy="12" r="10" fill="#4285f4"/><path d="M12 2a10 10 0 0 1 8.7 5H12a5 5 0 0 0-4.3 2.5L3.4 5.7A10 10 0 0 1 12 2z" fill="#ea4335"/><path d="M20.7 7A10 10 0 0 1 12 22l4.3-7.5A5 5 0 0 0 17 12c0-1.9-1-3.9-2.7-5z" fill="#fbbc05"/><path d="M12 22A10 10 0 0 1 3.4 5.7L7.7 13A5 5 0 0 0 12 17z" fill="#34a853"/><circle cx="12" cy="12" r="4.2" fill="#eaf3ff"/><circle cx="12" cy="12" r="2.8" fill="#4285f4"/>'),
     search:stroke('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M16 16l4 4"/>'),
     play:fill('<rect x="3" y="5" width="18" height="14" rx="3" fill="#ef4444"/><path d="M10 9v6l5-3z" fill="#fff"/>'),
@@ -697,7 +733,29 @@ function drawLiveWallpaper(t){
   }
   liveWallpaperFrame=requestAnimationFrame(drawLiveWallpaper);
 }
-function switchScreen(next){screen=next;["lockScreen","loginScreen","welcomeScreen","desktop","taskbar"].forEach(id=>document.getElementById(id).classList.add("hidden"));if(next==="lock")document.getElementById("lockScreen").classList.remove("hidden");if(next==="login")document.getElementById("loginScreen").classList.remove("hidden");if(next==="welcome")document.getElementById("welcomeScreen").classList.remove("hidden");if(next==="desktop"){document.getElementById("desktop").classList.remove("hidden");document.getElementById("taskbar").classList.remove("hidden");renderAll()}}
+function switchScreen(next){
+  screen=next;
+  const lock=document.getElementById("lockScreen"),login=document.getElementById("loginScreen");
+  lock.classList.remove("unlocking");login.classList.remove("login-enter");
+  ["lockScreen","loginScreen","welcomeScreen","desktop","taskbar"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+  if(next==="lock")lock.classList.remove("hidden");
+  if(next==="login")login.classList.remove("hidden");
+  if(next==="welcome")document.getElementById("welcomeScreen").classList.remove("hidden");
+  if(next==="desktop"){document.getElementById("desktop").classList.remove("hidden");document.getElementById("taskbar").classList.remove("hidden");renderAll()}
+}
+async function revealLogin(){
+  if(screen!=="lock")return;
+  screen="login";
+  const lock=document.getElementById("lockScreen"),login=document.getElementById("loginScreen");
+  ["welcomeScreen","desktop","taskbar"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+  login.classList.remove("hidden");
+  login.classList.add("login-enter");
+  lock.classList.add("unlocking");
+  await wait(560);
+  lock.classList.add("hidden");
+  lock.classList.remove("unlocking");
+  setTimeout(()=>document.getElementById("loginUser")?.focus(),40);
+}
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
 function timeout(ms,message){return new Promise((_,reject)=>setTimeout(()=>reject(new Error(message)),ms))}
 async function showWelcomeAnimation(user){
@@ -721,7 +779,7 @@ if(navigator.getBattery)navigator.getBattery().then(b=>{
   const update=()=>{batteryState={supported:true,level:Math.round((b.level||0)*100),charging:!!b.charging};renderTaskbar()};
   update();["levelchange","chargingchange"].forEach(ev=>b.addEventListener(ev,update));
 }).catch(()=>{batteryState={supported:false,level:100,charging:false}});
-document.getElementById("lockScreen").addEventListener("click",()=>{resumeWallpaperVideo();switchScreen("login")});
+document.getElementById("lockScreen").addEventListener("click",()=>{resumeWallpaperVideo();revealLogin()});
 document.querySelectorAll("[data-auth-tab]").forEach(b=>b.addEventListener("click",()=>{authMode=b.dataset.authTab;document.querySelectorAll("[data-auth-tab]").forEach(x=>x.classList.toggle("active",x.dataset.authTab===authMode));document.getElementById("loginSubmit").textContent=authMode==="login"?"Sign in":"Create"}));
 document.getElementById("loginUser").addEventListener("input",e=>document.getElementById("loginAvatar").textContent=(e.target.value||"U")[0].toUpperCase());
 document.getElementById("localLogin").addEventListener("click",async()=>{currentUser=document.getElementById("loginUser").value.trim()||"Local User";token="";localStorage.removeItem(LS_TOKEN);localStorage.setItem(LS_USER,currentUser);await showWelcomeAnimation(currentUser);switchScreen("desktop")});
@@ -769,13 +827,89 @@ function createImageFile(folder,name,dataUrl){
 }
 function updateFile(id,patch){const found=findFile(id);if(!found)return;state.vfs[found.folder]=state.vfs[found.folder].map(f=>f.id===id?{...f,...patch,updatedAt:iso()}:f);saveState()}
 function deleteFile(id){const found=findFile(id);if(!found)return;state.vfs[found.folder]=state.vfs[found.folder].filter(f=>f.id!==id);saveState();renderAll()}
+function termData(w){if(w.data.cwd==null)w.data.cwd="Documents";if(!Array.isArray(w.data.history))w.data.history=[{kind:"dim",text:"Infinix Terminal. Type help to see commands."}];return w.data}
+function termPath(cwd){return cwd?`/${cwd}`:"/"}
+function termPrompt(w){return `infinix:${termPath(termData(w).cwd)}$`}
+function termPrint(w,text,kind="out"){const d=termData(w),lines=String(text??"").split(/\r?\n/);lines.forEach(line=>d.history.push({kind,text:line}));if(d.history.length>180)d.history=d.history.slice(-180)}
+function termLine(line){const kind=escapeHtml(line.kind||"out");if(line.kind==="cmd")return`<div class="term-line cmd"><span class="term-prompt">${escapeHtml(line.prompt||"$")}</span>${escapeHtml(line.text)}</div>`;return`<div class="term-line ${kind}">${escapeHtml(line.text)}</div>`}
+function tokenizeCommand(input){const out=[];let cur="",quote="";for(const ch of String(input||"")){if(quote){if(ch===quote){quote=""}else cur+=ch}else if(ch==="\""||ch==="'"){quote=ch}else if(/\s/.test(ch)){if(cur){out.push(cur);cur=""}}else cur+=ch}if(cur)out.push(cur);return out}
+function matchFolder(name){return folders.find(f=>f.toLowerCase()===String(name||"").toLowerCase())||null}
+function resolveTermFolder(cwd,path=""){let raw=String(path||"").trim().replace(/\\/g,"/");if(!raw||raw==="."||raw==="~")return cwd;if(raw==="/"||raw===".."||raw==="/..")return"";raw=raw.replace(/^\/+/,"").replace(/\/+$/,"");const parts=raw.split("/").filter(Boolean);if(parts.length===1)return matchFolder(parts[0]);if(parts.length===2&&parts[0]==="..")return matchFolder(parts[1]);return null}
+function resolveTermFile(cwd,path){
+  let raw=String(path||"").trim().replace(/\\/g,"/");if(!raw)return{error:"Missing file name."};
+  let folder=cwd,name=raw.replace(/^\.\/+/,"");
+  if(raw.startsWith("/")){
+    const parts=raw.split("/").filter(Boolean);folder=matchFolder(parts.shift());name=parts.join("/");
+  }else{
+    const parts=name.split("/").filter(Boolean);
+    if(parts[0]===".."){folder="";parts.shift()}
+    const first=matchFolder(parts[0]);
+    if(first&&parts.length>1){folder=first;parts.shift()}
+    name=parts.join("/")||name;
+  }
+  if(!folder){
+    const hits=[];folders.forEach(f=>(state.vfs[f]||[]).forEach(file=>{if(file.name.toLowerCase()===name.toLowerCase())hits.push({folder:f,file})}));
+    if(hits.length===1)return hits[0];
+    return{error:hits.length>1?`${name}: found in multiple folders. Use /Folder/${name}`:`${name}: no such file.`};
+  }
+  const file=(state.vfs[folder]||[]).find(f=>f.name.toLowerCase()===name.toLowerCase());
+  return file?{folder,file}:{error:`${name}: no such file in ${folder}.`};
+}
+function terminalHelp(){return["Commands:","  ls [folder]       list folders or files","  cd <folder|..|/> move between WebOS folders","  pwd               show current folder","  cat <file>        print a file","  touch <file>      create a file in the current folder","  open <file>       open a file in its app","  run <file>        execute .js or preview .html files","  clear             clear this terminal"].join("\n")}
+function runTerminalFile(w,file){
+  const ext=extOf(file.name);
+  if(ext===".js"){termPrint(w,`Running ${file.name}...`,"dim");runJsTerminalFile(w.id,file);return}
+  if(ext===".html"){openApp("runner",{title:file.name,type:"html",content:file.content});termPrint(w,`Opened ${file.name} in Runner.`,"dim");return}
+  if(ext===".json"){try{termPrint(w,JSON.stringify(JSON.parse(file.content||"null"),null,2));}catch{termPrint(w,file.content||"(empty)")}return}
+  if([".txt",".md",".css"].includes(ext)){termPrint(w,file.content||"(empty)");return}
+  if(ext===".py"){termPrint(w,"Python files are saved in WebOS, but this browser runtime can execute JavaScript and preview HTML files.","err");return}
+  if(isImageFile(file)){openFile(file.id);termPrint(w,`Opened ${file.name}.`,"dim");return}
+  termPrint(w,`${file.name}: no runner for ${ext||"this file type"}.`,"err");
+}
+function appendTerminalById(id,text,kind="out"){const w=state.windows.find(x=>x.id===id);if(!w)return;termPrint(w,text,kind);saveStateQuiet();renderAll()}
+function runJsTerminalFile(id,file){
+  const format="const format=v=>{try{if(typeof v==='string')return v;const j=JSON.stringify(v,null,2);return j===undefined?String(v):j}catch{return String(v)}};";
+  const bridge="const send=(kind,args)=>postMessage({kind,text:Array.from(args).map(format).join(' ')});self.console={log:(...a)=>send('out',a),info:(...a)=>send('out',a),warn:(...a)=>send('dim',a),error:(...a)=>send('err',a)};";
+  const source=`${format}${bridge}\nPromise.resolve((async()=>{\n${file.content||""}\n})()).then(value=>{if(value!==undefined)console.log(value);postMessage({kind:'done'})}).catch(error=>postMessage({kind:'err',text:error&&error.stack?error.stack:String(error)}));`;
+  const url=URL.createObjectURL(new Blob([source],{type:"text/javascript"}));let done=false;
+  try{
+    const worker=new Worker(url),timer=setTimeout(()=>{if(done)return;done=true;worker.terminate();URL.revokeObjectURL(url);appendTerminalById(id,`${file.name}: stopped after 3s timeout.`,"err")},3000);
+    worker.onmessage=e=>{const msg=e.data||{};if(msg.kind==="done"){if(done)return;done=true;clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);appendTerminalById(id,"Process exited with code 0.","dim")}else appendTerminalById(id,msg.text||"",msg.kind||"out")};
+    worker.onerror=e=>{if(done)return;done=true;clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);appendTerminalById(id,e.message||"JavaScript runtime error.","err")};
+  }catch(e){URL.revokeObjectURL(url);appendTerminalById(id,e.message||"Could not start JavaScript runner.","err")}
+}
+function executeTerminal(w,raw){
+  const parts=tokenizeCommand(raw),cmd=(parts.shift()||"").toLowerCase(),arg=parts.join(" "),d=termData(w);
+  if(!cmd)return;
+  if(cmd==="help"){termPrint(w,terminalHelp(),"dim");return}
+  if(cmd==="clear"){d.history=[];return}
+  if(cmd==="pwd"){termPrint(w,termPath(d.cwd));return}
+  if(cmd==="ls"){
+    const folder=resolveTermFolder(d.cwd,arg);
+    if(folder===null){termPrint(w,`${arg}: no such folder.`,"err");return}
+    if(!folder){termPrint(w,folders.map(f=>f+"/").join("  "));return}
+    const files=state.vfs[folder]||[];termPrint(w,files.length?files.map(f=>f.name).join("\n"):"(empty)");return
+  }
+  if(cmd==="cd"){const folder=resolveTermFolder(d.cwd,arg||"/");if(folder===null)termPrint(w,`${arg}: no such folder.`,"err");else d.cwd=folder;return}
+  if(cmd==="touch"){if(!d.cwd){termPrint(w,"Choose a folder first with cd Documents, cd Desktop, etc.","err");return}try{const f=createFile(d.cwd,arg||"untitled.txt");termPrint(w,`Created ${f.name}.`,"dim")}catch(e){termPrint(w,e.message,"err")}return}
+  if(["cat","open","run"].includes(cmd)){
+    const found=resolveTermFile(d.cwd,arg);if(found.error){termPrint(w,found.error,"err");return}
+    if(cmd==="cat"){termPrint(w,found.file.content||"(empty)");return}
+    if(cmd==="open"){openFile(found.file.id);termPrint(w,`Opened ${found.file.name}.`,"dim");return}
+    runTerminalFile(w,found.file);return
+  }
+  const maybe=resolveTermFile(d.cwd,raw.replace(/^\.\//,""));
+  if(!maybe.error){runTerminalFile(w,maybe.file);return}
+  termPrint(w,`${cmd}: command not found. Type help.`,"err");
+}
+function runTerminalCommand(id,root){const w=state.windows.find(x=>x.id===id);if(!w)return;const input=root.querySelector(`[data-term-input="${id}"]`),raw=(input?.value||w.data.command||"").trim();termData(w);if(!raw)return;w.data.history.push({kind:"cmd",prompt:termPrompt(w),text:raw});w.data.command="";executeTerminal(w,raw);saveState();renderAll()}
 function openApp(app,data={}){
   const d=appDefs[app];if(!d)return;
   if(d.single){const existing=state.windows.find(w=>w.app===app);if(existing){existing.minimized=false;focusWindow(existing.id);renderAll();return}}
   zTop++;const offset=Math.min(80,state.windows.length*22);
   state.windows.forEach(w=>w.focused=false);
   const mobile=innerWidth<=760;
-  state.windows.push({id:uid("win"),app,title:d.title,icon:d.icon,x:clamp(Math.round((innerWidth-d.w)/2)+offset,4,innerWidth-120),y:clamp(Math.round((innerHeight-48-d.h)/2)+offset,4,innerHeight-90),w:Math.min(d.w,innerWidth-12),h:Math.min(d.h,innerHeight-varTaskbar()-12),z:zTop,minimized:false,maximized:mobile,focused:true,data});
+  state.windows.push({id:uid("win"),app,title:data.title||d.title,icon:d.icon,x:clamp(Math.round((innerWidth-d.w)/2)+offset,4,innerWidth-120),y:clamp(Math.round((innerHeight-48-d.h)/2)+offset,4,innerHeight-90),w:Math.min(d.w,innerWidth-12),h:Math.min(d.h,innerHeight-varTaskbar()-12),z:zTop,minimized:false,maximized:mobile,focused:true,data});
   saveState();renderAll();
 }
 function focusWindow(id){zTop++;state.windows.forEach(w=>{w.focused=w.id===id;if(w.id===id){w.z=zTop;w.minimized=false}});saveState()}
@@ -810,7 +944,7 @@ function startResize(e){e.preventDefault();e.stopPropagation();const parts=e.cur
 function varTaskbar(){return parseInt(getComputedStyle(document.documentElement).getPropertyValue("--taskbar-h"))||48}
 function renderClock(){const t=document.querySelector(".clock-time"),d=document.querySelector(".clock-date");if(!t||!d)return;const n=new Date();t.textContent=n.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});d.textContent=n.toLocaleDateString([],{month:"numeric",day:"numeric"})}
 function batteryLabel(){return `${batteryState.level==null?100:batteryState.level}%${batteryState.charging?" charging":""}`}
-function renderTaskbar(){if(screen!=="desktop")return;const cls=syncState==="synced"?"synced":syncState==="saving"?"saving":syncState==="error"?"error":"";document.getElementById("taskbar").innerHTML=`<div class="tb-left"><span class="sync ${cls}"></span><span style="font-size:12px;color:#334155">${escapeHtml(currentUser||"Local")}</span></div><div class="tb-center"><button class="start-btn" id="startBtn">${icon("start",22)}</button><button class="search-box" id="searchBtn">${icon("search",15)}<span>Search</span></button>${pinned.map(a=>`<button class="tb-btn" data-pin="${a}"><span>${icon(appDefs[a].icon,22)}</span><span class="tb-tip">${appDefs[a].title}</span></button>`).join("")}${state.windows.map(w=>`<button class="tb-btn ${w.focused&&!w.minimized?"active":"running"}" data-task="${w.id}"><span>${icon(w.icon,22)}</span><span class="tb-tip">${escapeHtml(w.title)}</span></button>`).join("")}</div><div class="tb-right"><div class="tray">${icon("wifi",16)}${icon("volume",16)}${icon("battery",18)}<span class="battery-text">${batteryLabel()}</span></div><button class="clock-zone" id="clockBtn"><span class="clock-time"></span><span class="clock-date"></span></button></div>`;
+function renderTaskbar(){if(screen!=="desktop")return;const cls=syncState==="synced"?"synced":syncState==="saving"?"saving":syncState==="error"?"error":"",density=state.windows.length>10?"ultra":state.windows.length>6?"dense":state.windows.length>3?"compact":"";const taskbar=document.getElementById("taskbar");taskbar.className=`taskbar ${density}`;taskbar.innerHTML=`<div class="tb-left"><span class="sync ${cls}"></span><span style="font-size:12px;color:#334155;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(currentUser||"Local")}</span></div><div class="tb-center"><button class="start-btn" id="startBtn">${icon("start",22)}</button><button class="search-box" id="searchBtn">${icon("search",15)}<span>Search</span></button>${pinned.map(a=>`<button class="tb-btn" data-pin="${a}"><span>${icon(appDefs[a].icon,22)}</span><span class="tb-tip">${appDefs[a].title}</span></button>`).join("")}${state.windows.map(w=>`<button class="tb-btn ${w.focused&&!w.minimized?"active":"running"}" data-task="${w.id}"><span>${icon(w.icon,22)}</span><span class="tb-tip">${escapeHtml(w.title)}</span></button>`).join("")}</div><div class="tb-right"><div class="tray">${icon("wifi",16)}${icon("volume",16)}${icon("battery",18)}<span class="battery-text">${batteryLabel()}</span></div><button class="clock-zone" id="clockBtn"><span class="clock-time"></span><span class="clock-date"></span></button></div>`;
   document.getElementById("startBtn").addEventListener("click",()=>toggleStart());
   document.getElementById("searchBtn").addEventListener("click",()=>toggleStart(true));
   document.getElementById("clockBtn").addEventListener("click",()=>toggleCalendar());
@@ -823,10 +957,12 @@ function toggleStart(force){const el=document.getElementById("startMenu");const 
 function toggleCalendar(force){const el=document.getElementById("calendarPop");el.classList.toggle("open",typeof force==="boolean"?force:!el.classList.contains("open"));renderCalendarPop()}
 function renderCalendarPop(){const el=document.getElementById("calendarPop"),y=calendarView.getFullYear(),m=calendarView.getMonth();el.innerHTML=`<div class="cal-head"><div class="cal-title">${calendarView.toLocaleDateString([],{month:"long",year:"numeric"})}</div><div class="cal-nav"><button id="calPrev">&lt;</button><button id="calNext">&gt;</button></div></div>${calendarGrid(y,m)}<button class="tool-btn primary" style="width:100%;margin-top:12px" id="openCal">Open Calendar</button>`;el.querySelector("#calPrev").addEventListener("click",()=>{calendarView.setMonth(calendarView.getMonth()-1);renderCalendarPop()});el.querySelector("#calNext").addEventListener("click",()=>{calendarView.setMonth(calendarView.getMonth()+1);renderCalendarPop()});el.querySelector("#openCal").addEventListener("click",()=>{openApp("calendar");toggleCalendar(false)})}
 function calendarGrid(y,m){const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),today=new Date();let html=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div class="cal-dow">${d}</div>`).join("");for(let i=0;i<first;i++)html+="<div></div>";for(let d=1;d<=days;d++){const key=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,cls=`${today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d?"today":""} ${(state.events[key]||[]).length?"has":""}`;html+=`<button class="cal-day ${cls}" data-date="${key}">${d}</button>`}return`<div class="cal-grid">${html}</div>`}
-function renderApp(w){return ({explorer:explorerApp,notepad:notepadApp,viewer:viewerApp,chromium:chromiumApp,google:googleApp,youtube:youtubeApp,calendar:calendarApp,apis:apisApp,todo:todoApp,calculator:calculatorApp,camera:cameraApp,roanime:roanimeApp,tictactoe:ticTacToeApp,snake:snakeApp,settings:settingsApp}[w.app]||(()=>"<div></div>"))(w)}
+function renderApp(w){return ({explorer:explorerApp,notepad:notepadApp,terminal:terminalApp,viewer:viewerApp,runner:runnerApp,chromium:chromiumApp,google:googleApp,youtube:youtubeApp,calendar:calendarApp,apis:apisApp,todo:todoApp,calculator:calculatorApp,camera:cameraApp,roanime:roanimeApp,tictactoe:ticTacToeApp,snake:snakeApp,settings:settingsApp}[w.app]||(()=>"<div></div>"))(w)}
 function explorerApp(w){const folder=w.data.folder||"Documents",files=state.vfs[folder]||[],draft=w.data.newName||"",err=w.data.fileError||"";return`<div class="app-shell"><div class="toolbar"><input class="tool-input" style="min-width:210px" id="new_${w.id}" data-new-name="${w.id}" value="${escapeHtml(draft)}" placeholder="Name file, e.g. story.md"><button class="tool-btn primary" data-new-file="${w.id}">Create</button><button class="tool-btn" data-open-note="${w.id}">Notepad</button>${err?`<span class="file-error">${escapeHtml(err)}</span>`:""}</div><div class="split"><aside class="sidebar">${folders.map(f=>`<button class="side-item ${f===folder?"active":""}" data-folder="${w.id}:${f}">${icon("folder",18)} ${f}</button>`).join("")}</aside><main class="main-pane"><div class="pathbar">WebOS / ${folder} / ${files.length} item${files.length===1?"":"s"}</div><div class="file-grid">${files.length?files.map(f=>`<button class="file-card" data-file-open="${f.id}"><span class="app-ico">${fileIcon(f.name,f)}</span><span class="file-name">${escapeHtml(f.name)}</span><button class="tool-btn danger" title="Delete" style="position:absolute;right:4px;top:4px;height:22px;padding:0 7px" data-file-del="${f.id}">x</button></button>`).join(""):`<div class="empty">This folder is empty.</div>`}</div></main></div></div>`}
 function viewerApp(w){const found=w.data.fileId?findFile(w.data.fileId):null,file=found&&found.file;if(!file)return'<div class="image-viewer"><div class="image-viewer-bar"><span class="image-viewer-name">Image not found</span></div><div class="image-viewer-stage"><div class="empty">This picture is missing.</div></div></div>';return`<div class="image-viewer"><div class="image-viewer-bar"><span class="image-viewer-name">${escapeHtml(file.name)} - ${escapeHtml(found.folder)}</span></div><div class="image-viewer-stage"><img alt="${escapeHtml(file.name)}" src="${file.content}"></div></div>`}
 function notepadApp(w){const found=w.data.fileId?findFile(w.data.fileId):null,file=found&&found.file,name=file?file.name:(w.data.name||"Untitled.txt"),text=file?file.content:(w.data.content||""),words=text.trim()?text.trim().split(/\s+/).length:0,status=w.data.saveStatus||(file?`Saved in ${found.folder}`:"Unsaved document");return`<div class="notepad"><div class="note-bar"><input class="note-title" data-note-name="${w.id}" value="${escapeHtml(name)}" title="File name"><span class="note-stat" id="stat_${w.id}">${words} words, ${text.length} chars</span><span class="note-stat" id="noteStatus_${w.id}">${escapeHtml(status)}</span><button class="tool-btn primary" data-note-save="${w.id}">Save</button></div><textarea class="note-area" data-note-text="${w.id}" spellcheck="false">${escapeHtml(text)}</textarea></div>`}
+function terminalApp(w){const d=termData(w);return`<div class="terminal"><div class="term-output" id="termOut_${w.id}">${d.history.map(termLine).join("")}</div><form class="term-input-row" data-term-form="${w.id}"><span class="term-prompt">${escapeHtml(termPrompt(w))}</span><input class="term-input" data-term-input="${w.id}" value="${escapeHtml(d.command||"")}" autocomplete="off" spellcheck="false"></form></div>`}
+function runnerApp(w){const name=w.data.title||"Runner",html=w.data.content||"";return`<div class="runner"><div class="runner-bar"><span>${escapeHtml(name)}</span><span>Sandboxed</span></div><iframe sandbox="allow-scripts allow-forms" srcdoc="${escapeHtml(html)}"></iframe></div>`}
 function tabDefaults(w){if(!w.data.tabs)w.data.tabs=[{id:uid("tab"),title:"New tab",url:"about:blank"}];if(!w.data.activeTab)w.data.activeTab=w.data.tabs[0].id;return w.data.tabs.find(t=>t.id===w.data.activeTab)||w.data.tabs[0]}
 function normUrl(v){v=(v||"").trim();if(!v)return"about:blank";if(/\s/.test(v))return"https://www.google.com/search?q="+encodeURIComponent(v);if(/^https?:\/\//i.test(v))return v;return"https://"+v}
 function chromiumContent(tab){
@@ -914,6 +1050,8 @@ function attachHandlers(root){
   root.querySelectorAll("[data-open-note]").forEach(b=>b.addEventListener("click",()=>openApp("notepad")));
   root.querySelectorAll("[data-file-open]").forEach(b=>{b.addEventListener("dblclick",()=>openFile(b.dataset.fileOpen));b.addEventListener("keydown",e=>{if(e.key==="Enter")openFile(b.dataset.fileOpen)})});
   root.querySelectorAll("[data-file-del]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();deleteFile(b.dataset.fileDel)}));
+  root.querySelectorAll("[data-term-form]").forEach(f=>f.addEventListener("submit",e=>{e.preventDefault();runTerminalCommand(f.dataset.termForm,root)}));
+  root.querySelectorAll("[data-term-input]").forEach(i=>{i.addEventListener("input",()=>{const w=state.windows.find(x=>x.id===i.dataset.termInput);if(w){w.data.command=i.value;saveStateQuiet()}});const w=state.windows.find(x=>x.id===i.dataset.termInput);if(w?.focused)setTimeout(()=>{i.focus();const out=document.getElementById("termOut_"+w.id);if(out)out.scrollTop=out.scrollHeight},0)});
   root.querySelectorAll("[data-note-text]").forEach(a=>a.addEventListener("input",()=>{const w=state.windows.find(x=>x.id===a.dataset.noteText),name=normalizeFileName(root.querySelector(`[data-note-name="${w.id}"]`).value,".txt")||"Untitled.txt";if(w.data.fileId)updateFile(w.data.fileId,{name,content:a.value});else{w.data.name=name;w.data.content=a.value;saveState()}w.data.saveStatus=w.data.fileId?"Auto saved":"Unsaved document";document.getElementById("stat_"+w.id).textContent=`${a.value.trim()?a.value.trim().split(/\s+/).length:0} words, ${a.value.length} chars`;document.getElementById("noteStatus_"+w.id).textContent=w.data.saveStatus}));
   root.querySelectorAll("[data-note-save]").forEach(b=>b.addEventListener("click",()=>{const w=state.windows.find(x=>x.id===b.dataset.noteSave),name=normalizeFileName(root.querySelector(`[data-note-name="${w.id}"]`).value,".txt")||"Untitled.txt",text=root.querySelector(`[data-note-text="${w.id}"]`).value;if(w.data.fileId)updateFile(w.data.fileId,{name,content:text});else{const f=createFile("Documents",name,text);w.data.fileId=f.id;delete w.data.content;delete w.data.name}w.title=name;w.data.saveStatus="Saved";saveState(true);renderAll()}));
   root.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",e=>{if(e.target.dataset.tabClose)return;const[id,tid]=b.dataset.tab.split(":");const w=state.windows.find(x=>x.id===id);w.data.activeTab=tid;saveState();renderAll()}));
@@ -992,6 +1130,7 @@ function handleGameKeys(e){
 }
 function logout(){saveState(true);token="";currentUser="";localStorage.removeItem(LS_TOKEN);localStorage.removeItem(LS_USER);switchScreen("lock")}
 document.getElementById("desktop").addEventListener("click",()=>{toggleStart(false);toggleCalendar(false)});
+document.addEventListener("keydown",e=>{if(screen==="lock"){e.preventDefault();resumeWallpaperVideo();revealLogin()}});
 document.addEventListener("keydown",handleCalcKey);
 document.addEventListener("keydown",handleGameKeys);
 document.addEventListener("pointerdown",resumeWallpaperVideo,{passive:true});
@@ -1002,3 +1141,4 @@ window.addEventListener("resize",()=>{state.windows=sanitizeWindows(state.window
 </script>
 </body>
 </html>
+
